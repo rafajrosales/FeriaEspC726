@@ -1,0 +1,6 @@
+{
+  "name": "CETis No. 7 - Feria de Especialidades 2026",
+  "description": "Plataforma de Orientación Vocacional, Gestión Híbrida (70% Virtual / 30% Presencial) y Acreditación Digital para el CETis No. 7 'Miguel Lerdo de Tejada' DGETI.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
