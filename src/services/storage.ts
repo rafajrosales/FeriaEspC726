@@ -1,5 +1,6 @@
 import { Estudiante, EvaluacionVocacional, ProgresoVirtual, AsistenciaPresencial, FichaAcademiaReq, OficioCircular, SpecialtyId, DocenteAutorizado } from '../types';
 import { ESTUDIANTES_INICIALES, FICHAS_ACADEMIA_DEFAULT, OFICIO_CIRCULAR_DEFAULT } from '../data/mockData';
+import { cloudSaveEstudiante, cloudSaveDocente } from './firebase';
 
 const STORAGE_KEYS = {
   ESTUDIANTES: 'cetis7_estudiantes',
@@ -558,6 +559,7 @@ export function saveEstudiante(estudiante: Estudiante): void {
     current.push(estudiante);
   }
   localStorage.setItem(STORAGE_KEYS.ESTUDIANTES, JSON.stringify(current));
+  cloudSaveEstudiante(estudiante);
 }
 
 export function getEstudianteActivoNC(): string {
@@ -733,6 +735,7 @@ export function getDocentes(): DocenteAutorizado[] {
 export function saveDocentes(docentes: DocenteAutorizado[]): void {
   initializeStorage();
   localStorage.setItem(STORAGE_KEYS.DOCENTES, JSON.stringify(docentes));
+  docentes.forEach(d => cloudSaveDocente(d));
 }
 
 export function registrarNuevoDocente(

@@ -326,6 +326,14 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
           </div>
         )}
 
+        {/* Pre-registro anticipado notice */}
+        <div className="bg-blue-50 border-b border-blue-200 px-3 py-2 sm:px-4 text-[11px] sm:text-xs text-blue-950 flex items-center gap-2 shrink-0">
+          <span className="w-5 h-5 rounded-md bg-blue-600 text-white flex items-center justify-center shrink-0 font-bold text-xs">
+            📅
+          </span>
+          <span><strong>¡Pre-Registro Anticipado!</strong> Regístrate días antes de la feria para completar tu test vocacional y asegurar tu Pase QR desde casa.</span>
+        </div>
+
         {/* Navigation Tabs - Responsive for small smartphone screens */}
         <div className="flex border-b border-stone-200 bg-stone-50 text-xs font-semibold shrink-0">
           <button

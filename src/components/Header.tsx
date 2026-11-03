@@ -30,9 +30,9 @@ export const Header: React.FC<HeaderProps> = ({
           <span className="opacity-90">SEP · SEMS · DGETI</span>
         </div>
         <div className="hidden sm:flex items-center gap-2 font-mono-code text-[10px] text-stone-200">
-          <span>PLANTEL 007 "MIGUEL LERDO DE TEJADA"</span>
+          <span className="bg-emerald-600 text-emerald-100 px-2 py-0.5 rounded font-bold shadow-2xs">☁️ Cloud Firestore (Plan Gratuito)</span>
           <span className="opacity-50">·</span>
-          <span>CUAUTEPEC, CDMX</span>
+          <span>PLANTEL 007 "MIGUEL LERDO DE TEJADA"</span>
         </div>
       </div>
 
