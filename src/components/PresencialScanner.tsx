@@ -34,9 +34,10 @@ import { COMIC_ASSETS } from '../assets/comicAssets';
 
 interface PresencialScannerProps {
   estudianteActivo?: Estudiante | null;
+  onNavigateToDirection?: () => void;
 }
 
-export const PresencialScanner: React.FC<PresencialScannerProps> = ({ estudianteActivo }) => {
+export const PresencialScanner: React.FC<PresencialScannerProps> = ({ estudianteActivo, onNavigateToDirection }) => {
   const [tokenInput, setTokenInput] = useState<string>('');
   const [estudianteEscaneado, setEstudianteEscaneado] = useState<Estudiante | null>(null);
   const [progresoEscaneado, setProgresoEscaneado] = useState<ProgresoVirtual | null>(null);
@@ -224,8 +225,20 @@ export const PresencialScanner: React.FC<PresencialScannerProps> = ({ estudiante
               <h3 className="text-base font-bold text-stone-900">Validación de Token QR y Check-in en Plantel</h3>
             </div>
           </div>
-          <div className="text-xs text-stone-500">
-            Mesa de Aplicadores y Docentes Tutores · Edificio Central
+          <div className="flex items-center gap-2">
+            {onNavigateToDirection && (
+              <button
+                onClick={onNavigateToDirection}
+                className="px-3 py-1.5 text-xs font-bold text-amber-950 bg-amber-200 hover:bg-amber-300 border border-amber-400 rounded-lg transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                title="Abrir editor de retos presenciales en Subdirección"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-800" />
+                <span>⚙️ Editar Retos Presenciales</span>
+              </button>
+            )}
+            <span className="text-xs text-stone-500 hidden sm:inline">
+              Mesa de Aplicadores y Docentes Tutores · Edificio Central
+            </span>
           </div>
         </div>
 

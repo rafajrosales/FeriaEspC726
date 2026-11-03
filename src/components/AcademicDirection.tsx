@@ -55,7 +55,7 @@ import {
 import { MatriculaDashboard } from './MatriculaDashboard';
 
 export const AcademicDirection: React.FC = () => {
-  const [subTab, setSubTab] = useState<'tablero' | 'ficha' | 'circular' | 'padron' | 'docentes'>('tablero');
+  const [subTab, setSubTab] = useState<'tablero' | 'ficha' | 'circular' | 'padron' | 'docentes' | 'retos'>('tablero');
   const [selectedAcademia, setSelectedAcademia] = useState<SpecialtyId>('programacion');
   
   // Fichas & Circular state
@@ -552,7 +552,97 @@ export const AcademicDirection: React.FC = () => {
             }`}
           >
             <UserCheck className="w-3.5 h-3.5" />
-            5. Padrón de Docentes Autorizados ({docentes.filter(d => d.estatus_autorizacion === 'AUTORIZADO').length})
+            5. Padrón Docentes Autorizados ({docentes.filter(d => d.estatus_autorizacion === 'AUTORIZADO').length})
+          </button>
+          <button
+            onClick={() => setSubTab('retos')}
+            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 whitespace-nowrap ${
+              subTab === 'retos' ? 'bg-[#721B32] text-white font-semibold' : 'bg-amber-100 text-amber-950 hover:bg-amber-200 border border-amber-300 font-bold'
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+            6. ⚙️ Retos Presenciales & Rally (30%)
+          </button>
+        </div>
+      </div>
+
+      {/* Docente Quick Guide Banner: Where and How to Edit Content */}
+      <div className="no-print bg-gradient-to-r from-amber-50 to-stone-50 border-2 border-amber-300 rounded-2xl p-4 sm:p-5 shadow-2xs space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-200 pb-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-200 text-amber-950 flex items-center justify-center font-bold shrink-0 border border-amber-400 shadow-2xs">
+              <Sparkles className="w-5 h-5 text-amber-900" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 text-[10px] uppercase font-bold text-amber-800 tracking-wider">
+                <span>Modo Docente Activo</span>
+                <span>•</span>
+                <span>Centro de Configuración y Edición</span>
+              </div>
+              <h3 className="text-sm sm:text-base font-bold text-amber-950">
+                ¿Dónde y cómo modificar Retos, Cuestionarios, Test y Videos?
+              </h3>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5 text-xs">
+          <button
+            onClick={() => setSubTab('retos')}
+            className="p-3 bg-white rounded-xl border border-amber-200 hover:border-[#721B32] hover:shadow-xs transition-all text-left space-y-1 cursor-pointer group"
+          >
+            <div className="font-bold text-[#721B32] flex items-center justify-between">
+              <span>1. Retos Presenciales</span>
+              <span className="text-[10px] bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded font-mono-code">Rally 30%</span>
+            </div>
+            <p className="text-[11px] text-stone-600 leading-tight">
+              Modifica nombres, objetivos, espacio en plantel, dinamica y materiales de las 4 estaciones.
+            </p>
+          </button>
+
+          <button
+            onClick={() => {
+              setSubTab('ficha');
+            }}
+            className="p-3 bg-white rounded-xl border border-amber-200 hover:border-[#721B32] hover:shadow-xs transition-all text-left space-y-1 cursor-pointer group"
+          >
+            <div className="font-bold text-[#721B32] flex items-center justify-between">
+              <span>2. Cuestionarios Examen</span>
+              <span className="text-[10px] bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded font-mono-code">CRUD</span>
+            </div>
+            <p className="text-[11px] text-stone-600 leading-tight">
+              Añade o edita preguntas, opciones de respuesta y explicaciones de las 4 especialidades.
+            </p>
+          </button>
+
+          <button
+            onClick={() => {
+              setSubTab('ficha');
+            }}
+            className="p-3 bg-white rounded-xl border border-amber-200 hover:border-[#721B32] hover:shadow-xs transition-all text-left space-y-1 cursor-pointer group"
+          >
+            <div className="font-bold text-[#721B32] flex items-center justify-between">
+              <span>3. Test Vocacional</span>
+              <span className="text-[10px] bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded font-mono-code">Aptitud/Gusto</span>
+            </div>
+            <p className="text-[11px] text-stone-600 leading-tight">
+              Ajusta las preguntas del algoritmo psicométrico de 4 ejes y ponderaciones 50/50.
+            </p>
+          </button>
+
+          <button
+            onClick={() => {
+              setSubTab('ficha');
+            }}
+            className="p-3 bg-white rounded-xl border border-amber-200 hover:border-[#721B32] hover:shadow-xs transition-all text-left space-y-1 cursor-pointer group"
+          >
+            <div className="font-bold text-[#721B32] flex items-center justify-between">
+              <span>4. Videos & Galería</span>
+              <span className="text-[10px] bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded font-mono-code">YouTube/Drive</span>
+            </div>
+            <p className="text-[11px] text-stone-600 leading-tight">
+              Inserta URLs de videos de YouTube, enlaces de Google Drive y fotos de trabajos estudiantiles.
+            </p>
           </button>
         </div>
       </div>
@@ -2086,6 +2176,185 @@ export const AcademicDirection: React.FC = () => {
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Subtab 6: Editor CRUD Completo para Retos Presenciales (Rally 30%) */}
+      {subTab === 'retos' && (
+        <div className="space-y-6 animate-fade-in">
+          {/* Header Banner */}
+          <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-[#721B32] text-white flex items-center justify-center font-bold shrink-0">
+                <Sparkles className="w-5 h-5 text-amber-300" />
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-[#721B32] uppercase tracking-wider">Módulo de Subdirección Académica</span>
+                <h3 className="text-base font-bold text-stone-900">Configuración & Edición de Retos Presenciales (Rally 30%)</h3>
+                <p className="text-xs text-stone-600 mt-0.5">
+                  Los docentes pueden personalizar el nombre, objetivo, espacio en plantel, materiales y dinámica para los 4 laboratorios/talleres del rally.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  // Save all 4 fichas
+                  (['programacion', 'comercio', 'rrhh', 'cosmetologia'] as SpecialtyId[]).forEach(id => {
+                    if (fichas[id]) {
+                      saveFichaAcademia(fichas[id]);
+                    }
+                  });
+                  setSavedNotice('¡Los 4 Retos Presenciales han sido actualizados y guardados con éxito!');
+                  setTimeout(() => setSavedNotice(null), 4000);
+                }}
+                className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
+              >
+                <Save className="w-4 h-4" />
+                <span>Guardar Cambios de Retos</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Grid of the 4 Specialties Retos Presenciales Editors */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {(['programacion', 'comercio', 'rrhh', 'cosmetologia'] as SpecialtyId[]).map(id => {
+              const ficha = fichas[id];
+              if (!ficha) return null;
+
+              const colors: Record<SpecialtyId, { border: string; bg: string; title: string }> = {
+                programacion: { border: 'border-blue-300', bg: 'bg-blue-50/40', title: '💻 1. Programación y Software' },
+                comercio: { border: 'border-amber-300', bg: 'bg-amber-50/40', title: '🌐 2. Comercio Exterior y Aduanas' },
+                rrhh: { border: 'border-purple-300', bg: 'bg-purple-50/40', title: '👥 3. Recursos Humanos' },
+                cosmetologia: { border: 'border-pink-300', bg: 'bg-pink-50/40', title: '✨ 4. Cosmetología y Cuidado Personal' }
+              };
+
+              const style = colors[id];
+
+              return (
+                <div key={id} className={`bg-white rounded-2xl border-2 ${style.border} p-5 shadow-xs space-y-4`}>
+                  <div className={`p-3 rounded-xl ${style.bg} border ${style.border} flex items-center justify-between`}>
+                    <h4 className="font-bold text-sm text-stone-900">{style.title}</h4>
+                    <span className="px-2 py-0.5 bg-stone-900 text-white font-mono-code text-[10px] font-bold rounded">
+                      Estación {id.toUpperCase()}
+                    </span>
+                  </div>
+
+                  {/* Form Fields for this Reto */}
+                  <div className="space-y-3 text-xs">
+                    <div>
+                      <label className="font-bold text-stone-800 block mb-1">Nombre de la Actividad / Reto Presencial:</label>
+                      <input
+                        type="text"
+                        value={ficha.reto_ludico.nombre}
+                        onChange={e => {
+                          const updated = {
+                            ...ficha,
+                            reto_ludico: { ...ficha.reto_ludico, nombre: e.target.value }
+                          };
+                          setFichas(prev => ({ ...prev, [id]: updated }));
+                          saveFichaAcademia(updated);
+                        }}
+                        className="w-full p-2 text-xs border border-stone-300 rounded-lg bg-stone-50 font-bold focus:bg-white focus:ring-1 focus:ring-[#721B32]"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="font-semibold text-stone-700 block mb-1">Espacio Requerido:</label>
+                        <select
+                          value={ficha.reto_ludico.espacio}
+                          onChange={e => {
+                            const updated = {
+                              ...ficha,
+                              reto_ludico: { ...ficha.reto_ludico, espacio: e.target.value as any }
+                            };
+                            setFichas(prev => ({ ...prev, [id]: updated }));
+                            saveFichaAcademia(updated);
+                          }}
+                          className="w-full p-2 text-xs border border-stone-300 rounded-lg bg-stone-50 font-medium"
+                        >
+                          <option value="Laboratorio">Laboratorio</option>
+                          <option value="Taller">Taller</option>
+                          <option value="Plaza Cívica">Plaza Cívica</option>
+                          <option value="Aula">Aula</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="font-semibold text-stone-700 block mb-1">Mobiliario / Red:</label>
+                        <input
+                          type="text"
+                          value={ficha.reto_ludico.mobiliario_conexiones}
+                          onChange={e => {
+                            const updated = {
+                              ...ficha,
+                              reto_ludico: { ...ficha.reto_ludico, mobiliario_conexiones: e.target.value }
+                            };
+                            setFichas(prev => ({ ...prev, [id]: updated }));
+                            saveFichaAcademia(updated);
+                          }}
+                          className="w-full p-2 text-xs border border-stone-300 rounded-lg bg-stone-50"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="font-semibold text-stone-700 block mb-1">Objetivo Pedagógico / Competencia:</label>
+                      <textarea
+                        rows={2}
+                        value={ficha.reto_ludico.objetivo}
+                        onChange={e => {
+                          const updated = {
+                            ...ficha,
+                            reto_ludico: { ...ficha.reto_ludico, objetivo: e.target.value }
+                          };
+                          setFichas(prev => ({ ...prev, [id]: updated }));
+                          saveFichaAcademia(updated);
+                        }}
+                        className="w-full p-2 text-xs border border-stone-300 rounded-lg bg-stone-50 focus:bg-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="font-semibold text-stone-700 block mb-1">Dinámica e Indicaciones para Alumnos:</label>
+                      <textarea
+                        rows={2}
+                        value={ficha.reto_ludico.dinamica}
+                        onChange={e => {
+                          const updated = {
+                            ...ficha,
+                            reto_ludico: { ...ficha.reto_ludico, dinamica: e.target.value }
+                          };
+                          setFichas(prev => ({ ...prev, [id]: updated }));
+                          saveFichaAcademia(updated);
+                        }}
+                        className="w-full p-2 text-xs border border-stone-300 rounded-lg bg-stone-50 focus:bg-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="font-semibold text-stone-700 block mb-1">Materiales e Instrumental Requerido:</label>
+                      <input
+                        type="text"
+                        value={ficha.reto_ludico.materiales_insumos}
+                        onChange={e => {
+                          const updated = {
+                            ...ficha,
+                            reto_ludico: { ...ficha.reto_ludico, materiales_insumos: e.target.value }
+                          };
+                          setFichas(prev => ({ ...prev, [id]: updated }));
+                          saveFichaAcademia(updated);
+                        }}
+                        className="w-full p-2 text-xs border border-stone-300 rounded-lg bg-stone-50"
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

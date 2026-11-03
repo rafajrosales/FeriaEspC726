@@ -365,7 +365,10 @@ export default function App() {
 
         {/* TAB 4: Fase Presencial (30% - Scanner & Rally) */}
         {activeTab === 'presencial' && (
-          <PresencialScanner estudianteActivo={estudianteActual} />
+          <PresencialScanner 
+            estudianteActivo={estudianteActual} 
+            onNavigateToDirection={() => handleNavTabChange('direccion')}
+          />
         )}
 
         {/* TAB 5: Dirección & Subdirección Académica */}
