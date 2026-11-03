@@ -919,6 +919,19 @@ export const AcademicDirection: React.FC = () => {
                       </tr>
                     );
                   })}
+                  {filteredEstudiantes.length === 0 && (
+                    <tr>
+                      <td colSpan={8} className="p-8 text-center text-stone-500">
+                        <div className="max-w-sm mx-auto space-y-2">
+                          <Users className="w-8 h-8 text-stone-300 mx-auto" />
+                          <div className="font-bold text-stone-700 text-sm">No hay alumnos en el padrón</div>
+                          <p className="text-xs text-stone-500">
+                            Actualmente el padrón contiene 0 alumnos. Puedes registrar nuevos alumnos desde el formulario de registro o restaurar los datos en "Respaldar y Reiniciar".
+                          </p>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -1384,6 +1397,19 @@ export const AcademicDirection: React.FC = () => {
                       </tr>
                     );
                   })}
+                  {docentesFiltrados.length === 0 && (
+                    <tr>
+                      <td colSpan={6} className="p-8 text-center text-stone-500">
+                        <div className="max-w-sm mx-auto space-y-2">
+                          <ShieldCheck className="w-8 h-8 text-stone-300 mx-auto" />
+                          <div className="font-bold text-stone-700 text-sm">No hay profesores registrados en el padrón</div>
+                          <p className="text-xs text-stone-500">
+                            Usa el botón "+ Dar de Alta Nuevo Profesor" para registrar personal o restaura el catálogo oficial con los 4 profesores de academia.
+                          </p>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>

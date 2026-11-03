@@ -562,14 +562,23 @@ export function saveEstudiante(estudiante: Estudiante): void {
 
 export function getEstudianteActivoNC(): string {
   initializeStorage();
-  return localStorage.getItem(STORAGE_KEYS.ESTUDIANTE_ACTIVO) || ESTUDIANTES_INICIALES[0].num_control;
+  const stored = localStorage.getItem(STORAGE_KEYS.ESTUDIANTE_ACTIVO);
+  if (stored) return stored;
+  const list = getEstudiantes();
+  if (list.length > 0) return list[0].num_control;
+  return '';
 }
 
 export function setEstudianteActivoNC(nc: string): void {
-  localStorage.setItem(STORAGE_KEYS.ESTUDIANTE_ACTIVO, nc);
+  if (!nc) {
+    localStorage.removeItem(STORAGE_KEYS.ESTUDIANTE_ACTIVO);
+  } else {
+    localStorage.setItem(STORAGE_KEYS.ESTUDIANTE_ACTIVO, nc);
+  }
 }
 
 export function getEvaluacionVocacional(nc: string): EvaluacionVocacional | null {
+  if (!nc) return null;
   initializeStorage();
   const raw = localStorage.getItem(STORAGE_KEYS.EVALUACIONES);
   const dict: Record<string, EvaluacionVocacional> = raw ? JSON.parse(raw) : {};
@@ -577,6 +586,7 @@ export function getEvaluacionVocacional(nc: string): EvaluacionVocacional | null
 }
 
 export function saveEvaluacionVocacional(evaluacion: EvaluacionVocacional): void {
+  if (!evaluacion || !evaluacion.num_control) return;
   initializeStorage();
   const raw = localStorage.getItem(STORAGE_KEYS.EVALUACIONES);
   const dict: Record<string, EvaluacionVocacional> = raw ? JSON.parse(raw) : {};
@@ -586,15 +596,17 @@ export function saveEvaluacionVocacional(evaluacion: EvaluacionVocacional): void
 
 export function getProgresoVirtual(nc: string): ProgresoVirtual {
   initializeStorage();
-  const raw = localStorage.getItem(STORAGE_KEYS.PROGRESOS);
-  const dict: Record<string, ProgresoVirtual> = raw ? JSON.parse(raw) : {};
-  if (dict[nc]) {
-    return dict[nc];
+  if (nc) {
+    const raw = localStorage.getItem(STORAGE_KEYS.PROGRESOS);
+    const dict: Record<string, ProgresoVirtual> = raw ? JSON.parse(raw) : {};
+    if (dict[nc]) {
+      return dict[nc];
+    }
   }
 
-  // Return empty progress structure
+  // Return empty progress structure safely
   const empty: ProgresoVirtual = {
-    num_control: nc,
+    num_control: nc || '',
     test_vocacional_completado: false,
     progreso_especialidades: {
       programacion: { video_visto: false, infografia_explorada: false, proyectos_revisados: false, quiz_aprobado: false, calificacion_quiz: 0 },
@@ -972,12 +984,20 @@ export function reiniciarSoloAlumnos(modo: 'iniciales' | 'limpiar'): void {
     localStorage.removeItem(STORAGE_KEYS.EVALUACIONES);
     localStorage.removeItem(STORAGE_KEYS.PROGRESOS);
     localStorage.removeItem(STORAGE_KEYS.ASISTENCIAS);
+    localStorage.removeItem(STORAGE_KEYS.ESTUDIANTE_ACTIVO);
     initializeStorage();
   } else {
     localStorage.setItem(STORAGE_KEYS.ESTUDIANTES, JSON.stringify([]));
     localStorage.setItem(STORAGE_KEYS.EVALUACIONES, JSON.stringify({}));
     localStorage.setItem(STORAGE_KEYS.PROGRESOS, JSON.stringify({}));
     localStorage.setItem(STORAGE_KEYS.ASISTENCIAS, JSON.stringify({}));
+    localStorage.removeItem(STORAGE_KEYS.ESTUDIANTE_ACTIVO);
+
+    // Si la sesión activa era de un alumno, cerrarla inmediatamente
+    const ses = getSesionActiva();
+    if (ses && ses.tipo === 'alumno') {
+      cerrarSesion();
+    }
   }
 }
 
@@ -986,6 +1006,14 @@ export function reiniciarSoloDocentes(modo: 'iniciales' | 'limpiar'): void {
     localStorage.setItem(STORAGE_KEYS.DOCENTES, JSON.stringify(DOCENTES_INICIALES));
   } else {
     localStorage.setItem(STORAGE_KEYS.DOCENTES, JSON.stringify([]));
+    // Mantener la sesión de administración disponible para no bloquear al directivo
+    const ses = getSesionActiva();
+    if (ses && ses.tipo === 'docente') {
+      setSesionActiva({
+        tipo: 'docente',
+        nombre: 'Dirección Académica (Administrador DGETI)'
+      });
+    }
   }
 }
 

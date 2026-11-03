@@ -786,6 +786,12 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
                     </span>
                   </button>
                 ))}
+                {estudiantesRegistrados.length === 0 && (
+                  <div className="col-span-1 sm:col-span-2 text-center p-4 bg-stone-50 rounded-xl border border-stone-200 text-xs text-stone-500 space-y-1">
+                    <p className="font-semibold text-stone-700">No hay alumnos registrados actualmente</p>
+                    <p className="text-[11px]">Por favor regístrate como nuevo estudiante en la pestaña <strong>"1. Registro"</strong>.</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>

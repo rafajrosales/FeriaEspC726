@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 
 interface StudentProfileBannerProps {
-  estudiante: Estudiante;
+  estudiante?: Estudiante | null;
   progreso: ProgresoVirtual;
   evaluacion: EvaluacionVocacional | null;
   asistencia: AsistenciaPresencial | null;
@@ -40,6 +40,10 @@ export const StudentProfileBanner: React.FC<StudentProfileBannerProps> = ({
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [modalSelfRegOpen, setModalSelfRegOpen] = useState(false);
   const [modalTutorSignOpen, setModalTutorSignOpen] = useState(false);
+
+  if (!estudiante) {
+    return null;
+  }
 
   const todosEstudiantes = getEstudiantes();
   const isTutorVerificado = Boolean(estudiante.tutor?.verificado);

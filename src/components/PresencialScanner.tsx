@@ -33,7 +33,7 @@ import confetti from 'canvas-confetti';
 import { COMIC_ASSETS } from '../assets/comicAssets';
 
 interface PresencialScannerProps {
-  estudianteActivo: Estudiante;
+  estudianteActivo?: Estudiante | null;
 }
 
 export const PresencialScanner: React.FC<PresencialScannerProps> = ({ estudianteActivo }) => {
@@ -50,12 +50,13 @@ export const PresencialScanner: React.FC<PresencialScannerProps> = ({ estudiante
 
   // Load active student by default if they have a token
   useEffect(() => {
+    if (!estudianteActivo?.num_control) return;
     const prog = getProgresoVirtual(estudianteActivo.num_control);
     if (prog.clave_unica_token) {
       setTokenInput(prog.clave_unica_token);
       validarToken(prog.clave_unica_token);
     }
-  }, [estudianteActivo.num_control]);
+  }, [estudianteActivo?.num_control]);
 
   const validarToken = (tokenToVerify: string) => {
     setErrorValidacion(null);

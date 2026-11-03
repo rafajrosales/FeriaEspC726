@@ -40,14 +40,44 @@ export default function App() {
   
   // Dynamic student state
   const estudiantes = getEstudiantes();
-  const estudianteActual = estudiantes.find(e => e.num_control === estudianteActivoNC) || estudiantes[0];
+  const estudianteActual = estudiantes.length > 0 
+    ? (estudiantes.find(e => e.num_control === estudianteActivoNC) || estudiantes[0])
+    : null;
   
-  const [progresoActual, setProgresoActual] = useState<ProgresoVirtual>(getProgresoVirtual(estudianteActual.num_control));
-  const [evaluacionActual, setEvaluacionActual] = useState<EvaluacionVocacional | null>(getEvaluacionVocacional(estudianteActual.num_control));
-  const [asistenciaActual, setAsistenciaActual] = useState<AsistenciaPresencial | null>(getAsistenciaPresencialByNC(estudianteActual.num_control));
+  const [progresoActual, setProgresoActual] = useState<ProgresoVirtual>(() =>
+    estudianteActual ? getProgresoVirtual(estudianteActual.num_control) : getProgresoVirtual('')
+  );
+  const [evaluacionActual, setEvaluacionActual] = useState<EvaluacionVocacional | null>(() =>
+    estudianteActual ? getEvaluacionVocacional(estudianteActual.num_control) : null
+  );
+  const [asistenciaActual, setAsistenciaActual] = useState<AsistenciaPresencial | null>(() =>
+    estudianteActual ? getAsistenciaPresencialByNC(estudianteActual.num_control) : null
+  );
+
+  // Sync state when cohort is reset or student switches
+  useEffect(() => {
+    if (estudianteActual) {
+      setProgresoActual(getProgresoVirtual(estudianteActual.num_control));
+      setEvaluacionActual(getEvaluacionVocacional(estudianteActual.num_control));
+      setAsistenciaActual(getAsistenciaPresencialByNC(estudianteActual.num_control));
+    } else {
+      setProgresoActual(getProgresoVirtual(''));
+      setEvaluacionActual(null);
+      setAsistenciaActual(null);
+    }
+  }, [estudianteActivoNC, estudianteActual?.num_control]);
+
+  // If active session belongs to an alumno but padron is at zero, clear session and return to gate
+  useEffect(() => {
+    if (sesionActiva?.tipo === 'alumno' && estudiantes.length === 0) {
+      cerrarSesion();
+      setSesionActivaState(null);
+    }
+  }, [sesionActiva?.tipo, estudiantes.length]);
 
   // Sync state when student switches
   const handleCambiarEstudiante = (nc: string) => {
+    if (!nc) return;
     setEstudianteActivoNC(nc);
     setEstudianteActivoNCState(nc);
     setProgresoActual(getProgresoVirtual(nc));
@@ -187,47 +217,87 @@ export default function App() {
 
         {/* Student Profile & Live Hybrid Progress Bar (Only shown in student workflows) */}
         {activeTab !== 'direccion' && (
-          <div className="no-print">
-            <StudentProfileBanner
-              estudiante={estudianteActual}
-              progreso={progresoActual}
-              evaluacion={evaluacionActual}
-              asistencia={asistenciaActual}
-              onCambiarEstudiante={handleCambiarEstudiante}
-              onVerPaseQR={() => setActiveTab('pase_qr')}
-              onStudentUpdated={(updated) => handleCambiarEstudiante(updated.num_control)}
-              onCerrarSesion={handleCerrarSesion}
-            />
-          </div>
+          estudianteActual ? (
+            <div className="no-print">
+              <StudentProfileBanner
+                estudiante={estudianteActual}
+                progreso={progresoActual}
+                evaluacion={evaluacionActual}
+                asistencia={asistenciaActual}
+                onCambiarEstudiante={handleCambiarEstudiante}
+                onVerPaseQR={() => setActiveTab('pase_qr')}
+                onStudentUpdated={(updated) => handleCambiarEstudiante(updated.num_control)}
+                onCerrarSesion={handleCerrarSesion}
+              />
+            </div>
+          ) : (
+            <div className="no-print bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 sm:p-5 text-amber-950 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-200 text-amber-900 flex items-center justify-center shrink-0">
+                  <Sparkles className="w-5 h-5 text-amber-800" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-sm">Padrón de Alumnos Actualmente en Cero</h4>
+                  <p className="text-xs text-amber-900/80">
+                    Se reinició el sistema a cero estudiantes. Puedes acudir a Dirección para dar de alta alumnos o restaurar el padrón del plantel.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setActiveTab('direccion')}
+                className="px-3.5 py-2 text-xs font-bold text-white bg-[#721B32] hover:bg-[#5b1528] rounded-xl shadow-xs transition-colors cursor-pointer shrink-0"
+              >
+                Ir a Dirección Académica
+              </button>
+            </div>
+          )
         )}
 
         {/* TAB 1: Test Vocacional Dual (Aptitud vs Interés) */}
         {activeTab === 'vocacional' && (
-          <div className="space-y-6">
-            <VocationalDiagnostic
-              numControl={estudianteActual.num_control}
-              evaluacionExistente={evaluacionActual}
-              onCompletar={handleCompletarEvaluacionVocacional}
-            />
+          estudianteActual ? (
+            <div className="space-y-6">
+              <VocationalDiagnostic
+                numControl={estudianteActual.num_control}
+                evaluacionExistente={evaluacionActual}
+                onCompletar={handleCompletarEvaluacionVocacional}
+              />
 
-            {evaluacionActual && (
-              <div className="no-print bg-white p-5 rounded-xl border border-stone-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <h4 className="text-sm font-bold text-stone-900">¿Listo para explorar la oferta académica?</h4>
-                  <p className="text-xs text-stone-600 mt-0.5">
-                    Conoce a fondo las 4 especialidades del CETis 7 y responde sus cuestionarios de lectura para avanzar hacia tu Pase Digital QR.
-                  </p>
+              {evaluacionActual && (
+                <div className="no-print bg-white p-5 rounded-xl border border-stone-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <h4 className="text-sm font-bold text-stone-900">¿Listo para explorar la oferta académica?</h4>
+                    <p className="text-xs text-stone-600 mt-0.5">
+                      Conoce a fondo las 4 especialidades del CETis 7 y responde sus cuestionarios de lectura para avanzar hacia tu Pase Digital QR.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setActiveTab('modulos')}
+                    className="px-5 py-2.5 text-xs font-semibold text-white bg-[#721B32] hover:bg-[#5b1528] rounded-lg transition-colors flex items-center gap-2 whitespace-nowrap shadow-2xs"
+                  >
+                    Continuar a Especialidades (Paso 2)
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
                 </div>
-                <button
-                  onClick={() => setActiveTab('modulos')}
-                  className="px-5 py-2.5 text-xs font-semibold text-white bg-[#721B32] hover:bg-[#5b1528] rounded-lg transition-colors flex items-center gap-2 whitespace-nowrap shadow-2xs"
-                >
-                  Continuar a Especialidades (Paso 2)
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+              )}
+            </div>
+          ) : (
+            <div className="bg-white rounded-2xl border border-stone-200 p-8 text-center space-y-4 shadow-xs">
+              <div className="w-16 h-16 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center mx-auto">
+                <Compass className="w-8 h-8" />
               </div>
-            )}
-          </div>
+              <h3 className="text-lg font-bold text-stone-900">No hay alumno seleccionado</h3>
+              <p className="text-xs text-stone-600 max-w-md mx-auto">
+                El test vocacional dual requiere un alumno registrado para guardar sus aptitudes e intereses.
+              </p>
+              <button
+                onClick={() => setActiveTab('direccion')}
+                className="px-4 py-2 text-xs font-bold text-white bg-[#721B32] hover:bg-[#5b1528] rounded-xl cursor-pointer"
+              >
+                Abrir Dirección Académica
+              </button>
+            </div>
+          )
         )}
 
         {/* TAB 2: Módulos de Especialidad (4 Carreras) */}
