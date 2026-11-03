@@ -198,7 +198,11 @@ export const BackupAndResetModal: React.FC<BackupAndResetModalProps> = ({
     try {
       // Step 1: Automatic backup if checked
       if (autoBackupBeforeReset) {
-        descargarRespaldoJSON();
+        try {
+          descargarRespaldoJSON();
+        } catch {
+          // Safe ignore if popup blocker prevents download during reset
+        }
       }
 
       // Step 2: Execute requested scope
@@ -222,11 +226,11 @@ export const BackupAndResetModal: React.FC<BackupAndResetModalProps> = ({
       setTimeout(() => {
         onClose();
       }, 1400);
-    } catch {
+    } catch (err: any) {
       setIsProcessing(false);
       setStatusMessage({
         type: 'error',
-        text: 'Ocurrió un error al procesar el reinicio.'
+        text: `Ocurrió un error al procesar el reinicio: ${err?.message || 'Error desconocido'}`
       });
     }
   };
