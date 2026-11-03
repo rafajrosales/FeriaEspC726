@@ -15,7 +15,9 @@ import {
   eliminarDocente,
   descargarRespaldoJSON
 } from '../services/storage';
-import { SpecialtyId, FichaAcademiaReq, OficioCircular, DocenteAutorizado, Estudiante } from '../types';
+import { SpecialtyId, FichaAcademiaReq, OficioCircular, DocenteAutorizado, Estudiante, ItemGaleriaAlumno, VideoAcademiaDocente, ReactivoExamen } from '../types';
+import { parseEmbedMediaUrl } from '../utils/media';
+import { ESPECIALIDADES, FICHAS_ACADEMIA_DEFAULT } from '../data/mockData';
 import { BackupAndResetModal } from './BackupAndResetModal';
 import { 
   BarChart3, 
@@ -42,7 +44,13 @@ import {
   Building2,
   X,
   Search,
-  Check
+  Check,
+  Video,
+  Image as ImageIcon,
+  Plus,
+  Film,
+  Link,
+  Play
 } from 'lucide-react';
 import { MatriculaDashboard } from './MatriculaDashboard';
 
@@ -85,9 +93,159 @@ export const AcademicDirection: React.FC = () => {
   const [mostrarModalRespaldo, setMostrarModalRespaldo] = useState(false);
   const [modoInicialRespaldo, setModoInicialRespaldo] = useState<'respaldar' | 'reiniciar' | 'restaurar'>('respaldar');
 
+  // Reactivos CRUD state
+  const [modalReactivoOpen, setModalReactivoOpen] = useState(false);
+  const [editandoReactivoIndex, setEditandoReactivoIndex] = useState<number | null>(null);
+  const [reactivoPregunta, setReactivoPregunta] = useState('');
+  const [reactivoOpciones, setReactivoOpciones] = useState<string[]>(['', '', '']);
+  const [reactivoCorrecta, setReactivoCorrecta] = useState<'a' | 'b' | 'c' | 'd'>('a');
+  const [reactivoExplicacion, setReactivoExplicacion] = useState('');
+  const [reactivoError, setReactivoError] = useState<string | null>(null);
+
   const [estudiantesList, setEstudiantesList] = useState<Estudiante[]>(() => getEstudiantes());
   const estudiantes = estudiantesList;
   const currentFicha = fichas[selectedAcademia];
+
+  const handleAbrirNuevoReactivo = () => {
+    setEditandoReactivoIndex(null);
+    setReactivoPregunta('');
+    setReactivoOpciones(['', '', '']);
+    setReactivoCorrecta('a');
+    setReactivoExplicacion('');
+    setReactivoError(null);
+    setModalReactivoOpen(true);
+  };
+
+  const handleAbrirEditarReactivo = (idx: number) => {
+    const r = currentFicha.banco_reactivos[idx];
+    if (!r) return;
+    setEditandoReactivoIndex(idx);
+    setReactivoPregunta(r.pregunta);
+    setReactivoOpciones(r.opciones.length >= 3 ? [...r.opciones] : [...r.opciones, '']);
+    const c = r.correcta.toLowerCase();
+    setReactivoCorrecta(c === 'b' ? 'b' : c === 'c' ? 'c' : c === 'd' ? 'd' : 'a');
+    setReactivoExplicacion(r.explicacion || '');
+    setReactivoError(null);
+    setModalReactivoOpen(true);
+  };
+
+  const handleEliminarReactivo = (idx: number) => {
+    if (window.confirm(`¿Estás seguro de eliminar el Reactivo #${idx + 1} de este banco de preguntas?`)) {
+      const updatedReactivos = currentFicha.banco_reactivos.filter((_, i) => i !== idx);
+      const updatedFicha: FichaAcademiaReq = {
+        ...currentFicha,
+        banco_reactivos: updatedReactivos
+      };
+      setFichas(prev => ({ ...prev, [selectedAcademia]: updatedFicha }));
+      saveFichaAcademia(updatedFicha);
+
+      // Sync in-memory
+      const spec = ESPECIALIDADES.find(s => s.id === currentFicha.especialidad_id);
+      if (spec) {
+        const letraIdxMap: Record<string, number> = { a: 0, b: 1, c: 2, d: 3 };
+        spec.preguntas_quiz = updatedReactivos.map((r, i) => ({
+          id: i + 1,
+          pregunta: r.pregunta,
+          opciones: r.opciones,
+          respuesta_correcta: letraIdxMap[r.correcta.toLowerCase()] ?? 0,
+          explicacion: r.explicacion || `La opción oficial correcta es la (${r.correcta.toUpperCase()}).`
+        }));
+      }
+
+      setSavedNotice(`Reactivo #${idx + 1} eliminado correctamente.`);
+      setTimeout(() => setSavedNotice(null), 3000);
+    }
+  };
+
+  const handleRestablecerReactivosOriginales = () => {
+    if (window.confirm(`¿Restablecer los 5 reactivos originales sugeridos por la Academia de ${currentFicha.nombre_especialidad}?`)) {
+      const reactivosDefault = FICHAS_ACADEMIA_DEFAULT[selectedAcademia]?.banco_reactivos || [];
+      const updatedFicha: FichaAcademiaReq = {
+        ...currentFicha,
+        banco_reactivos: JSON.parse(JSON.stringify(reactivosDefault))
+      };
+      setFichas(prev => ({ ...prev, [selectedAcademia]: updatedFicha }));
+      saveFichaAcademia(updatedFicha);
+
+      // Sync in-memory
+      const spec = ESPECIALIDADES.find(s => s.id === currentFicha.especialidad_id);
+      if (spec) {
+        const letraIdxMap: Record<string, number> = { a: 0, b: 1, c: 2, d: 3 };
+        spec.preguntas_quiz = reactivosDefault.map((r, i) => ({
+          id: i + 1,
+          pregunta: r.pregunta,
+          opciones: r.opciones,
+          respuesta_correcta: letraIdxMap[r.correcta.toLowerCase()] ?? 0,
+          explicacion: r.explicacion || `La opción oficial correcta es la (${r.correcta.toUpperCase()}).`
+        }));
+      }
+
+      setSavedNotice(`Reactivos oficiales de ${currentFicha.nombre_especialidad} restablecidos.`);
+      setTimeout(() => setSavedNotice(null), 3000);
+    }
+  };
+
+  const handleGuardarReactivoSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setReactivoError(null);
+
+    const cleanPregunta = reactivoPregunta.trim();
+    if (!cleanPregunta || cleanPregunta.length < 6) {
+      setReactivoError('Por favor redacta la pregunta completa (mínimo 6 caracteres).');
+      return;
+    }
+
+    const cleanOpciones = reactivoOpciones.map(o => o.trim()).filter(o => o.length > 0);
+    if (cleanOpciones.length < 2) {
+      setReactivoError('Debes ingresar al menos 2 opciones de respuesta válidas.');
+      return;
+    }
+
+    const letraIdxMap: Record<string, number> = { a: 0, b: 1, c: 2, d: 3 };
+    const correctIdx = letraIdxMap[reactivoCorrecta] ?? 0;
+    if (correctIdx >= cleanOpciones.length) {
+      setReactivoError(`La opción correcta seleccionada (${reactivoCorrecta.toUpperCase()}) no tiene texto. Selecciona una opción con contenido.`);
+      return;
+    }
+
+    const nuevoReactivo: ReactivoExamen = {
+      pregunta: cleanPregunta,
+      opciones: cleanOpciones,
+      correcta: reactivoCorrecta,
+      explicacion: reactivoExplicacion.trim() || `La opción correcta oficial es la (${reactivoCorrecta.toUpperCase()}).`
+    };
+
+    let updatedReactivos = [...currentFicha.banco_reactivos];
+    if (editandoReactivoIndex === null) {
+      updatedReactivos.push(nuevoReactivo);
+    } else {
+      updatedReactivos[editandoReactivoIndex] = nuevoReactivo;
+    }
+
+    const updatedFicha: FichaAcademiaReq = {
+      ...currentFicha,
+      banco_reactivos: updatedReactivos
+    };
+
+    setFichas(prev => ({ ...prev, [selectedAcademia]: updatedFicha }));
+    saveFichaAcademia(updatedFicha);
+
+    // Sync directly to in-memory ESPECIALIDADES
+    const spec = ESPECIALIDADES.find(s => s.id === currentFicha.especialidad_id);
+    if (spec) {
+      spec.preguntas_quiz = updatedReactivos.map((r, i) => ({
+        id: i + 1,
+        pregunta: r.pregunta,
+        opciones: r.opciones,
+        respuesta_correcta: letraIdxMap[r.correcta.toLowerCase()] ?? 0,
+        explicacion: r.explicacion || `La opción correcta oficial es la (${r.correcta.toUpperCase()}).`
+      }));
+    }
+
+    setModalReactivoOpen(false);
+    setSavedNotice(editandoReactivoIndex === null ? '¡Nuevo reactivo agregado exitosamente al banco!' : '¡Reactivo actualizado exitosamente!');
+    setTimeout(() => setSavedNotice(null), 3500);
+  };
 
   const handleDataChanged = () => {
     setEstudiantesList(getEstudiantes());
@@ -210,8 +368,30 @@ export const AcademicDirection: React.FC = () => {
 
   const handleSaveFicha = () => {
     saveFichaAcademia(currentFicha);
-    setSavedNotice('Ficha de Academia guardada con éxito.');
-    setTimeout(() => setSavedNotice(null), 3000);
+
+    // Sync to in-memory ESPECIALIDADES so student views reflect updates immediately
+    const spec = ESPECIALIDADES.find(s => s.id === currentFicha.especialidad_id);
+    if (spec) {
+      if (currentFicha.recursos_multimedia.video_academia) {
+        spec.video_academia = currentFicha.recursos_multimedia.video_academia;
+      }
+      if (currentFicha.recursos_multimedia.galeria_alumnos) {
+        spec.galeria_alumnos = currentFicha.recursos_multimedia.galeria_alumnos;
+      }
+      if (currentFicha.banco_reactivos && currentFicha.banco_reactivos.length > 0) {
+        const letraIdxMap: Record<string, number> = { a: 0, b: 1, c: 2, d: 3 };
+        spec.preguntas_quiz = currentFicha.banco_reactivos.map((r, i) => ({
+          id: i + 1,
+          pregunta: r.pregunta,
+          opciones: r.opciones,
+          respuesta_correcta: letraIdxMap[r.correcta.toLowerCase()] ?? 0,
+          explicacion: r.explicacion || `La opción oficial correcta es la (${r.correcta.toUpperCase()}).`
+        }));
+      }
+    }
+
+    setSavedNotice('Ficha de Academia guardada y sincronizada con éxito con la plataforma de estudiantes.');
+    setTimeout(() => setSavedNotice(null), 3500);
   };
 
   const handleSaveOficio = () => {
@@ -509,36 +689,523 @@ export const AcademicDirection: React.FC = () => {
               </div>
 
               <div>
-                <label className="font-semibold text-stone-800 block mb-1">
-                  2. RECURSOS MULTIMEDIA (Carpeta Drive Institucional)
+                <label className="font-semibold text-stone-800 block mb-2 text-sm flex items-center justify-between">
+                  <span className="flex items-center gap-1.5 font-bold">
+                    <Video className="w-4 h-4 text-[#721B32]" />
+                    2. RECURSOS MULTIMEDIA Y GALERÍA AUDIOVISUAL DE LA ACADEMIA
+                  </span>
+                  <span className="text-xs text-stone-500 font-normal">Soporte YouTube y Google Drive</span>
                 </label>
-                <div className="p-3 bg-stone-50 rounded border border-stone-200 space-y-2 text-[11px]">
-                  <div>[ ✓ ] Video promocional/explicativo: {currentFicha.recursos_multimedia.video_url_o_estado}</div>
-                  <div>[ ✓ ] Infografía digital: {currentFicha.recursos_multimedia.infografia_formato}</div>
-                  <div>[ ✓ ] 3 Proyectos destacados: {currentFicha.recursos_multimedia.proyectos_registrados.join(' · ')}</div>
+
+                <div className="space-y-4 bg-stone-50 p-4 rounded-xl border border-stone-300">
+                  {/* SECCIÓN A: Video de la Academia realizado por los profesores */}
+                  <div className="bg-white p-4 rounded-lg border border-stone-200 space-y-3">
+                    <div className="flex items-center justify-between border-b border-stone-200 pb-2">
+                      <span className="font-bold text-stone-900 text-xs flex items-center gap-1.5">
+                        <Video className="w-4 h-4 text-[#721B32]" />
+                        a) Video Oficial de la Academia (Realizado por Profesores)
+                      </span>
+                      {(() => {
+                        const url = currentFicha.recursos_multimedia.video_academia?.url_video || '';
+                        const parsed = parseEmbedMediaUrl(url);
+                        return (
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                            parsed.type === 'youtube' ? 'bg-red-100 text-red-800 border border-red-200' :
+                            parsed.type === 'drive' ? 'bg-blue-100 text-blue-800 border border-blue-200' :
+                            'bg-stone-100 text-stone-700'
+                          }`}>
+                            {parsed.providerLabel}
+                          </span>
+                        );
+                      })()}
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                      <div className="md:col-span-2">
+                        <label className="font-semibold text-stone-700 block mb-0.5">
+                          Enlace de Video (YouTube o Google Drive):
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Ej: https://www.youtube.com/watch?v=... o https://drive.google.com/file/d/.../view"
+                          value={currentFicha.recursos_multimedia.video_academia?.url_video || ''}
+                          onChange={e => {
+                            const currentVal = currentFicha.recursos_multimedia.video_academia || {
+                              titulo: `Video Oficial de la Academia de ${currentFicha.nombre_especialidad}`,
+                              duracion: '3:30 min',
+                              presentador: currentFicha.presidente_academia,
+                              descripcion: currentFicha.resumen_ejecutivo,
+                              url_video: ''
+                            };
+                            const updatedVid = { ...currentVal, url_video: e.target.value };
+                            const updatedFicha = {
+                              ...currentFicha,
+                              recursos_multimedia: {
+                                ...currentFicha.recursos_multimedia,
+                                video_academia: updatedVid
+                              }
+                            };
+                            setFichas(prev => ({ ...prev, [selectedAcademia]: updatedFicha }));
+                          }}
+                          className="w-full p-2 text-xs border border-stone-300 rounded bg-stone-50 font-mono-code focus:ring-1 focus:ring-[#721B32]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="font-semibold text-stone-700 block mb-0.5">Título del Video Oficial:</label>
+                        <input
+                          type="text"
+                          value={currentFicha.recursos_multimedia.video_academia?.titulo || `Video Oficial de ${currentFicha.nombre_especialidad}`}
+                          onChange={e => {
+                            const currentVal = currentFicha.recursos_multimedia.video_academia || {
+                              titulo: '',
+                              duracion: '3:30 min',
+                              presentador: currentFicha.presidente_academia,
+                              descripcion: currentFicha.resumen_ejecutivo,
+                              url_video: ''
+                            };
+                            const updatedVid = { ...currentVal, titulo: e.target.value };
+                            const updatedFicha = {
+                              ...currentFicha,
+                              recursos_multimedia: {
+                                ...currentFicha.recursos_multimedia,
+                                video_academia: updatedVid
+                              }
+                            };
+                            setFichas(prev => ({ ...prev, [selectedAcademia]: updatedFicha }));
+                          }}
+                          className="w-full p-2 text-xs border border-stone-300 rounded bg-stone-50"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="font-semibold text-stone-700 block mb-0.5">Docente / Presentador:</label>
+                        <input
+                          type="text"
+                          value={currentFicha.recursos_multimedia.video_academia?.presentador || currentFicha.presidente_academia}
+                          onChange={e => {
+                            const currentVal = currentFicha.recursos_multimedia.video_academia || {
+                              titulo: `Video Oficial de ${currentFicha.nombre_especialidad}`,
+                              duracion: '3:30 min',
+                              presentador: '',
+                              descripcion: currentFicha.resumen_ejecutivo,
+                              url_video: ''
+                            };
+                            const updatedVid = { ...currentVal, presentador: e.target.value };
+                            const updatedFicha = {
+                              ...currentFicha,
+                              recursos_multimedia: {
+                                ...currentFicha.recursos_multimedia,
+                                video_academia: updatedVid
+                              }
+                            };
+                            setFichas(prev => ({ ...prev, [selectedAcademia]: updatedFicha }));
+                          }}
+                          className="w-full p-2 text-xs border border-stone-300 rounded bg-stone-50"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="font-semibold text-stone-700 block mb-0.5">Duración (ej: 4:15 min):</label>
+                        <input
+                          type="text"
+                          value={currentFicha.recursos_multimedia.video_academia?.duracion || '3:30 min'}
+                          onChange={e => {
+                            const currentVal = currentFicha.recursos_multimedia.video_academia || {
+                              titulo: `Video Oficial de ${currentFicha.nombre_especialidad}`,
+                              duracion: '3:30 min',
+                              presentador: currentFicha.presidente_academia,
+                              descripcion: currentFicha.resumen_ejecutivo,
+                              url_video: ''
+                            };
+                            const updatedVid = { ...currentVal, duracion: e.target.value };
+                            const updatedFicha = {
+                              ...currentFicha,
+                              recursos_multimedia: {
+                                ...currentFicha.recursos_multimedia,
+                                video_academia: updatedVid
+                              }
+                            };
+                            setFichas(prev => ({ ...prev, [selectedAcademia]: updatedFicha }));
+                          }}
+                          className="w-full p-2 text-xs border border-stone-300 rounded bg-stone-50 font-mono-code"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="font-semibold text-stone-700 block mb-0.5">Sinopsis / Descripción Pedagógica:</label>
+                        <input
+                          type="text"
+                          value={currentFicha.recursos_multimedia.video_academia?.descripcion || ''}
+                          onChange={e => {
+                            const currentVal = currentFicha.recursos_multimedia.video_academia || {
+                              titulo: `Video Oficial de ${currentFicha.nombre_especialidad}`,
+                              duracion: '3:30 min',
+                              presentador: currentFicha.presidente_academia,
+                              descripcion: '',
+                              url_video: ''
+                            };
+                            const updatedVid = { ...currentVal, descripcion: e.target.value };
+                            const updatedFicha = {
+                              ...currentFicha,
+                              recursos_multimedia: {
+                                ...currentFicha.recursos_multimedia,
+                                video_academia: updatedVid
+                              }
+                            };
+                            setFichas(prev => ({ ...prev, [selectedAcademia]: updatedFicha }));
+                          }}
+                          className="w-full p-2 text-xs border border-stone-300 rounded bg-stone-50"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* SECCIÓN B: Galería con videos o fotos de los trabajos realizados por los alumnos */}
+                  <div className="bg-white p-4 rounded-lg border border-stone-200 space-y-3">
+                    <div className="flex items-center justify-between border-b border-stone-200 pb-2">
+                      <span className="font-bold text-stone-900 text-xs flex items-center gap-1.5">
+                        <Film className="w-4 h-4 text-[#721B32]" />
+                        b) Galería con videos o fotos de los trabajos realizados por los alumnos
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const currentGal = currentFicha.recursos_multimedia.galeria_alumnos || [];
+                          const nuevoItem: ItemGaleriaAlumno = {
+                            id: `gal-${Date.now()}`,
+                            titulo: 'Nuevo Proyecto de Alumnos',
+                            alumnos: 'Equipo de Estudiantes',
+                            semestre: '5° Semestre',
+                            tipo: 'video',
+                            url_media: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+                            descripcion: 'Descripción del trabajo desarrollado en laboratorio.'
+                          };
+                          const updatedFicha = {
+                            ...currentFicha,
+                            recursos_multimedia: {
+                              ...currentFicha.recursos_multimedia,
+                              galeria_alumnos: [...currentGal, nuevoItem]
+                            }
+                          };
+                          setFichas(prev => ({ ...prev, [selectedAcademia]: updatedFicha }));
+                        }}
+                        className="px-2.5 py-1 bg-[#721B32] text-white rounded text-[11px] font-bold flex items-center gap-1 hover:bg-[#5c1628] transition-colors cursor-pointer"
+                      >
+                        <Plus className="w-3.5 h-3.5" /> Agregar Trabajo de Alumno
+                      </button>
+                    </div>
+
+                    <div className="space-y-3">
+                      {((currentFicha.recursos_multimedia.galeria_alumnos && currentFicha.recursos_multimedia.galeria_alumnos.length > 0)
+                        ? currentFicha.recursos_multimedia.galeria_alumnos
+                        : []
+                      ).map((item, idx) => {
+                        const parsed = parseEmbedMediaUrl(item.url_media, item.tipo);
+
+                        return (
+                          <div key={item.id || idx} className="p-3 bg-stone-50 border border-stone-200 rounded-lg space-y-2 text-xs">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="font-bold text-stone-900 flex items-center gap-1.5">
+                                #{idx + 1}
+                                <span className={`px-1.5 py-0.5 rounded text-[10px] uppercase font-mono-code ${
+                                  item.tipo === 'video' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
+                                }`}>
+                                  {item.tipo}
+                                </span>
+                                {item.titulo}
+                              </span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-[10px] text-stone-500 font-mono-code">{parsed.providerLabel}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const currentGal = currentFicha.recursos_multimedia.galeria_alumnos || [];
+                                    const updatedGal = currentGal.filter(g => g.id !== item.id);
+                                    const updatedFicha = {
+                                      ...currentFicha,
+                                      recursos_multimedia: {
+                                        ...currentFicha.recursos_multimedia,
+                                        galeria_alumnos: updatedGal
+                                      }
+                                    };
+                                    setFichas(prev => ({ ...prev, [selectedAcademia]: updatedFicha }));
+                                  }}
+                                  className="text-red-600 hover:text-red-800 p-1 cursor-pointer"
+                                  title="Eliminar este trabajo"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                              <div>
+                                <label className="font-semibold text-stone-700 text-[10px] block">Título:</label>
+                                <input
+                                  type="text"
+                                  value={item.titulo}
+                                  onChange={e => {
+                                    const currentGal = currentFicha.recursos_multimedia.galeria_alumnos || [];
+                                    const updatedGal = currentGal.map(g => g.id === item.id ? { ...g, titulo: e.target.value } : g);
+                                    setFichas(prev => ({
+                                      ...prev,
+                                      [selectedAcademia]: {
+                                        ...currentFicha,
+                                        recursos_multimedia: { ...currentFicha.recursos_multimedia, galeria_alumnos: updatedGal }
+                                      }
+                                    }));
+                                  }}
+                                  className="w-full p-1.5 text-xs border border-stone-300 rounded bg-white"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="font-semibold text-stone-700 text-[10px] block">Alumnos Autores:</label>
+                                <input
+                                  type="text"
+                                  value={item.alumnos}
+                                  onChange={e => {
+                                    const currentGal = currentFicha.recursos_multimedia.galeria_alumnos || [];
+                                    const updatedGal = currentGal.map(g => g.id === item.id ? { ...g, alumnos: e.target.value } : g);
+                                    setFichas(prev => ({
+                                      ...prev,
+                                      [selectedAcademia]: {
+                                        ...currentFicha,
+                                        recursos_multimedia: { ...currentFicha.recursos_multimedia, galeria_alumnos: updatedGal }
+                                      }
+                                    }));
+                                  }}
+                                  className="w-full p-1.5 text-xs border border-stone-300 rounded bg-white"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="font-semibold text-stone-700 text-[10px] block">Semestre:</label>
+                                <input
+                                  type="text"
+                                  value={item.semestre}
+                                  onChange={e => {
+                                    const currentGal = currentFicha.recursos_multimedia.galeria_alumnos || [];
+                                    const updatedGal = currentGal.map(g => g.id === item.id ? { ...g, semestre: e.target.value } : g);
+                                    setFichas(prev => ({
+                                      ...prev,
+                                      [selectedAcademia]: {
+                                        ...currentFicha,
+                                        recursos_multimedia: { ...currentFicha.recursos_multimedia, galeria_alumnos: updatedGal }
+                                      }
+                                    }));
+                                  }}
+                                  className="w-full p-1.5 text-xs border border-stone-300 rounded bg-white"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="font-semibold text-stone-700 text-[10px] block">Tipo de Medio:</label>
+                                <select
+                                  value={item.tipo}
+                                  onChange={e => {
+                                    const currentGal = currentFicha.recursos_multimedia.galeria_alumnos || [];
+                                    const updatedGal = currentGal.map(g => g.id === item.id ? { ...g, tipo: e.target.value as 'video' | 'foto' } : g);
+                                    setFichas(prev => ({
+                                      ...prev,
+                                      [selectedAcademia]: {
+                                        ...currentFicha,
+                                        recursos_multimedia: { ...currentFicha.recursos_multimedia, galeria_alumnos: updatedGal }
+                                      }
+                                    }));
+                                  }}
+                                  className="w-full p-1.5 text-xs border border-stone-300 rounded bg-white font-medium"
+                                >
+                                  <option value="video">Video (YouTube / Drive)</option>
+                                  <option value="foto">Fotografía / Imagen</option>
+                                </select>
+                              </div>
+
+                              <div className="sm:col-span-2 lg:col-span-4">
+                                <label className="font-semibold text-stone-700 text-[10px] block">URL de Media (YouTube / Google Drive / Foto):</label>
+                                <input
+                                  type="text"
+                                  value={item.url_media}
+                                  onChange={e => {
+                                    const currentGal = currentFicha.recursos_multimedia.galeria_alumnos || [];
+                                    const updatedGal = currentGal.map(g => g.id === item.id ? { ...g, url_media: e.target.value } : g);
+                                    setFichas(prev => ({
+                                      ...prev,
+                                      [selectedAcademia]: {
+                                        ...currentFicha,
+                                        recursos_multimedia: { ...currentFicha.recursos_multimedia, galeria_alumnos: updatedGal }
+                                      }
+                                    }));
+                                  }}
+                                  className="w-full p-1.5 text-xs border border-stone-300 rounded bg-white font-mono-code"
+                                />
+                              </div>
+
+                              <div className="sm:col-span-2 lg:col-span-4">
+                                <label className="font-semibold text-stone-700 text-[10px] block">Descripción corta del proyecto:</label>
+                                <input
+                                  type="text"
+                                  value={item.descripcion}
+                                  onChange={e => {
+                                    const currentGal = currentFicha.recursos_multimedia.galeria_alumnos || [];
+                                    const updatedGal = currentGal.map(g => g.id === item.id ? { ...g, descripcion: e.target.value } : g);
+                                    setFichas(prev => ({
+                                      ...prev,
+                                      [selectedAcademia]: {
+                                        ...currentFicha,
+                                        recursos_multimedia: { ...currentFicha.recursos_multimedia, galeria_alumnos: updatedGal }
+                                      }
+                                    }));
+                                  }}
+                                  className="w-full p-1.5 text-xs border border-stone-300 rounded bg-white"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div>
-                <label className="font-semibold text-stone-800 block mb-1">
-                  3. BANCO DE REACTIVOS DE COMPROBACIÓN DE LECTURA (5 Preguntas)
-                </label>
-                <div className="space-y-2">
-                  {currentFicha.banco_reactivos.map((r, rIdx) => (
-                    <div key={rIdx} className="p-2.5 bg-stone-50 rounded border border-stone-200 space-y-1">
-                      <div className="font-semibold text-stone-900">
-                        • Pregunta {rIdx + 1}: {r.pregunta}
+              {/* SECCIÓN 3: BANCO DE REACTIVOS CRUD */}
+              <div className="space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-stone-200 pb-2">
+                  <div>
+                    <label className="font-bold text-stone-900 block text-xs flex items-center gap-2">
+                      <span>3. BANCO DE REACTIVOS DE COMPROBACIÓN DE LECTURA</span>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono-code font-bold bg-[#721B32]/10 text-[#721B32]">
+                        {currentFicha.banco_reactivos.length} {currentFicha.banco_reactivos.length === 1 ? 'reactivo' : 'reactivos'}
+                      </span>
+                    </label>
+                    <span className="text-[11px] text-stone-500">
+                      Gestiona las preguntas evaluativas del quiz que responden los alumnos para su acreditación virtual.
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 shrink-0 self-start sm:self-center">
+                    <button
+                      type="button"
+                      onClick={handleRestablecerReactivosOriginales}
+                      title="Restablecer los reactivos originales sugeridos para esta academia"
+                      className="px-2.5 py-1 text-[11px] font-semibold text-stone-700 bg-white border border-stone-300 hover:bg-stone-50 rounded-lg transition-colors flex items-center gap-1 shadow-2xs cursor-pointer"
+                    >
+                      <RotateCcw className="w-3 h-3 text-stone-500" />
+                      <span>Restablecer</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleAbrirNuevoReactivo}
+                      className="px-3 py-1 bg-[#721B32] hover:bg-[#5b1528] text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>+ Nuevo Reactivo</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Reactivos List */}
+                <div className="space-y-3">
+                  {currentFicha.banco_reactivos.map((r, rIdx) => {
+                    const letraIdxMap: Record<string, number> = { a: 0, b: 1, c: 2, d: 3 };
+                    const correctIdx = letraIdxMap[r.correcta.toLowerCase()] ?? 0;
+
+                    return (
+                      <div
+                        key={rIdx}
+                        className="p-3.5 bg-stone-50/80 rounded-xl border border-stone-200 hover:border-stone-300 transition-all space-y-2.5 shadow-2xs"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="px-2 py-0.5 rounded bg-stone-200/80 text-stone-800 text-[10px] font-mono-code font-bold">
+                              Pregunta #{rIdx + 1}
+                            </span>
+                            <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] font-bold flex items-center gap-1">
+                              <Check className="w-3 h-3 text-emerald-600" />
+                              Correcta: ({r.correcta.toUpperCase()})
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-1 shrink-0">
+                            <button
+                              type="button"
+                              onClick={() => handleAbrirEditarReactivo(rIdx)}
+                              className="px-2 py-1 bg-white hover:bg-stone-100 text-stone-700 border border-stone-300 rounded text-[11px] font-semibold transition-colors flex items-center gap-1 cursor-pointer"
+                              title="Editar este reactivo"
+                            >
+                              <Edit3 className="w-3 h-3 text-stone-600" />
+                              <span>Editar</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleEliminarReactivo(rIdx)}
+                              className="p-1 text-stone-400 hover:text-red-700 hover:bg-red-50 rounded transition-colors cursor-pointer"
+                              title="Eliminar este reactivo"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+
+                        <p className="text-xs sm:text-sm font-bold text-stone-900 leading-snug">
+                          {r.pregunta}
+                        </p>
+
+                        {/* Opciones */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 pt-1">
+                          {r.opciones.map((opt, oIdx) => {
+                            const isCorrect = oIdx === correctIdx;
+                            const letra = String.fromCharCode(97 + oIdx).toUpperCase();
+
+                            return (
+                              <div
+                                key={oIdx}
+                                className={`p-2 rounded-lg text-xs border flex items-start gap-2 transition-all ${
+                                  isCorrect
+                                    ? 'bg-emerald-50 border-emerald-400 text-emerald-950 font-semibold'
+                                    : 'bg-white border-stone-200 text-stone-700'
+                                }`}
+                              >
+                                <span className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold ${
+                                  isCorrect ? 'bg-emerald-600 text-white' : 'bg-stone-100 text-stone-600 border border-stone-300'
+                                }`}>
+                                  {letra}
+                                </span>
+                                <span className="line-clamp-2">{opt}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        {/* Explicación / Fundamentación Pedagógica */}
+                        {r.explicacion && (
+                          <div className="bg-amber-50/70 border border-amber-200 rounded-lg p-2 text-[11px] text-amber-950">
+                            <strong className="text-amber-900">Fundamentación Pedagógica:</strong> {r.explicacion}
+                          </div>
+                        )}
                       </div>
-                      <div className="grid grid-cols-3 gap-2 text-[11px] text-stone-600">
-                        <span>a) {r.opciones[0]}</span>
-                        <span>b) {r.opciones[1]}</span>
-                        <span>c) {r.opciones[2]}</span>
-                      </div>
-                      <div className="text-[10px] text-emerald-800 font-bold">
-                        Respuesta Correcta: Opción ({r.correcta.toUpperCase()})
-                      </div>
+                    );
+                  })}
+
+                  {currentFicha.banco_reactivos.length === 0 && (
+                    <div className="text-center py-8 bg-white border border-dashed border-stone-300 rounded-xl p-4">
+                      <p className="text-xs font-bold text-stone-700">No hay reactivos registrados en esta academia aún.</p>
+                      <p className="text-[11px] text-stone-500 mt-1">
+                        Haz clic en "+ Nuevo Reactivo" para agregar preguntas o en "Restablecer" para cargar las oficiales.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={handleAbrirNuevoReactivo}
+                        className="mt-3 px-3 py-1.5 bg-[#721B32] text-white rounded-lg text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        Agregar Primer Reactivo
+                      </button>
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
             </div>
@@ -1419,6 +2086,177 @@ export const AcademicDirection: React.FC = () => {
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal para Crear / Editar Reactivo del Banco de Preguntas */}
+      {modalReactivoOpen && (
+        <div className="fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-stone-200 overflow-hidden my-6 animate-in fade-in zoom-in-95 duration-150">
+            {/* Modal Header */}
+            <div className="p-4 sm:p-5 bg-gradient-to-r from-stone-900 to-[#721B32] text-white flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center font-bold text-sm">
+                  {editandoReactivoIndex === null ? '+' : <Edit3 className="w-4 h-4" />}
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm sm:text-base leading-tight">
+                    {editandoReactivoIndex === null ? 'Agregar Nuevo Reactivo' : `Editar Reactivo #${editandoReactivoIndex + 1}`}
+                  </h3>
+                  <p className="text-[11px] text-amber-200 font-medium">
+                    {currentFicha.nombre_especialidad}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setModalReactivoOpen(false)}
+                className="p-1 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={handleGuardarReactivoSubmit} className="p-4 sm:p-6 space-y-4 text-xs">
+              {reactivoError && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-800 flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+                  <span>{reactivoError}</span>
+                </div>
+              )}
+
+              {/* Pregunta */}
+              <div>
+                <label className="font-bold text-stone-900 block mb-1">
+                  Texto de la Pregunta / Reactivo: *
+                </label>
+                <textarea
+                  rows={3}
+                  value={reactivoPregunta}
+                  onChange={e => setReactivoPregunta(e.target.value)}
+                  placeholder="Ej: ¿Cuál es el objetivo principal de la especialidad de Programación en el CETis No. 7?"
+                  className="w-full p-2.5 text-xs sm:text-sm border border-stone-300 rounded-lg bg-stone-50 focus:bg-white focus:ring-1 focus:ring-[#721B32] font-medium"
+                  required
+                />
+              </div>
+
+              {/* Opciones de respuesta */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="font-bold text-stone-900 block">
+                    Opciones de Respuesta: *
+                  </label>
+                  <span className="text-[11px] text-stone-500">Selecciona el círculo de la respuesta correcta</span>
+                </div>
+
+                <div className="space-y-2">
+                  {reactivoOpciones.map((opt, idx) => {
+                    const letra = String.fromCharCode(97 + idx); // 'a', 'b', 'c', 'd'
+                    const isSelected = reactivoCorrecta === letra;
+
+                    return (
+                      <div
+                        key={idx}
+                        className={`p-2 rounded-xl border flex items-center gap-2.5 transition-all ${
+                          isSelected ? 'bg-emerald-50/80 border-emerald-400' : 'bg-stone-50 border-stone-200'
+                        }`}
+                      >
+                        {/* Radio selector */}
+                        <label className="flex items-center gap-1.5 cursor-pointer shrink-0">
+                          <input
+                            type="radio"
+                            name="correct_answer"
+                            checked={isSelected}
+                            onChange={() => setReactivoCorrecta(letra as any)}
+                            className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+                          />
+                          <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                            isSelected ? 'bg-emerald-600 text-white' : 'bg-stone-200 text-stone-700'
+                          }`}>
+                            {letra.toUpperCase()}
+                          </span>
+                        </label>
+
+                        {/* Text input */}
+                        <input
+                          type="text"
+                          value={opt}
+                          onChange={e => {
+                            const updated = [...reactivoOpciones];
+                            updated[idx] = e.target.value;
+                            setReactivoOpciones(updated);
+                          }}
+                          placeholder={`Opción ${letra.toUpperCase()}...`}
+                          className="flex-1 p-2 text-xs border border-stone-300 rounded-lg bg-white"
+                        />
+
+                        {/* Remove option button (if > 2) */}
+                        {reactivoOpciones.length > 2 && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = reactivoOpciones.filter((_, i) => i !== idx);
+                              setReactivoOpciones(updated);
+                              if (reactivoCorrecta === letra && updated.length > 0) {
+                                setReactivoCorrecta('a');
+                              }
+                            }}
+                            className="p-1 text-stone-400 hover:text-red-700 cursor-pointer"
+                            title="Quitar opción"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {reactivoOpciones.length < 4 && (
+                  <button
+                    type="button"
+                    onClick={() => setReactivoOpciones([...reactivoOpciones, ''])}
+                    className="text-[11px] font-bold text-[#721B32] hover:underline flex items-center gap-1 pt-1 cursor-pointer"
+                  >
+                    <Plus className="w-3 h-3" /> Agregar Opción D
+                  </button>
+                )}
+              </div>
+
+              {/* Fundamentación / Explicación */}
+              <div>
+                <label className="font-bold text-stone-900 block mb-1">
+                  Fundamentación Pedagógica / Retroalimentación al Alumno:
+                </label>
+                <textarea
+                  rows={2}
+                  value={reactivoExplicacion}
+                  onChange={e => setReactivoExplicacion(e.target.value)}
+                  placeholder="Explica brevemente por qué esta es la respuesta correcta para que el alumno aprenda al resolver el quiz."
+                  className="w-full p-2 text-xs border border-stone-300 rounded-lg bg-stone-50 focus:bg-white"
+                />
+              </div>
+
+              {/* Modal Buttons */}
+              <div className="pt-3 border-t border-stone-200 flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setModalReactivoOpen(false)}
+                  className="px-4 py-2 border border-stone-300 rounded-xl text-stone-700 font-semibold hover:bg-stone-50 cursor-pointer"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-[#721B32] hover:bg-[#5b1528] text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                >
+                  <Save className="w-3.5 h-3.5" />
+                  <span>{editandoReactivoIndex === null ? 'Guardar Reactivo' : 'Actualizar Reactivo'}</span>
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

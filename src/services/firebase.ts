@@ -2,7 +2,7 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getFirestore, collection, doc, getDoc, setDoc, getDocs, deleteDoc, updateDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import firebaseConfig from '../../firebase-applet-config.json';
-import { Estudiante, EvaluacionVocacional, ProgresoVirtual, AsistenciaPresencial, DocenteAutorizado } from '../types';
+import { Estudiante, EvaluacionVocacional, ProgresoVirtual, AsistenciaPresencial, DocenteAutorizado, CuestionarioEspecialidad } from '../types';
 
 // Initialize Firebase App
 export const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
@@ -15,7 +15,8 @@ const COLLECTIONS = {
   DOCENTES: 'docentes',
   EVALUACIONES: 'evaluaciones',
   PROGRESOS: 'progresos',
-  ASISTENCIAS: 'asistencias'
+  ASISTENCIAS: 'asistencias',
+  CUESTIONARIOS: 'cuestionarios_especialidades'
 };
 
 export async function cloudGetEstudiantes(): Promise<Estudiante[]> {
@@ -51,5 +52,31 @@ export async function cloudSaveDocente(docente: DocenteAutorizado): Promise<void
     await setDoc(doc(db, COLLECTIONS.DOCENTES, docente.id), docente);
   } catch (err) {
     console.warn('Firestore write error for docente:', err);
+  }
+}
+
+export async function cloudGetCuestionarios(): Promise<CuestionarioEspecialidad[]> {
+  try {
+    const snap = await getDocs(collection(db, COLLECTIONS.CUESTIONARIOS));
+    return snap.docs.map(d => d.data() as CuestionarioEspecialidad);
+  } catch (err) {
+    console.warn('Firestore offline read error for cuestionarios:', err);
+    return [];
+  }
+}
+
+export async function cloudSaveCuestionario(cuestionario: CuestionarioEspecialidad): Promise<void> {
+  try {
+    await setDoc(doc(db, COLLECTIONS.CUESTIONARIOS, cuestionario.id), cuestionario);
+  } catch (err) {
+    console.warn('Firestore write error for cuestionario:', err);
+  }
+}
+
+export async function cloudDeleteCuestionario(id: string): Promise<void> {
+  try {
+    await deleteDoc(doc(db, COLLECTIONS.CUESTIONARIOS, id));
+  } catch (err) {
+    console.warn('Firestore delete error for cuestionario:', err);
   }
 }

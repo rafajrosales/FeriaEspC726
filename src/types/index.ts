@@ -123,7 +123,10 @@ export interface SpecialtyInfo {
     duracion: string;
     presentador: string;
     descripcion: string;
+    url_video?: string;
   };
+  video_academia?: VideoAcademiaDocente;
+  galeria_alumnos?: ItemGaleriaAlumno[];
   preguntas_quiz: {
     id: number;
     pregunta: string;
@@ -141,6 +144,46 @@ export interface SpecialtyInfo {
   };
 }
 
+export interface VideoAcademiaDocente {
+  titulo: string;
+  duracion: string;
+  presentador: string;
+  descripcion: string;
+  url_video: string; // YouTube URL or Google Drive Video URL
+}
+
+export interface ItemGaleriaAlumno {
+  id: string;
+  titulo: string;
+  alumnos: string;
+  semestre: string;
+  tipo: 'video' | 'foto';
+  url_media: string; // YouTube URL, Google Drive URL, or Image URL
+  descripcion: string;
+}
+
+export interface ReactivoExamen {
+  id?: string | number;
+  pregunta: string;
+  opciones: string[];
+  correcta: string; // 'a' | 'b' | 'c' | 'd'
+  explicacion?: string;
+}
+
+export interface CuestionarioEspecialidad {
+  id: string;
+  especialidad_id: SpecialtyId;
+  titulo: string;
+  descripcion: string;
+  instrucciones?: string;
+  porcentaje_aprobatorio: number; // default 60%
+  tiempo_limite_min?: number;
+  activo: boolean;
+  fecha_actualizacion: string;
+  autor_docente?: string;
+  preguntas: ReactivoExamen[];
+}
+
 export interface FichaAcademiaReq {
   especialidad_id: SpecialtyId;
   nombre_especialidad: string;
@@ -152,12 +195,10 @@ export interface FichaAcademiaReq {
     video_url_o_estado: string;
     infografia_formato: string;
     proyectos_registrados: string[];
+    video_academia?: VideoAcademiaDocente;
+    galeria_alumnos?: ItemGaleriaAlumno[];
   };
-  banco_reactivos: {
-    pregunta: string;
-    opciones: [string, string, string];
-    correcta: string;
-  }[];
+  banco_reactivos: ReactivoExamen[];
   reto_ludico: {
     nombre: string;
     objetivo: string;

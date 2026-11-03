@@ -1,6 +1,6 @@
-import { Estudiante, EvaluacionVocacional, ProgresoVirtual, AsistenciaPresencial, FichaAcademiaReq, OficioCircular, SpecialtyId, DocenteAutorizado } from '../types';
-import { ESTUDIANTES_INICIALES, FICHAS_ACADEMIA_DEFAULT, OFICIO_CIRCULAR_DEFAULT } from '../data/mockData';
-import { cloudSaveEstudiante, cloudSaveDocente } from './firebase';
+import { Estudiante, EvaluacionVocacional, ProgresoVirtual, AsistenciaPresencial, FichaAcademiaReq, OficioCircular, SpecialtyId, DocenteAutorizado, CuestionarioEspecialidad, ReactivoExamen } from '../types';
+import { ESTUDIANTES_INICIALES, FICHAS_ACADEMIA_DEFAULT, OFICIO_CIRCULAR_DEFAULT, CUESTIONARIOS_DEFAULT } from '../data/mockData';
+import { cloudSaveEstudiante, cloudSaveDocente, cloudSaveCuestionario, cloudDeleteCuestionario } from './firebase';
 
 const STORAGE_KEYS = {
   ESTUDIANTES: 'cetis7_estudiantes',
@@ -11,7 +11,8 @@ const STORAGE_KEYS = {
   OFICIO: 'cetis7_oficio_circular',
   ESTUDIANTE_ACTIVO: 'cetis7_estudiante_activo_nc',
   SESION_ACTIVA: 'cetis7_sesion_activa',
-  DOCENTES: 'cetis7_docentes_autorizados'
+  DOCENTES: 'cetis7_docentes_autorizados',
+  CUESTIONARIOS: 'cetis7_cuestionarios_especialidad'
 };
 
 export const DOCENTES_INICIALES: DocenteAutorizado[] = [

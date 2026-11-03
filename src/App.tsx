@@ -24,7 +24,8 @@ import { AcademicDirection } from './components/AcademicDirection';
 import { MandatoryRegistrationGate } from './components/MandatoryRegistrationGate';
 import { WelcomeTutorialModal } from './components/WelcomeTutorialModal';
 import { DirectionAuthModal } from './components/DirectionAuthModal';
-import { Compass, BookOpen, QrCode, MapPin, Building2, CheckCircle, ArrowRight, Sparkles } from 'lucide-react';
+import { HelpFaqModal } from './components/HelpFaqModal';
+import { Compass, BookOpen, QrCode, MapPin, Building2, CheckCircle, ArrowRight, Sparkles, HelpCircle } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<MainNavTab>('vocacional');
@@ -37,6 +38,13 @@ export default function App() {
     return !localStorage.getItem('cetis7_tutorial_visto');
   });
   const [mostrarModalDirAuth, setMostrarModalDirAuth] = useState<boolean>(false);
+  const [mostrarHelpModal, setMostrarHelpModal] = useState<boolean>(false);
+  const [helpDefaultTab, setHelpDefaultTab] = useState<'fundamentacion' | 'docentes' | 'alumnos'>('docentes');
+
+  const handleOpenHelp = (tab: 'fundamentacion' | 'docentes' | 'alumnos' = 'docentes') => {
+    setHelpDefaultTab(tab);
+    setMostrarHelpModal(true);
+  };
   
   // Dynamic student state
   const estudiantes = getEstudiantes();
@@ -170,16 +178,17 @@ export default function App() {
         sesionActiva={sesionActiva}
         onCerrarSesion={handleCerrarSesion}
         onOpenTutorial={() => setMostrarTutorial(true)}
+        onOpenHelpFaq={(tab) => handleOpenHelp(tab)}
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-24 md:pb-8">
         {/* Institutional Welcome & Hero kicker */}
         <div className="no-print mb-6">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 border-b border-stone-200 pb-4">
             <div>
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#721B32] uppercase tracking-wider mb-1">
-                <span>Feria de Especialidades e Innovación Tecnológica 2026</span>
+              <div className="flex items-center gap-2 flex-wrap text-xs font-semibold text-[#721B32] uppercase tracking-wider mb-1">
+                <span>Feria de Especialidades 2026</span>
                 <span className="text-stone-300">·</span>
                 <span>Modelo Híbrido DGETI (70/30)</span>
               </div>
@@ -191,8 +200,17 @@ export default function App() {
               </p>
             </div>
 
-            {/* Quick Flow Pills / Breadcrumbs & Tutorial Trigger */}
+            {/* Quick Flow Pills / Breadcrumbs & Tutorial & Ayuda Triggers */}
             <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => handleOpenHelp('fundamentacion')}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#721B32] hover:bg-[#5b1528] text-white font-bold text-xs border border-[#5b1528] shadow-2xs transition-all cursor-pointer hover:scale-102"
+                title="Fundamentación y FAQs"
+              >
+                <HelpCircle className="w-3.5 h-3.5 text-amber-300" />
+                <span>Ayuda & FAQ</span>
+              </button>
+
               <button
                 onClick={() => setMostrarTutorial(true)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold text-xs border border-amber-500 shadow-2xs transition-all cursor-pointer hover:scale-102"
@@ -202,7 +220,7 @@ export default function App() {
                 <span>¿Cómo funciona? (Tutorial)</span>
               </button>
 
-              <div className="flex items-center gap-1.5 text-xs font-mono-code text-stone-500 bg-white p-2 rounded-lg border border-stone-200 shrink-0">
+              <div className="flex items-center gap-1.5 text-xs font-mono-code text-stone-500 bg-white p-2 rounded-lg border border-stone-200 flex-wrap">
                 <span className={activeTab === 'vocacional' ? 'text-[#721B32] font-bold' : ''}>1. Test</span>
                 <span>→</span>
                 <span className={activeTab === 'modulos' ? 'text-[#721B32] font-bold' : ''}>2. Módulos</span>
@@ -307,6 +325,8 @@ export default function App() {
               progreso={progresoActual}
               onUpdateProgreso={handleUpdateProgreso}
               sugeridaId={evaluacionActual?.carrera_sugerida}
+              onNavigateToDirection={() => handleNavTabChange('direccion')}
+              sesionActiva={sesionActiva}
             />
 
             {progresoActual.porcentaje_virtual >= 100 && (
@@ -392,6 +412,13 @@ export default function App() {
         isOpen={mostrarModalDirAuth}
         onClose={() => setMostrarModalDirAuth(false)}
         onAuthSuccess={handleAuthDirSuccess}
+      />
+
+      {/* Help & FAQ Center Modal */}
+      <HelpFaqModal
+        isOpen={mostrarHelpModal}
+        onClose={() => setMostrarHelpModal(false)}
+        defaultTab={helpDefaultTab}
       />
     </div>
   );

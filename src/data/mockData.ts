@@ -1,4 +1,4 @@
-import { SpecialtyInfo, Estudiante, EvaluacionVocacional, ProgresoVirtual, AsistenciaPresencial, FichaAcademiaReq, OficioCircular } from '../types';
+import { SpecialtyInfo, Estudiante, EvaluacionVocacional, ProgresoVirtual, AsistenciaPresencial, FichaAcademiaReq, OficioCircular, CuestionarioEspecialidad } from '../types';
 
 export const ESPECIALIDADES: SpecialtyInfo[] = [
   {
@@ -59,8 +59,45 @@ export const ESPECIALIDADES: SpecialtyInfo[] = [
       titulo: 'Descubre el Código que Transforma al CETis 7',
       duracion: '2:45 min',
       presentador: 'Ing. Marco Antonio Estrada (Docente Titular de Programación)',
-      descripcion: 'Recorrido por el Laboratorio de Cómputo 3, demostración de arquitectura de software y testimonios de egresados que hoy laboran en empresas tecnológicas.'
+      descripcion: 'Recorrido por el Laboratorio de Cómputo 3, demostración de arquitectura de software y testimonios de egresados que hoy laboran en empresas tecnológicas.',
+      url_video: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
     },
+    video_academia: {
+      titulo: 'Video Oficial de la Academia de Programación CETis 7',
+      duracion: '4:15 min',
+      presentador: 'Ing. Marco Antonio Estrada Ruiz y Colegiado de Docentes',
+      descripcion: 'Los profesores de la academia explican el modelo de proyectos integradores, la ruta de aprendizaje en desarrollo Web y Móvil, y los requerimientos para el campo laboral.',
+      url_video: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+    },
+    galeria_alumnos: [
+      {
+        id: 'prog-gal-1',
+        titulo: 'Sistema Escolar Web LerdoConecta',
+        alumnos: 'Sofía Martínez y Carlos Ruiz',
+        semestre: '5° Semestre',
+        tipo: 'video',
+        url_media: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        descripcion: 'Demostración en vivo del sistema de calificaciones con Firebase Firestore y panel reactivo.'
+      },
+      {
+        id: 'prog-gal-2',
+        titulo: 'App Móvil SOS Comunitaria Cuautepec',
+        alumnos: 'Equipo Innovatec 6°A',
+        semestre: '6° Semestre',
+        tipo: 'foto',
+        url_media: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80',
+        descripcion: 'Alumnos exponiendo el prototipo galardonado en el Concurso DGETI 2025.'
+      },
+      {
+        id: 'prog-gal-3',
+        titulo: 'Laboratorio de Algoritmos e Inteligencia Artificial',
+        alumnos: 'Comunidad de Alumnos de 4° Semestre',
+        semestre: '4° Semestre',
+        tipo: 'foto',
+        url_media: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=1200&q=80',
+        descripcion: 'Sesión práctica de desarrollo en el Laboratorio de Cómputo 3.'
+      }
+    ],
     preguntas_quiz: [
       {
         id: 1,
@@ -181,8 +218,45 @@ export const ESPECIALIDADES: SpecialtyInfo[] = [
       titulo: 'De Cuautepec para el Mundo: Logística y Aduanas 2026',
       duracion: '3:10 min',
       presentador: 'Lic. Claudia Becerril (Presidenta de Academia de Comercio)',
-      descripcion: 'Explicación didáctica sobre cómo viaja un producto desde una fábrica hasta el otro lado del mundo pasando por aduanas y verificación fiscal.'
+      descripcion: 'Explicación didáctica sobre cómo viaja un producto desde una fábrica hasta el otro lado del mundo pasando por aduanas y verificación fiscal.',
+      url_video: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
     },
+    video_academia: {
+      titulo: 'Video Oficial de la Academia de Comercio Internacional',
+      duracion: '3:40 min',
+      presentador: 'Lic. Claudia Becerril Morales y Colegiado de Comercio',
+      descripcion: 'Recorrido interactivo por el taller de aduanas, revisión del pedimento SAT y demostración de las rutas logísticas de importación y exportación.',
+      url_video: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+    },
+    galeria_alumnos: [
+      {
+        id: 'com-gal-1',
+        titulo: 'Simulador Digital de Cubicaje de Contenedores 40ft',
+        alumnos: 'Equipo Logistix 6°A',
+        semestre: '6° Semestre',
+        tipo: 'video',
+        url_media: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        descripcion: 'Video demostrativo de estiba y optimización de espacio volumétrico en transporte marítimo.'
+      },
+      {
+        id: 'com-gal-2',
+        titulo: 'Maqueta de Garita Aduanal y Puerto de Veracruz',
+        alumnos: 'Alumnos de 3° Semestre',
+        semestre: '3° Semestre',
+        tipo: 'foto',
+        url_media: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80',
+        descripcion: 'Representación física a escala del proceso de desaduanamiento y semáforo fiscal.'
+      },
+      {
+        id: 'com-gal-3',
+        titulo: 'Ruta de Exportación de Miel de Agave a la UE',
+        alumnos: 'Grupo 5°B Comercio',
+        semestre: '5° Semestre',
+        tipo: 'foto',
+        url_media: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1200&q=80',
+        descripcion: 'Exposición de la carpeta técnica con Incoterms y certificado de origen bajo TLCUEM.'
+      }
+    ],
     preguntas_quiz: [
       {
         id: 1,
@@ -299,8 +373,45 @@ export const ESPECIALIDADES: SpecialtyInfo[] = [
       titulo: 'El Corazón de Toda Empresa: El Talento Humano',
       duracion: '2:50 min',
       presentador: 'Mtra. Patricia Mendoza (Docente de Recursos Humanos)',
-      descripcion: 'Recorrido por las dinámicas de entrevista, resolución de dilemas éticos y cálculo de nómina en laboratorios administrativos.'
+      descripcion: 'Recorrido por las dinámicas de entrevista, resolución de dilemas éticos y cálculo de nómina en laboratorios administrativos.',
+      url_video: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
     },
+    video_academia: {
+      titulo: 'Video Oficial de la Academia de Recursos Humanos',
+      duracion: '3:15 min',
+      presentador: 'Mtra. Patricia Mendoza Garduño y Docentes Tutores',
+      descripcion: 'Explicación del rol estratégico del capital humano, aplicación de la NOM-035-STPS y talleres de entrevistas por competencias laborales.',
+      url_video: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+    },
+    galeria_alumnos: [
+      {
+        id: 'rrhh-gal-1',
+        titulo: 'Roleplay de Entrevistas Estructuradas por Competencias',
+        alumnos: 'Alumnos de 4° Semestre',
+        semestre: '4° Semestre',
+        tipo: 'video',
+        url_media: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        descripcion: 'Simulación interactiva de reclutamiento y selección de personal con retroalimentación en vivo.'
+      },
+      {
+        id: 'rrhh-gal-2',
+        titulo: 'Jornada de Diagnóstico de Clima Laboral NOM-035',
+        alumnos: 'Grupo 5°D RRHH',
+        semestre: '5° Semestre',
+        tipo: 'foto',
+        url_media: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
+        descripcion: 'Aplicación de cuestionarios de bienestar organizacional y pausas activas para la comunidad.'
+      },
+      {
+        id: 'rrhh-gal-3',
+        titulo: 'Taller Practico de Nóminas y Contratos LFT',
+        alumnos: 'Alumnos de 6° Semestre',
+        semestre: '6° Semestre',
+        tipo: 'foto',
+        url_media: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80',
+        descripcion: 'Cálculo de finiquitos y elaboración de contratos individuales de trabajo.'
+      }
+    ],
     preguntas_quiz: [
       {
         id: 1,
@@ -418,8 +529,45 @@ export const ESPECIALIDADES: SpecialtyInfo[] = [
       titulo: 'Ciencia, Salud y Belleza: La Cabina Cosmetológica del CETis 7',
       duracion: '3:05 min',
       presentador: 'Cosmiatra Lic. Rosa Isela Romero (Titular de Cosmetología)',
-      descripcion: 'Demostración de lámpara de Wood, análisis dérmico de poros, bioseguridad con autoclave y preparación de activos naturales.'
+      descripcion: 'Demostración de lámpara de Wood, análisis dérmico de poros, bioseguridad con autoclave y preparación de activos naturales.',
+      url_video: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
     },
+    video_academia: {
+      titulo: 'Video Oficial de la Academia de Cosmetología',
+      duracion: '4:00 min',
+      presentador: 'Cosmiatra Lic. Rosa Isela Romero Vargas y Colegiado',
+      descripcion: 'Recorrido detallado por la cabina didáctica, protocolos COFEPRIS de esterilización y bioseguridad, diagnóstico de biotipos cutáneos y muestras de proyectos botánicos.',
+      url_video: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+    },
+    galeria_alumnos: [
+      {
+        id: 'cos-gal-1',
+        titulo: 'Demostración de Drenaje Linfático y Masaje Facial',
+        alumnos: 'Alumnas de 6° Semestre',
+        semestre: '6° Semestre',
+        tipo: 'video',
+        url_media: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        descripcion: 'Técnica de maniobras suaves de descongestión ganglionar en cabina didáctica.'
+      },
+      {
+        id: 'cos-gal-2',
+        titulo: 'Línea Dermocosmética Botánica Xochitl-Lerdo',
+        alumnos: 'Grupo 5°F Cosmetología',
+        semestre: '5° Semestre',
+        tipo: 'foto',
+        url_media: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=80',
+        descripcion: 'Presentación de lociones, tónicos y mascarillas con aloe vera y caléndula.'
+      },
+      {
+        id: 'cos-gal-3',
+        titulo: 'Análisis Cutáneo con Lupa Dermatológica y Luz LED',
+        alumnos: 'Alumnos de 3° Semestre',
+        semestre: '3° Semestre',
+        tipo: 'foto',
+        url_media: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=1200&q=80',
+        descripcion: 'Evaluación del pH y biotipo cutáneo en modelos con estándares de higiene COFEPRIS.'
+      }
+    ],
     preguntas_quiz: [
       {
         id: 1,
@@ -758,6 +906,42 @@ export const FICHAS_ACADEMIA_DEFAULT: Record<string, FichaAcademiaReq> = {
         'Sistema Escolar Web LerdoConecta',
         'App Móvil SOS Comunitaria Cuautepec',
         'Simulador de Encriptación y Ciberdefensa'
+      ],
+      video_academia: {
+        titulo: 'Video Oficial de la Academia de Programación CETis 7',
+        duracion: '4:15 min',
+        presentador: 'Ing. Marco Antonio Estrada Ruiz y Colegiado de Docentes',
+        descripcion: 'Los profesores de la academia explican el modelo de proyectos integradores, la ruta de aprendizaje en desarrollo Web y Móvil, y los requerimientos para el campo laboral.',
+        url_video: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+      },
+      galeria_alumnos: [
+        {
+          id: 'prog-gal-1',
+          titulo: 'Sistema Escolar Web LerdoConecta',
+          alumnos: 'Sofía Martínez y Carlos Ruiz',
+          semestre: '5° Semestre',
+          tipo: 'video',
+          url_media: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+          descripcion: 'Demostración en vivo del sistema de calificaciones con Firebase Firestore y panel reactivo.'
+        },
+        {
+          id: 'prog-gal-2',
+          titulo: 'App Móvil SOS Comunitaria Cuautepec',
+          alumnos: 'Equipo Innovatec 6°A',
+          semestre: '6° Semestre',
+          tipo: 'foto',
+          url_media: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80',
+          descripcion: 'Alumnos exponiendo el prototipo galardonado en el Concurso DGETI 2025.'
+        },
+        {
+          id: 'prog-gal-3',
+          titulo: 'Laboratorio de Algoritmos e Inteligencia Artificial',
+          alumnos: 'Comunidad de Alumnos de 4° Semestre',
+          semestre: '4° Semestre',
+          tipo: 'foto',
+          url_media: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=1200&q=80',
+          descripcion: 'Sesión práctica de desarrollo en el Laboratorio de Cómputo 3.'
+        }
       ]
     },
     banco_reactivos: [
@@ -983,3 +1167,218 @@ export const OFICIO_CIRCULAR_DEFAULT: OficioCircular = {
   firmante_cargo: 'Subdirector Académico del CETis No. 7 "Miguel Lerdo de Tejada"',
   sello_oficial: 'CETIS 007 - SUBDIRECCIÓN ACADÉMICA - DGETI CDMX'
 };
+
+export const CUESTIONARIOS_DEFAULT: CuestionarioEspecialidad[] = [
+  {
+    id: 'quiz-programacion-oficial',
+    especialidad_id: 'programacion',
+    titulo: 'Evaluación Formativa de Programación y Software',
+    descripcion: 'Comprobación de competencias sobre desarrollo de software, POO, aplicaciones móviles y campo laboral.',
+    instrucciones: 'Lee atentamente cada reactivo y selecciona la opción correcta. Se requiere 60% para aprobar.',
+    porcentaje_aprobatorio: 60,
+    tiempo_limite_min: 15,
+    activo: true,
+    fecha_actualizacion: '2026-11-03T09:00:00.000Z',
+    autor_docente: 'Ing. Marco Antonio Estrada Ruiz (Jefe de Academia)',
+    preguntas: [
+      {
+        id: 1,
+        pregunta: '¿Cuál es el objetivo principal de la especialidad de Programación en el CETis No. 7?',
+        opciones: [
+          'Únicamente armar y reparar computadoras físicamente.',
+          'Diseñar, programar, implementar y mantener sistemas de software y aplicaciones web/móviles.',
+          'Gestionar trámites de nóminas y contratos colectivos.'
+        ],
+        correcta: 'b',
+        explicacion: 'Programación se enfoca en el desarrollo de software, modelado algorítmico y aplicaciones web/móviles integrales.'
+      },
+      {
+        id: 2,
+        pregunta: '¿En qué semestre se imparte el Módulo de desarrollo de aplicaciones para móviles en el mapa curricular DGETI?',
+        opciones: ['1° Semestre', '3° Semestre', '6° Semestre'],
+        correcta: 'c',
+        explicacion: 'El Módulo V se cursa en 6° semestre y consolida las competencias de desarrollo móvil y computación en la nube.'
+      },
+      {
+        id: 3,
+        pregunta: '¿Qué destreza analítica básica se requiere prioritariamente para esta carrera técnica?',
+        opciones: [
+          'Razonamiento lógico-matemático y descomposición de problemas.',
+          'Conocimiento de aranceles y aduanas internacionales.',
+          'Protocolos de aparatología estética.'
+        ],
+        correcta: 'a',
+        explicacion: 'La abstracción algorítmica y el pensamiento estructurado son la base formativa del programador.'
+      },
+      {
+        id: 4,
+        pregunta: '¿Qué tecnología se aprende en el Módulo IV de la carrera técnica?',
+        opciones: [
+          'Bases de datos relacionales, lenguaje SQL y seguridad de datos.',
+          'Clasificación arancelaria de mercancías.',
+          'Tratamientos faciales con vapor de ozono.'
+        ],
+        correcta: 'a',
+        explicacion: 'En 5° semestre se profundiza en modelado de datos relacionales, consultas estructuradas e integridad transaccional.'
+      },
+      {
+        id: 5,
+        pregunta: '¿Cuál de los siguientes es un campo de inserción profesional directo para los egresados de Programación?',
+        opciones: [
+          'Empresas de desarrollo de software, startups tecnológicas y áreas de TI.',
+          'Agencias aduanales marítimas.',
+          'Spas y clínicas dermocosméticas.'
+        ],
+        correcta: 'a',
+        explicacion: 'El sector de desarrollo de software y servicios de computación en la nube ofrece alta demanda de técnicos calificados.'
+      }
+    ]
+  },
+  {
+    id: 'quiz-comercio-oficial',
+    especialidad_id: 'comercio',
+    titulo: 'Evaluación Formativa de Comercio Internacional y Logística',
+    descripcion: 'Validación de conocimientos aduanales, pedimentos, clasificación arancelaria y tratados internacionales.',
+    instrucciones: 'Analiza cada escenario de importación/exportación y marca la respuesta acertada. Mínimo 60% aprobatorio.',
+    porcentaje_aprobatorio: 60,
+    tiempo_limite_min: 15,
+    activo: true,
+    fecha_actualizacion: '2026-11-03T09:00:00.000Z',
+    autor_docente: 'Lic. Claudia Becerril Morales (Presidenta de Academia)',
+    preguntas: [
+      {
+        id: 1,
+        pregunta: '¿Qué documento oficial legaliza el tránsito y desaduanamiento de mercancías en México?',
+        opciones: ['Pedimento Aduanal', 'Carta de recomendación escolar', 'Credencial de elector'],
+        correcta: 'a',
+        explicacion: 'El Pedimento Aduanal es la declaración fiscal y legal obligatoria ante la Agencia Nacional de Aduanas de México (ANAM).'
+      },
+      {
+        id: 2,
+        pregunta: '¿Para qué sirven los Incoterms en el comercio mundial?',
+        opciones: ['Calcular el promedio escolar', 'Determinar costos, riesgos y obligaciones entre comprador y vendedor', 'Escribir código de software'],
+        correcta: 'b',
+        explicacion: 'Los Incoterms (ICC) estandarizan internacionalmente la entrega de mercancías y delimitación de riesgos.'
+      },
+      {
+        id: 3,
+        pregunta: '¿En qué consiste el cubicaje en la logística?',
+        opciones: ['Maximizar el aprovechamiento de espacio en contenedores', 'Pintar contenedores de colores', 'Calcular el aguinaldo'],
+        correcta: 'a',
+        explicacion: 'El cubicaje optimiza la distribución volumétrica y peso para reducir fletes marítimos y terrestres.'
+      },
+      {
+        id: 4,
+        pregunta: '¿Cuál es el tratado comercial clave de México con América del Norte?',
+        opciones: ['Pacto Andino', 'T-MEC', 'Tratado de Kioto'],
+        correcta: 'b',
+        explicacion: 'El T-MEC es el pilar de intercambio comercial y cadenas de suministro entre México, Estados Unidos y Canadá.'
+      },
+      {
+        id: 5,
+        pregunta: '¿Dónde labora un egresado técnico de Comercio Internacional?',
+        opciones: ['Agencias aduanales, terminales marítimas y empresas exportadoras', 'Laboratorios clínicos únicamente', 'Salones de manicura'],
+        correcta: 'a',
+        explicacion: 'Los egresados operan en agencias aduanales, departamentos de tráfico internacional y centros de distribución logística.'
+      }
+    ]
+  },
+  {
+    id: 'quiz-rrhh-oficial',
+    especialidad_id: 'rrhh',
+    titulo: 'Evaluación Formativa de Administración de Recursos Humanos',
+    descripcion: 'Comprensión de normas laborales LFT, NOM-035, nómina, reclutamiento y bienestar organizacional.',
+    instrucciones: 'Responde de acuerdo a las directrices de la gestión del talento humano. Se requiere 60% para acreditar.',
+    porcentaje_aprobatorio: 60,
+    tiempo_limite_min: 15,
+    activo: true,
+    fecha_actualizacion: '2026-11-03T09:00:00.000Z',
+    autor_docente: 'Mtra. Patricia Mendoza Garduño (Presidenta de Academia)',
+    preguntas: [
+      {
+        id: 1,
+        pregunta: '¿Qué ley en México regula las relaciones laborales y los derechos mínimos de los trabajadores?',
+        opciones: ['Ley Federal del Trabajo (LFT)', 'Código Penal Federal', 'Ley de Tránsito'],
+        correcta: 'a',
+        explicacion: 'La LFT establece la jornada legal, salario, aguinaldo, vacaciones dignas y seguridad social.'
+      },
+      {
+        id: 2,
+        pregunta: '¿Cuál es el objetivo primordial de la NOM-035-STPS en las empresas?',
+        opciones: ['Identificar, prevenir y mitigar factores de riesgo psicosocial en el trabajo', 'Prohibir el uso de uniformes', 'Aumentar las horas extras obligatorias'],
+        correcta: 'a',
+        explicacion: 'La NOM-035 promueve un entorno organizacional favorable y previene estrés crónico o acoso laboral.'
+      },
+      {
+        id: 3,
+        pregunta: '¿Qué fase inicial del proceso de reclutamiento define el perfil del puesto deseado?',
+        opciones: ['Análisis y descripción de puestos', 'Firma de renuncia previa', 'Despido injustificado'],
+        correcta: 'a',
+        explicacion: 'El análisis de puestos detalla competencias, responsabilidades y requisitos del colaborador idóneo.'
+      },
+      {
+        id: 4,
+        pregunta: '¿Qué deducciones obligatorias por ley se reflejan comúnmente en un recibo de nómina?',
+        opciones: ['IMSS e ISR', 'Préstamo entre amigos', 'Cuota de graduación'],
+        correcta: 'a',
+        explicacion: 'Las retenciones oficiales obligatorias son el Impuesto Sobre la Renta (SAT) y cuotas obreras de seguridad social (IMSS).'
+      },
+      {
+        id: 5,
+        pregunta: '¿En qué áreas se desempeñan los técnicos en Recursos Humanos?',
+        opciones: ['Departamentos de Talento Humano, Reclutamiento, Capacitación y Nómina', 'Cabinas de belleza exclusivamente', 'Muelle de carga marítima'],
+        correcta: 'a',
+        explicacion: 'Gestionan el personal en empresas corporativas, fábricas, organismos de gobierno y consultorías de RH.'
+      }
+    ]
+  },
+  {
+    id: 'quiz-cosmetologia-oficial',
+    especialidad_id: 'cosmetologia',
+    titulo: 'Evaluación Formativa de Cosmetología y Dermocosmiatría',
+    descripcion: 'Evaluación sobre biotipos cutáneos, bioseguridad, química cosmética y protocolos en cabina estética.',
+    instrucciones: 'Selecciona la opción fundamentada en principios científicos de estética y salud. 60% aprobatorio.',
+    porcentaje_aprobatorio: 60,
+    tiempo_limite_min: 15,
+    activo: true,
+    fecha_actualizacion: '2026-11-03T09:00:00.000Z',
+    autor_docente: 'Cosmiatra Rosa Isela Romero Vargas (Jefa de Academia)',
+    preguntas: [
+      {
+        id: 1,
+        pregunta: '¿Cuáles son los 4 biotipos cutáneos fundamentales para el diagnóstico facial?',
+        opciones: ['Eutérmica (Normal), Seborreica (Grasa), Alípica (Seca) y Mixta', 'Piel 1, 2, 3 y 4', 'Áspera, Lisa, Dura y Blanda'],
+        correcta: 'a',
+        explicacion: 'La clasificación dérmica clásica permite formular el tratamiento cosmético preciso para cada tipo de piel.'
+      },
+      {
+        id: 2,
+        pregunta: '¿Qué lámpara con luz ultravioleta permite analizar deshidratación y pigmentaciones en cabina?',
+        opciones: ['Lámpara de Wood', 'Lámpara de Halógeno', 'Foco incandescente ordinario'],
+        correcta: 'a',
+        explicacion: 'La lámpara de Wood emite radiación UV de longitud de onda larga que fluoresce según la condición del estrato córneo.'
+      },
+      {
+        id: 3,
+        pregunta: '¿En qué se distingue la Cosmiatría de la cosmetología empírica?',
+        opciones: ['Bases científicas de histología, química cosmética y protocolos sanitarios', 'En nada, son exactamente lo mismo', 'En que no usa cosméticos'],
+        correcta: 'a',
+        explicacion: 'La cosmiatría integra conocimientos biológicos de la piel con activos dermocosméticos y aparatología certificada.'
+      },
+      {
+        id: 4,
+        pregunta: '¿Qué autoridad sanitaria en México certifica y vigila los establecimientos y productos cosméticos?',
+        opciones: ['COFEPRIS (Secretaría de Salud)', 'PROFECO únicamente', 'SECTUR'],
+        correcta: 'a',
+        explicacion: 'COFEPRIS emite avisos de funcionamiento, regulación de insumos y normas de bioseguridad higiénica.'
+      },
+      {
+        id: 5,
+        pregunta: '¿Cuál es la función del tónico facial en un protocolo de higiene profunda?',
+        opciones: ['Restablecer el manto hidrolipídico y equilibrar el pH de la piel', 'Pintar el rostro de color', 'Sustituir el protector solar'],
+        correcta: 'a',
+        explicacion: 'El tónico equilibra el pH ligeramente ácido natural de la piel tras la fase de emulsión desmaquillante o jabón.'
+      }
+    ]
+  }
+];
