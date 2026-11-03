@@ -124,7 +124,7 @@ export const DirectionAuthModal: React.FC<DirectionAuthModalProps> = ({
               placeholder="Ej. LEVM800512HDF..."
               value={rfcDocente}
               onChange={e => setRfcDocente(e.target.value)}
-              className="w-full px-3 py-2.5 sm:py-2 text-sm sm:text-xs font-mono-code border border-stone-300 rounded-xl focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white"
+              className="w-full px-3.5 py-3 sm:py-2 text-base sm:text-xs font-mono-code border border-stone-300 rounded-xl focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white shadow-2xs"
             />
           </div>
 
@@ -139,13 +139,13 @@ export const DirectionAuthModal: React.FC<DirectionAuthModalProps> = ({
                 placeholder="Ingresa la clave oficial DGETI"
                 value={claveInput}
                 onChange={e => setClaveInput(e.target.value)}
-                className="w-full pl-9 pr-12 py-2.5 text-sm sm:text-xs font-mono-code font-bold tracking-wider border border-stone-300 rounded-xl focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white"
+                className="w-full pl-10 pr-14 py-3 sm:py-2 text-base sm:text-xs font-mono-code font-bold tracking-wider border border-stone-300 rounded-xl focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white shadow-2xs"
               />
-              <KeyRound className="w-4 h-4 text-stone-400 absolute left-3 top-3" />
+              <KeyRound className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-2.5 text-[10px] font-bold text-stone-500 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 px-2 py-1 rounded cursor-pointer"
+                className="absolute right-2.5 top-2.5 text-[11px] font-bold text-stone-600 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 px-2.5 py-1.5 rounded-lg cursor-pointer"
               >
                 {showPassword ? 'Ocultar' : 'Ver'}
               </button>

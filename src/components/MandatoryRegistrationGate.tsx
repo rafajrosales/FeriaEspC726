@@ -266,17 +266,17 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-stone-900/90 backdrop-blur-md flex flex-col items-center justify-start sm:justify-center p-0 sm:p-4 md:p-6">
-      <div className="w-full max-w-2xl bg-white sm:rounded-2xl shadow-2xl border-0 sm:border border-stone-200 overflow-hidden min-h-full sm:min-h-0 sm:my-auto animate-in fade-in duration-300 flex flex-col">
+      <div className="w-full max-w-xl md:max-w-2xl bg-white sm:rounded-2xl shadow-2xl border-0 sm:border border-stone-200 overflow-hidden min-h-[100dvh] sm:min-h-0 sm:my-auto animate-in fade-in duration-300 flex flex-col">
         
-        {/* Visual Hero Banner with Comic Aesthetic for Teens */}
-        <div className="relative h-28 sm:h-44 md:h-52 w-full overflow-hidden bg-stone-900 border-b-2 border-[#721B32] shrink-0">
+        {/* Visual Hero Banner with Comic Aesthetic for Teens - Optimized for Mobile Viewports */}
+        <div className="relative h-20 sm:h-36 md:h-44 w-full overflow-hidden bg-stone-900 border-b-2 border-[#721B32] shrink-0">
           <img
             src={COMIC_ASSETS.hero}
             alt="Comunidad Estudiantil CETis No. 7"
             className="w-full h-full object-cover object-center"
           />
           {/* Comic vignette overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#721B32] via-[#721B32]/75 to-black/40 flex flex-col justify-between p-3 sm:p-5 text-white">
+          <div className="absolute inset-0 bg-gradient-to-t from-[#721B32] via-[#721B32]/75 to-black/40 flex flex-col justify-between p-2.5 sm:p-4 md:p-5 text-white">
             <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-mono-code gap-2">
               <span className="font-bold tracking-wider bg-black/50 px-2 py-0.5 rounded backdrop-blur-xs truncate">
                 SEP · DGETI CDMX
@@ -287,18 +287,18 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
             </div>
 
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] sm:text-[10px] font-bold uppercase bg-white/20 text-white backdrop-blur-xs mb-0.5 sm:mb-1">
+              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] sm:text-[10px] font-bold uppercase bg-white/20 text-white backdrop-blur-xs mb-0.5">
                 <Lock className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-300" />
-                <span>Acceso Obligatorio con CURP</span>
+                <span>Acceso Oficial con CURP</span>
               </div>
-              <h2 className="text-base sm:text-xl md:text-2xl font-black text-white tracking-tight drop-shadow-sm font-serif-institutional leading-tight">
+              <h2 className="text-sm sm:text-lg md:text-xl font-black text-white tracking-tight drop-shadow-sm font-serif-institutional leading-tight">
                 CETis No. 7 "Miguel Lerdo de Tejada"
               </h2>
               <p className="hidden sm:block text-xs text-amber-100 max-w-xl font-medium drop-shadow-xs mt-0.5">
-                ¡Bienvenido a tu elección de carrera! Registra tus datos y vincula a tu padre o tutor legal para comenzar el 70% virtual y tu Pase Digital QR.
+                ¡Bienvenido a tu elección de carrera! Registra tus datos y vincula a tu tutor legal para comenzar tu 70% virtual y Pase QR.
               </p>
-              <p className="sm:hidden text-[11px] text-amber-100 font-medium truncate mt-0.5">
-                Registro oficial para el 70% virtual y Pase Digital QR
+              <p className="sm:hidden text-[10px] text-amber-100 font-medium truncate mt-0.5">
+                Pre-registro para el 70% virtual y Pase Digital QR
               </p>
             </div>
           </div>
@@ -331,20 +331,20 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
           <span className="w-5 h-5 rounded-md bg-blue-600 text-white flex items-center justify-center shrink-0 font-bold text-xs">
             📅
           </span>
-          <span><strong>¡Pre-Registro Anticipado!</strong> Regístrate días antes de la feria para completar tu test vocacional y asegurar tu Pase QR desde casa.</span>
+          <span className="leading-tight"><strong>¡Pre-Registro Anticipado!</strong> Regístrate días antes de la feria para completar tu test vocacional y asegurar tu Pase QR desde casa.</span>
         </div>
 
-        {/* Navigation Tabs - Responsive for small smartphone screens */}
+        {/* Navigation Tabs - Responsive for small smartphone screens & tablets */}
         <div className="flex border-b border-stone-200 bg-stone-50 text-xs font-semibold shrink-0">
           <button
             onClick={() => { setActiveTab('registro'); setErrorMsg(null); }}
-            className={`flex-1 py-2.5 sm:py-3 px-2 sm:px-4 text-center transition-colors flex items-center justify-center gap-1 sm:gap-2 border-b-2 cursor-pointer ${
+            className={`flex-1 py-3 px-2 sm:px-4 text-center transition-colors flex items-center justify-center gap-1 sm:gap-2 border-b-2 cursor-pointer ${
               activeTab === 'registro'
                 ? 'border-[#721B32] text-[#721B32] bg-white font-bold'
                 : 'border-transparent text-stone-500 hover:text-stone-800'
             }`}
           >
-            <UserPlus className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+            <UserPlus className="w-4 h-4 shrink-0" />
             <span className="text-[11px] sm:text-xs font-bold leading-tight">
               <span className="sm:hidden">1. Registro</span>
               <span className="hidden sm:inline">1. Registro (Nuevo Alumno)</span>
@@ -352,13 +352,13 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
           </button>
           <button
             onClick={() => { setActiveTab('login'); setLoginError(null); }}
-            className={`flex-1 py-2.5 sm:py-3 px-2 sm:px-4 text-center transition-colors flex items-center justify-center gap-1 sm:gap-2 border-b-2 cursor-pointer ${
+            className={`flex-1 py-3 px-2 sm:px-4 text-center transition-colors flex items-center justify-center gap-1 sm:gap-2 border-b-2 cursor-pointer ${
               activeTab === 'login'
                 ? 'border-[#721B32] text-[#721B32] bg-white font-bold'
                 : 'border-transparent text-stone-500 hover:text-stone-800'
             }`}
           >
-            <KeyRound className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+            <KeyRound className="w-4 h-4 shrink-0" />
             <span className="text-[11px] sm:text-xs font-bold leading-tight">
               <span className="sm:hidden">2. Ingresar</span>
               <span className="hidden sm:inline">2. Ya Registrado (Ingresar)</span>
@@ -366,14 +366,14 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
           </button>
           <button
             onClick={() => setActiveTab('docente')}
-            className={`py-2.5 sm:py-3 px-2.5 sm:px-3.5 text-center transition-colors flex items-center justify-center gap-1 border-b-2 cursor-pointer ${
+            className={`py-3 px-3 sm:px-4 text-center transition-colors flex items-center justify-center gap-1 border-b-2 cursor-pointer ${
               activeTab === 'docente'
                 ? 'border-[#721B32] text-[#721B32] bg-white font-bold'
                 : 'border-transparent text-stone-500 hover:text-stone-800'
             }`}
             title="Acceso para personal académico"
           >
-            <Building2 className="w-3.5 h-3.5 shrink-0" />
+            <Building2 className="w-4 h-4 shrink-0" />
             <span className="text-[11px] sm:text-xs font-bold">
               <span className="sm:hidden">Docente</span>
               <span className="hidden sm:inline">Dirección</span>
@@ -383,25 +383,25 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
 
         {/* Tab 1 Content: Registro Obligatorio */}
         {activeTab === 'registro' && (
-          <div className="p-3.5 sm:p-6 space-y-4 sm:space-y-5 flex-1">
+          <div className="p-4 sm:p-6 space-y-4 sm:space-y-5 flex-1">
             {/* Steps indicator */}
-            <div className="flex items-center justify-between text-xs font-medium text-stone-600 bg-stone-50 p-2 sm:p-2.5 rounded-xl border border-stone-200">
-              <div className={`flex items-center gap-1.5 sm:gap-2 min-w-0 ${paso === 1 ? 'text-[#721B32] font-bold' : 'text-stone-700'}`}>
-                <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] text-white shrink-0 ${paso === 1 ? 'bg-[#721B32]' : 'bg-emerald-600'}`}>
+            <div className="flex items-center justify-between text-xs font-medium text-stone-600 bg-stone-50 p-2.5 rounded-xl border border-stone-200">
+              <div className={`flex items-center gap-2 min-w-0 ${paso === 1 ? 'text-[#721B32] font-bold' : 'text-stone-700'}`}>
+                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs text-white shrink-0 font-bold ${paso === 1 ? 'bg-[#721B32]' : 'bg-emerald-600'}`}>
                   {paso > 1 ? '✓' : '1'}
                 </span>
-                <span className="text-[11px] sm:text-xs truncate">
-                  <span className="sm:hidden">Paso 1: Alumno</span>
-                  <span className="hidden sm:inline">Paso 1: Alumno (CURP Única y Grupo)</span>
+                <span className="text-xs truncate">
+                  <span className="sm:hidden">1: Datos Alumno</span>
+                  <span className="hidden sm:inline">Paso 1: Alumno (CURP y Grupo)</span>
                 </span>
               </div>
               <span className="text-stone-300 px-1 shrink-0">➔</span>
-              <div className={`flex items-center gap-1.5 sm:gap-2 min-w-0 ${paso === 2 ? 'text-[#721B32] font-bold' : 'text-stone-400'}`}>
-                <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] text-white shrink-0 ${paso === 2 ? 'bg-[#721B32]' : 'bg-stone-300'}`}>
+              <div className={`flex items-center gap-2 min-w-0 ${paso === 2 ? 'text-[#721B32] font-bold' : 'text-stone-400'}`}>
+                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs text-white shrink-0 font-bold ${paso === 2 ? 'bg-[#721B32]' : 'bg-stone-300'}`}>
                   2
                 </span>
-                <span className="text-[11px] sm:text-xs truncate">
-                  <span className="sm:hidden">Paso 2: Tutor Legal</span>
+                <span className="text-xs truncate">
+                  <span className="sm:hidden">2: Papá o Tutor</span>
                   <span className="hidden sm:inline">Paso 2: Papá o Tutor (Correo Obligatorio)</span>
                 </span>
               </div>
@@ -409,47 +409,44 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
 
             {/* Notification alert */}
             {errorMsg && (
-              <div className="p-3.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-900 flex items-start gap-2.5">
-                <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-                <div className="flex-1 leading-relaxed">{errorMsg}</div>
+              <div className="p-3.5 bg-red-50 border border-red-200 rounded-xl text-xs sm:text-sm text-red-900 flex items-start gap-2.5 animate-in fade-in">
+                <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                <div className="flex-1 leading-relaxed font-medium">{errorMsg}</div>
               </div>
             )}
 
             {successNotice && (
-              <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900 flex items-start gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+              <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs sm:text-sm text-emerald-900 flex items-start gap-2.5 animate-in fade-in">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                 <div className="flex-1 leading-relaxed font-semibold">{successNotice}</div>
               </div>
             )}
 
             {/* PASO 1: Formulario Estudiante */}
             {paso === 1 && (
-              <form onSubmit={handleNextStep} className="space-y-3.5 sm:space-y-4">
+              <form onSubmit={handleNextStep} className="space-y-4">
                 {/* 4 Illustrated Careers Preview for 12-15 year olds - Compact horizontal scroll on mobile */}
                 <div className="bg-stone-50 p-2.5 sm:p-3 rounded-xl border border-stone-200">
-                  <div className="text-[10px] sm:text-[11px] font-bold text-stone-600 uppercase tracking-wider mb-1.5 sm:mb-2 flex items-center justify-between">
+                  <div className="text-[10px] sm:text-[11px] font-bold text-stone-600 uppercase tracking-wider mb-1.5 flex items-center justify-between">
                     <span>4 Carreras Técnicas del Plantel:</span>
-                    <span className="text-stone-400 font-normal text-[10px] hidden sm:inline">Toca para explorar después</span>
-                    <span className="text-stone-400 font-normal text-[9px] sm:hidden">Desliza para ver ➔</span>
+                    <span className="text-stone-400 font-normal text-[10px] hidden sm:inline">Las explorarás en el recorrido virtual</span>
+                    <span className="text-stone-400 font-normal text-[9px] sm:hidden">Desliza ➔</span>
                   </div>
                   <div className="flex sm:grid sm:grid-cols-4 gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
                     {(['programacion', 'comercio', 'rrhh', 'cosmetologia'] as const).map(specId => {
                       const item = COMIC_ASSETS.especialidades[specId];
                       return (
-                        <div key={specId} className="w-28 sm:w-auto shrink-0 group relative rounded-lg border border-stone-200 bg-white overflow-hidden shadow-2xs hover:border-[#721B32] transition-colors">
-                          <div className="h-12 sm:h-16 w-full overflow-hidden bg-stone-100">
+                        <div key={specId} className="w-24 sm:w-auto shrink-0 group relative rounded-lg border border-stone-200 bg-white overflow-hidden shadow-2xs">
+                          <div className="h-10 sm:h-14 w-full overflow-hidden bg-stone-100">
                             <img 
                               src={item.image} 
                               alt={item.badge} 
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                              className="w-full h-full object-cover" 
                             />
                           </div>
-                          <div className="p-1 sm:p-1.5 text-center">
-                            <span className="text-[10px] font-black text-stone-900 block truncate">
-                              {specId === 'programacion' ? 'Programación' : specId === 'comercio' ? 'Comercio Int.' : specId === 'rrhh' ? 'Recursos Hum.' : 'Cosmetología'}
-                            </span>
-                            <span className="text-[9px] text-[#721B32] font-bold block truncate">
-                              {item.badge}
+                          <div className="p-1 text-center">
+                            <span className="text-[10px] font-bold text-stone-900 block truncate">
+                              {specId === 'programacion' ? 'Programación' : specId === 'comercio' ? 'Comercio' : specId === 'rrhh' ? 'Recursos H.' : 'Cosmetología'}
                             </span>
                           </div>
                         </div>
@@ -459,16 +456,16 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
                 </div>
 
                 <div className="flex flex-wrap items-center justify-between gap-1.5 pt-0.5">
-                  <span className="text-[11px] sm:text-xs text-stone-500 font-semibold uppercase tracking-wider">
+                  <span className="text-[11px] sm:text-xs text-stone-500 font-bold uppercase tracking-wider">
                     Datos Escolares del Alumno
                   </span>
                   <button
                     type="button"
                     onClick={handleAutocompletarPrueba}
-                    className="text-[11px] font-semibold text-[#721B32] hover:text-[#501323] flex items-center gap-1 underline underline-offset-2 py-0.5 cursor-pointer"
+                    className="text-xs font-bold text-[#721B32] hover:text-[#501323] flex items-center gap-1 bg-[#721B32]/10 hover:bg-[#721B32]/15 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                    <span>⚡ Ejemplo rápido</span>
+                    <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                    <span>⚡ Llenar ejemplo rápido</span>
                   </button>
                 </div>
 
@@ -480,13 +477,15 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
                   <input
                     type="text"
                     required
+                    autoComplete="name"
+                    autoCapitalize="words"
                     placeholder="Ej. Mariana Guadalupe Sánchez Cruz"
                     value={nombreCompleto}
                     onChange={e => setNombreCompleto(e.target.value)}
-                    className="w-full px-3 py-2.5 sm:py-2 text-sm sm:text-xs border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white font-medium"
+                    className="w-full px-3.5 py-3 sm:py-2.5 text-base sm:text-sm border border-stone-300 rounded-xl focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white font-medium shadow-2xs"
                   />
-                  <span className="text-[10px] text-stone-400 mt-0.5 block">
-                    Tal como aparece en tu credencial o acta.
+                  <span className="text-[10px] text-stone-400 mt-1 block">
+                    Tal como aparece en tu credencial escolar o acta de nacimiento.
                   </span>
                 </div>
 
@@ -494,10 +493,10 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <label className="text-xs font-bold text-stone-800 flex items-center gap-1">
-                      <Fingerprint className="w-3.5 h-3.5 text-[#721B32] shrink-0" />
+                      <Fingerprint className="w-4 h-4 text-[#721B32] shrink-0" />
                       <span>CURP Oficial (18 Caracteres) *</span>
                     </label>
-                    <span className={`text-[10px] font-mono-code font-bold ${
+                    <span className={`text-[11px] font-mono-code font-bold ${
                       cleanCurp.length === 18 ? 'text-emerald-700' : 'text-stone-400'
                     }`}>
                       {cleanCurp.length}/18
@@ -513,7 +512,7 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
                     placeholder="Ej. SACM090714HDFRLA01"
                     value={curp}
                     onChange={e => setCurp(e.target.value.toUpperCase())}
-                    className={`w-full px-3 py-2.5 sm:py-2 text-sm sm:text-xs font-mono-code font-bold tracking-wider border rounded-lg focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white ${
+                    className={`w-full px-3.5 py-3 sm:py-2.5 text-base sm:text-sm font-mono-code font-bold tracking-wider border rounded-xl focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white shadow-2xs ${
                       estudianteExistenteConCurp 
                         ? 'border-red-400 bg-red-50/50 text-red-900' 
                         : cleanCurp.length === 18 
@@ -524,14 +523,14 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
                   
                   {/* Warning if duplicate CURP */}
                   {estudianteExistenteConCurp && (
-                    <div className="mt-1.5 p-2 bg-red-50 border border-red-200 rounded-lg text-[11px] text-red-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1.5">
+                    <div className="mt-2 p-2.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                       <span>
                         ⚠️ La CURP ya está asignada a <strong>{estudianteExistenteConCurp.nombre_completo}</strong>.
                       </span>
                       <button
                         type="button"
                         onClick={() => handleSelectQuickStudent(estudianteExistenteConCurp)}
-                        className="px-2 py-1 bg-red-800 text-white rounded text-[10px] font-bold whitespace-nowrap hover:bg-red-900 cursor-pointer"
+                        className="w-full sm:w-auto px-3 py-1.5 bg-red-800 text-white rounded-lg text-xs font-bold whitespace-nowrap hover:bg-red-900 cursor-pointer text-center"
                       >
                         Ingresar con esta cuenta
                       </button>
@@ -544,7 +543,7 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
                 </div>
 
                 {/* Número de Control & Teléfono Alumno */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-bold text-stone-800 mb-1">
                       Número de Control Escolar *
@@ -552,11 +551,12 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
                     <input
                       type="text"
                       inputMode="numeric"
+                      pattern="[0-9]*"
                       required
                       placeholder="Ej. 26316070010042"
                       value={numControl}
                       onChange={e => setNumControl(e.target.value.replace(/\D/g, ''))}
-                      className="w-full px-3 py-2.5 sm:py-2 text-sm sm:text-xs font-mono-code border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white"
+                      className="w-full px-3.5 py-3 sm:py-2.5 text-base sm:text-sm font-mono-code font-bold border border-stone-300 rounded-xl focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white shadow-2xs"
                     />
                   </div>
                   <div>
@@ -566,52 +566,73 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
                     <input
                       type="tel"
                       inputMode="tel"
+                      autoComplete="tel"
                       placeholder="Ej. 55 1234 5678"
                       value={telefonoAlumno}
                       onChange={e => setTelefonoAlumno(e.target.value)}
-                      className="w-full px-3 py-2.5 sm:py-2 text-sm sm:text-xs border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white"
+                      className="w-full px-3.5 py-3 sm:py-2.5 text-base sm:text-sm border border-stone-300 rounded-xl focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white shadow-2xs"
                     />
                   </div>
                 </div>
 
-                {/* Grupo y Turno */}
-                <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
-                  <div>
-                    <label className="block text-xs font-bold text-stone-800 mb-1">
-                      Grupo Asignado
-                    </label>
-                    <select
-                      value={grupo}
-                      onChange={e => setGrupo(e.target.value)}
-                      className="w-full px-2.5 sm:px-3 py-2.5 sm:py-2 text-sm sm:text-xs font-mono-code border border-stone-300 rounded-lg bg-white"
+                {/* Turno - Touch-friendly Segmented Control */}
+                <div>
+                  <label className="block text-xs font-bold text-stone-800 mb-1.5">
+                    Turno Asignado *
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setTurno('MATUTINO')}
+                      className={`py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                        turno === 'MATUTINO'
+                          ? 'bg-[#721B32] text-white border-[#721B32] shadow-xs'
+                          : 'bg-white text-stone-700 border-stone-300 hover:bg-stone-50'
+                      }`}
                     >
-                      <option value="1°A">Grupo 1°A</option>
-                      <option value="1°B">Grupo 1°B</option>
-                      <option value="1°C">Grupo 1°C</option>
-                      <option value="1°D">Grupo 1°D</option>
-                      <option value="1°E">Grupo 1°E</option>
-                      <option value="1°F">Grupo 1°F</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-stone-800 mb-1">
-                      Turno
-                    </label>
-                    <select
-                      value={turno}
-                      onChange={e => setTurno(e.target.value as any)}
-                      className="w-full px-2.5 sm:px-3 py-2.5 sm:py-2 text-sm sm:text-xs border border-stone-300 rounded-lg bg-white"
+                      <span>☀️ Matutino</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTurno('VESPERTINO')}
+                      className={`py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                        turno === 'VESPERTINO'
+                          ? 'bg-[#721B32] text-white border-[#721B32] shadow-xs'
+                          : 'bg-white text-stone-700 border-stone-300 hover:bg-stone-50'
+                      }`}
                     >
-                      <option value="MATUTINO">Matutino</option>
-                      <option value="VESPERTINO">Vespertino</option>
-                    </select>
+                      <span>🌙 Vespertino</span>
+                    </button>
                   </div>
                 </div>
 
-                <div className="pt-2 sm:pt-3 border-t border-stone-200 flex justify-end">
+                {/* Grupo - Touch-friendly Grid Selector */}
+                <div>
+                  <label className="block text-xs font-bold text-stone-800 mb-1.5">
+                    Grupo de 1.° Semestre *
+                  </label>
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                    {['1°A', '1°B', '1°C', '1°D', '1°E', '1°F'].map(g => (
+                      <button
+                        key={g}
+                        type="button"
+                        onClick={() => setGrupo(g)}
+                        className={`py-2.5 text-xs font-mono-code font-bold rounded-xl border text-center transition-all cursor-pointer ${
+                          grupo === g
+                            ? 'bg-[#721B32] text-white border-[#721B32] shadow-xs ring-2 ring-[#721B32]/30'
+                            : 'bg-white text-stone-700 border-stone-300 hover:bg-stone-50'
+                        }`}
+                      >
+                        {g}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-stone-200">
                   <button
                     type="submit"
-                    className="w-full sm:w-auto px-5 py-3 sm:py-2.5 bg-[#721B32] hover:bg-[#5b1528] active:bg-[#4a1020] text-white rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+                    className="w-full py-3.5 sm:py-3 bg-[#721B32] hover:bg-[#5b1528] active:bg-[#4a1020] active:scale-[0.99] text-white rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
                   >
                     <span>Continuar al Paso 2: Datos del Tutor</span>
                     <ArrowRight className="w-4 h-4 shrink-0" />
@@ -622,13 +643,36 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
 
             {/* PASO 2: Formulario Tutor */}
             {paso === 2 && (
-              <form onSubmit={handleFinalizarRegistro} className="space-y-3.5 sm:space-y-4">
-                <div className="p-3 bg-amber-50/80 border border-amber-200 rounded-xl text-xs text-amber-900 leading-relaxed">
-                  <div className="font-bold flex items-center gap-1.5 text-amber-950 mb-0.5">
+              <form onSubmit={handleFinalizarRegistro} className="space-y-4">
+                <div className="p-3.5 bg-amber-50/80 border border-amber-200 rounded-xl text-xs sm:text-sm text-amber-900 leading-relaxed">
+                  <div className="font-bold flex items-center gap-1.5 text-amber-950 mb-1">
                     <Mail className="w-4 h-4 text-amber-700 shrink-0" />
                     <span>Vinculación Obligatoria del Tutor Legal</span>
                   </div>
                   El correo de tu papá, mamá o tutor legal es estrictamente obligatorio. Se registrará en la base de datos para validar su firma digital y autorizar la impresión de tu <strong>Pase Digital QR</strong>.
+                </div>
+
+                {/* Parentesco - Segmented Touch Buttons */}
+                <div>
+                  <label className="block text-xs font-bold text-stone-800 mb-1.5">
+                    Parentesco con el Alumno *
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(['Padre', 'Madre', 'Tutor Legal'] as const).map(p => (
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => setParentesco(p)}
+                        className={`py-2.5 px-2 rounded-xl border text-xs font-bold text-center transition-all cursor-pointer truncate ${
+                          parentesco === p
+                            ? 'bg-[#721B32] text-white border-[#721B32] shadow-xs ring-2 ring-[#721B32]/30'
+                            : 'bg-white text-stone-700 border-stone-300 hover:bg-stone-50'
+                        }`}
+                      >
+                        {p === 'Padre' ? '👨 Padre' : p === 'Madre' ? '👩 Madre' : '⚖️ Tutor Legal'}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div>
@@ -638,28 +682,16 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
                   <input
                     type="text"
                     required
+                    autoComplete="name"
+                    autoCapitalize="words"
                     placeholder="Ej. Roberto Sánchez Morales"
                     value={nombreTutor}
                     onChange={e => setNombreTutor(e.target.value)}
-                    className="w-full px-3 py-2.5 sm:py-2 text-sm sm:text-xs border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white font-medium"
+                    className="w-full px-3.5 py-3 sm:py-2.5 text-base sm:text-sm border border-stone-300 rounded-xl focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white font-medium shadow-2xs"
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-bold text-stone-800 mb-1">
-                      Parentesco *
-                    </label>
-                    <select
-                      value={parentesco}
-                      onChange={e => setParentesco(e.target.value as any)}
-                      className="w-full px-3 py-2.5 sm:py-2 text-sm sm:text-xs border border-stone-300 rounded-lg bg-white"
-                    >
-                      <option value="Padre">Padre</option>
-                      <option value="Madre">Madre</option>
-                      <option value="Tutor Legal">Tutor Legal</option>
-                    </select>
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-bold text-stone-800 mb-1">
                       Teléfono del Tutor *
@@ -667,48 +699,47 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
                     <input
                       type="tel"
                       inputMode="tel"
+                      autoComplete="tel"
                       required
                       placeholder="Ej. 55 9876 5432"
                       value={telefonoTutor}
                       onChange={e => setTelefonoTutor(e.target.value)}
-                      className="w-full px-3 py-2.5 sm:py-2 text-sm sm:text-xs border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white"
+                      className="w-full px-3.5 py-3 sm:py-2.5 text-base sm:text-sm border border-stone-300 rounded-xl focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white shadow-2xs"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-stone-800 mb-1">
+                      Correo Electrónico del Tutor *
+                    </label>
+                    <input
+                      type="email"
+                      inputMode="email"
+                      autoCapitalize="none"
+                      autoCorrect="off"
+                      autoComplete="email"
+                      required
+                      placeholder="Ej. tutor.alumno@gmail.com"
+                      value={correoTutor}
+                      onChange={e => setCorreoTutor(e.target.value)}
+                      className="w-full px-3.5 py-3 sm:py-2.5 text-base sm:text-sm font-mono-code border border-stone-300 rounded-xl focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white shadow-2xs"
                     />
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold text-stone-800 mb-1">
-                    Correo Electrónico del Tutor (Indispensable para Pase QR) *
-                  </label>
-                  <input
-                    type="email"
-                    inputMode="email"
-                    autoCapitalize="none"
-                    required
-                    placeholder="Ej. tutor.alumno@gmail.com"
-                    value={correoTutor}
-                    onChange={e => setCorreoTutor(e.target.value)}
-                    className="w-full px-3 py-2.5 sm:py-2 text-sm sm:text-xs font-mono-code border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white"
-                  />
-                  <span className="text-[10px] text-stone-500 mt-0.5 block">
-                    Asegúrate de que sea una cuenta activa donde tu tutor pueda autorizar tu credencial.
-                  </span>
-                </div>
-
-                <div className="pt-2 sm:pt-3 border-t border-stone-200 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+                <div className="pt-3 border-t border-stone-200 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
                   <button
                     type="button"
                     onClick={() => setPaso(1)}
-                    className="w-full sm:w-auto px-4 py-2.5 border border-stone-300 text-stone-700 rounded-xl text-xs font-semibold hover:bg-stone-50 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                    className="w-full sm:w-auto px-4 py-3 sm:py-2.5 border border-stone-300 text-stone-700 rounded-xl text-xs font-bold hover:bg-stone-50 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                   >
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>Regresar a datos del alumno</span>
+                    <ArrowLeft className="w-4 h-4" />
+                    <span>Regresar al Paso 1</span>
                   </button>
                   <button
                     type="submit"
-                    className="w-full sm:w-auto px-5 py-3 sm:py-2.5 bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+                    className="w-full sm:w-auto px-6 py-3.5 sm:py-3 bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 active:scale-[0.99] text-white rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
                   >
-                    <Check className="w-4 h-4" />
+                    <Check className="w-5 h-5" />
                     <span>Completar Registro y Entrar</span>
                   </button>
                 </div>
@@ -736,7 +767,7 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
               </div>
             )}
 
-            <form onSubmit={handleLoginExisting} className="max-w-md mx-auto space-y-3">
+            <form onSubmit={handleLoginExisting} className="max-w-md mx-auto space-y-4">
               <div>
                 <label className="block text-xs font-bold text-stone-800 mb-1">
                   CURP o Número de Control:
@@ -747,18 +778,19 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
                     required
                     autoCapitalize="characters"
                     autoCorrect="off"
+                    spellCheck={false}
                     placeholder="Ej. SACM090714HDFRLA01 o 26316070010042"
                     value={loginQuery}
                     onChange={e => setLoginQuery(e.target.value.toUpperCase())}
-                    className="w-full pl-9 pr-3 py-2.5 text-sm sm:text-xs font-mono-code font-bold tracking-wider border border-stone-300 rounded-xl focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white"
+                    className="w-full pl-10 pr-3.5 py-3 sm:py-2.5 text-base sm:text-sm font-mono-code font-bold tracking-wider border border-stone-300 rounded-xl focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white shadow-2xs"
                   />
-                  <Search className="w-4 h-4 text-stone-400 absolute left-3 top-3" />
+                  <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
                 </div>
               </div>
 
               <button
                 type="submit"
-                className="w-full py-3 sm:py-2.5 bg-[#721B32] hover:bg-[#5b1528] active:bg-[#4a1020] text-white rounded-xl text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-3.5 sm:py-3 bg-[#721B32] hover:bg-[#5b1528] active:bg-[#4a1020] active:scale-[0.99] text-white rounded-xl text-sm font-bold transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Acceder a mi Cuenta de Alumno</span>
                 <ArrowRight className="w-4 h-4" />
@@ -769,17 +801,17 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
             <div className="border-t border-stone-200 pt-3 sm:pt-4 mt-3 sm:mt-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[10px] sm:text-[11px] font-bold text-stone-500 uppercase tracking-wider">
-                  Alumnos Demo en el Padrón ({estudiantesRegistrados.length})
+                  Alumnos Registrados en el Padrón ({estudiantesRegistrados.length})
                 </span>
-                <span className="text-[10px] text-stone-400">Clic para entrar</span>
+                <span className="text-[10px] text-stone-400">Toca para entrar</span>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto p-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-56 overflow-y-auto p-1">
                 {estudiantesRegistrados.map(est => (
                   <button
                     key={est.num_control}
                     type="button"
                     onClick={() => handleSelectQuickStudent(est)}
-                    className="p-2.5 text-left rounded-lg border border-stone-200 hover:border-[#721B32] hover:bg-stone-50 transition-colors flex items-center justify-between text-xs cursor-pointer gap-2"
+                    className="p-3 text-left rounded-xl border border-stone-200 hover:border-[#721B32] hover:bg-stone-50 transition-all flex items-center justify-between text-xs cursor-pointer gap-2 active:scale-[0.99]"
                   >
                     <div className="min-w-0 flex-1">
                       <div className="font-bold text-stone-900 truncate">{est.nombre_completo}</div>
@@ -787,7 +819,7 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
                         {est.curp} · {est.grupo}
                       </div>
                     </div>
-                    <span className={`text-[9px] px-1.5 py-0.5 rounded font-semibold shrink-0 ${
+                    <span className={`text-[9px] px-2 py-0.5 rounded font-bold shrink-0 ${
                       est.tutor?.verificado ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
                     }`}>
                       {est.tutor?.verificado ? '✓ Tutor OK' : '⚠️ Sin Firma'}
@@ -821,13 +853,13 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
             </div>
 
             {docenteError && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-900 flex items-start gap-2 animate-in fade-in">
+              <div className="p-3.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-900 flex items-start gap-2 animate-in fade-in">
                 <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
                 <div className="flex-1 font-medium">{docenteError}</div>
               </div>
             )}
 
-            <form onSubmit={handleAccesoDocente} className="space-y-3">
+            <form onSubmit={handleAccesoDocente} className="space-y-4">
               <div>
                 <label className="block text-xs font-bold text-stone-800 mb-1">
                   Clave Institucional / PIN Directivo:
@@ -839,9 +871,9 @@ export const MandatoryRegistrationGate: React.FC<MandatoryRegistrationGateProps>
                     placeholder="Ingresa clave o PIN directivo"
                     value={docentePass}
                     onChange={e => setDocentePass(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2.5 text-sm sm:text-xs font-mono-code font-bold tracking-wider border border-stone-300 rounded-xl focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white"
+                    className="w-full pl-10 pr-3.5 py-3 sm:py-2.5 text-base sm:text-sm font-mono-code font-bold tracking-wider border border-stone-300 rounded-xl focus:ring-2 focus:ring-[#721B32] focus:outline-none bg-white shadow-2xs"
                   />
-                  <KeyRound className="w-4 h-4 text-stone-400 absolute left-3 top-3" />
+                  <KeyRound className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
                 </div>
               </div>
 

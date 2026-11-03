@@ -161,44 +161,44 @@ export const TutorSignatureModal: React.FC<TutorSignatureModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl border border-stone-200 max-w-lg w-full shadow-2xl overflow-hidden my-6">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+      <div className="bg-white rounded-2xl border border-stone-200 max-w-lg w-full shadow-2xl overflow-hidden my-auto max-h-[96dvh] flex flex-col">
         {/* Modal Header */}
-        <div className="bg-[#721B32] p-5 text-white flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="bg-[#721B32] p-4 sm:p-5 text-white flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-3 min-w-0">
             <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-amber-200 shrink-0">
               <ShieldCheck className="w-6 h-6" />
             </div>
-            <div>
-              <span className="text-[11px] uppercase tracking-wider text-amber-200 font-semibold block">
+            <div className="min-w-0">
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-amber-200 font-semibold block truncate">
                 Consentimiento Familiar DGETI
               </span>
-              <h3 className="text-base font-bold text-white">
-                Firma y Verificación de Papá o Tutor Legal
+              <h3 className="text-sm sm:text-base font-bold text-white leading-tight">
+                Firma y Verificación del Tutor Legal
               </h3>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors shrink-0 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleConfirmSignature} className="p-6 space-y-4 text-xs">
+        <form onSubmit={handleConfirmSignature} className="p-4 sm:p-6 space-y-4 text-xs overflow-y-auto flex-1">
           {/* Explanation Alert */}
-          <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-blue-900 leading-relaxed">
+          <div className="p-3.5 bg-blue-50 border border-blue-200 rounded-xl text-blue-900 leading-relaxed text-xs">
             <span className="font-bold block mb-1">Requisito Obligatorio de Impresión:</span>
             Para que el Pase Digital QR sea válido e imprimible para el Rally Presencial, el padre, madre o tutor debe autorizar con su correo verificado y firmar la conformidad institucional.
           </div>
 
           {/* Student Info Card */}
-          <div className="p-3 bg-stone-50 rounded-xl border border-stone-200 grid grid-cols-2 gap-2 text-stone-700">
+          <div className="p-3 bg-stone-50 rounded-xl border border-stone-200 grid grid-cols-2 gap-2 text-stone-700 text-xs">
             <div>
               <span className="text-[10px] uppercase text-stone-400 font-bold block">Alumno:</span>
-              <span className="font-bold text-stone-900">{estudiante.nombre_completo}</span>
+              <span className="font-bold text-stone-900 truncate block">{estudiante.nombre_completo}</span>
             </div>
             <div>
               <span className="text-[10px] uppercase text-stone-400 font-bold block">Núm. de Control:</span>
@@ -215,47 +215,60 @@ export const TutorSignatureModal: React.FC<TutorSignatureModalProps> = ({
           </div>
 
           {/* Tutor Inputs */}
-          <div className="space-y-3 pt-1">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-              <div className="sm:col-span-2">
-                <label className="font-bold text-stone-800 block mb-1">Nombre Completo del Papá / Mamá / Tutor:</label>
-                <input
-                  type="text"
-                  required
-                  value={nombreTutor}
-                  onChange={e => setNombreTutor(e.target.value)}
-                  placeholder="ej. Lic. Fernando Morales Silva"
-                  className="w-full p-2 border border-stone-300 rounded-lg bg-stone-50 focus:bg-white text-xs font-medium"
-                />
-              </div>
-              <div>
-                <label className="font-bold text-stone-800 block mb-1">Parentesco:</label>
-                <select
-                  value={parentesco}
-                  onChange={e => setParentesco(e.target.value as any)}
-                  className="w-full p-2 border border-stone-300 rounded-lg bg-stone-50 text-xs font-medium"
-                >
-                  <option value="Padre">Padre</option>
-                  <option value="Madre">Madre</option>
-                  <option value="Tutor Legal">Tutor Legal</option>
-                </select>
+          <div className="space-y-3.5 pt-1">
+            {/* Parentesco Segmented Buttons */}
+            <div>
+              <label className="font-bold text-stone-800 block mb-1.5">Parentesco con el Alumno *</label>
+              <div className="grid grid-cols-3 gap-2">
+                {(['Padre', 'Madre', 'Tutor Legal'] as const).map(p => (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => setParentesco(p)}
+                    className={`py-2 px-2 rounded-xl border text-xs font-bold text-center transition-all cursor-pointer truncate ${
+                      parentesco === p
+                        ? 'bg-[#721B32] text-white border-[#721B32] shadow-xs ring-2 ring-[#721B32]/30'
+                        : 'bg-white text-stone-700 border-stone-300 hover:bg-stone-50'
+                    }`}
+                  >
+                    {p === 'Padre' ? '👨 Padre' : p === 'Madre' ? '👩 Madre' : '⚖️ Tutor'}
+                  </button>
+                ))}
               </div>
             </div>
 
             <div>
+              <label className="font-bold text-stone-800 block mb-1">Nombre Completo del Papá / Mamá / Tutor *</label>
+              <input
+                type="text"
+                required
+                autoComplete="name"
+                autoCapitalize="words"
+                value={nombreTutor}
+                onChange={e => setNombreTutor(e.target.value)}
+                placeholder="ej. Lic. Fernando Morales Silva"
+                className="w-full px-3.5 py-3 sm:py-2 border border-stone-300 rounded-xl bg-white text-base sm:text-xs font-medium focus:ring-2 focus:ring-[#721B32] focus:outline-none"
+              />
+            </div>
+
+            <div>
               <label className="font-bold text-stone-800 block mb-1">
-                Correo Electrónico del Papá o Tutor (donde queda registrado en la base de datos):
+                Correo Electrónico del Tutor (registrado en la base de datos) *
               </label>
               <div className="relative">
                 <input
                   type="email"
+                  inputMode="email"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  autoComplete="email"
                   required
                   value={correoTutor}
                   onChange={e => setCorreoTutor(e.target.value)}
                   placeholder="ej. tutor.familia@gmail.com"
-                  className="w-full pl-8 pr-3 py-2 border border-stone-300 rounded-lg bg-stone-50 focus:bg-white text-xs font-mono-code font-medium"
+                  className="w-full pl-10 pr-3.5 py-3 sm:py-2 border border-stone-300 rounded-xl bg-white text-base sm:text-xs font-mono-code font-medium focus:ring-2 focus:ring-[#721B32] focus:outline-none"
                 />
-                <Mail className="w-4 h-4 text-stone-400 absolute left-2.5 top-2.5" />
+                <Mail className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
               </div>
             </div>
           </div>
@@ -376,20 +389,20 @@ export const TutorSignatureModal: React.FC<TutorSignatureModalProps> = ({
           )}
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-stone-200">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2.5 pt-3 border-t border-stone-200">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-stone-600 hover:bg-stone-100 rounded-lg font-medium text-xs"
+              className="w-full sm:w-auto px-4 py-3 sm:py-2 text-stone-600 hover:bg-stone-100 rounded-xl font-bold text-xs cursor-pointer text-center"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-5 py-2.5 bg-[#721B32] hover:bg-[#5b1528] text-white rounded-lg font-bold text-xs flex items-center gap-1.5 shadow-xs transition-colors"
+              className="w-full sm:w-auto px-5 py-3.5 sm:py-2.5 bg-[#721B32] hover:bg-[#5b1528] active:bg-[#4a1020] active:scale-[0.99] text-white rounded-xl font-bold text-sm sm:text-xs flex items-center justify-center gap-1.5 shadow-md transition-all cursor-pointer"
             >
               <Check className="w-4 h-4" />
-              Guardar Firma y Desbloquear Impresión
+              Guardar Firma y Desbloquear Pase QR
             </button>
           </div>
         </form>

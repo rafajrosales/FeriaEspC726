@@ -203,88 +203,115 @@ export const StudentSelfRegistrationModal: React.FC<StudentSelfRegistrationModal
               </div>
 
               <div>
-                <label className="font-bold text-stone-800 block mb-1">Nombre Completo del Estudiante:</label>
+                <label className="font-bold text-stone-800 block mb-1">Nombre Completo del Estudiante *</label>
                 <input
                   type="text"
                   required
+                  autoComplete="name"
+                  autoCapitalize="words"
                   value={nombreCompleto}
                   onChange={e => setNombreCompleto(e.target.value)}
                   placeholder="ej. Gael Emiliano Morales Sánchez"
-                  className="w-full p-2.5 sm:p-2 border border-stone-300 rounded-lg bg-white focus:bg-white text-sm sm:text-xs font-medium"
+                  className="w-full px-3.5 py-3 sm:py-2 border border-stone-300 rounded-xl bg-white text-base sm:text-sm font-medium shadow-2xs focus:ring-2 focus:ring-[#721B32] focus:outline-none"
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="font-bold text-stone-800 block mb-1">Número de Control:</label>
+                  <label className="font-bold text-stone-800 block mb-1">Número de Control *</label>
                   <input
                     type="text"
                     inputMode="numeric"
+                    pattern="[0-9]*"
                     required
                     value={numControl}
-                    onChange={e => setNumControl(e.target.value)}
+                    onChange={e => setNumControl(e.target.value.replace(/\D/g, ''))}
                     placeholder="ej. 26316070010042"
-                    className="w-full p-2.5 sm:p-2 border border-stone-300 rounded-lg bg-white focus:bg-white text-sm sm:text-xs font-mono-code font-bold"
+                    className="w-full px-3.5 py-3 sm:py-2 border border-stone-300 rounded-xl bg-white text-base sm:text-sm font-mono-code font-bold shadow-2xs focus:ring-2 focus:ring-[#721B32] focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="font-bold text-stone-800 block mb-1">CURP Oficial:</label>
+                  <label className="font-bold text-stone-800 block mb-1">CURP Oficial (18 caracteres) *</label>
                   <input
                     type="text"
+                    required
+                    maxLength={18}
                     autoCapitalize="characters"
                     autoCorrect="off"
+                    spellCheck={false}
                     value={curp}
                     onChange={e => setCurp(e.target.value.toUpperCase())}
                     placeholder="ej. MOSG090314HDFRLA01"
-                    className="w-full p-2.5 sm:p-2 border border-stone-300 rounded-lg bg-white focus:bg-white text-sm sm:text-xs font-mono-code font-bold"
+                    className="w-full px-3.5 py-3 sm:py-2 border border-stone-300 rounded-xl bg-white text-base sm:text-sm font-mono-code font-bold tracking-wider shadow-2xs focus:ring-2 focus:ring-[#721B32] focus:outline-none"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
-                <div>
-                  <label className="font-bold text-stone-800 block mb-1">Grupo (1.° Semestre):</label>
-                  <select
-                    value={grupo}
-                    onChange={e => setGrupo(e.target.value)}
-                    className="w-full p-2.5 sm:p-2 border border-stone-300 rounded-lg bg-white text-sm sm:text-xs font-semibold"
+              {/* Turno Segmented Control */}
+              <div>
+                <label className="font-bold text-stone-800 block mb-1.5">Turno Asignado *</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setTurno('MATUTINO')}
+                    className={`py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                      turno === 'MATUTINO'
+                        ? 'bg-[#721B32] text-white border-[#721B32] shadow-xs'
+                        : 'bg-white text-stone-700 border-stone-300 hover:bg-stone-50'
+                    }`}
                   >
-                    <option value="1°A">Grupo 1°A</option>
-                    <option value="1°B">Grupo 1°B</option>
-                    <option value="1°C">Grupo 1°C</option>
-                    <option value="1°D">Grupo 1°D</option>
-                    <option value="1°E">Grupo 1°E</option>
-                    <option value="1°F">Grupo 1°F</option>
-                  </select>
+                    <span>☀️ Matutino</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTurno('VESPERTINO')}
+                    className={`py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                      turno === 'VESPERTINO'
+                        ? 'bg-[#721B32] text-white border-[#721B32] shadow-xs'
+                        : 'bg-white text-stone-700 border-stone-300 hover:bg-stone-50'
+                    }`}
+                  >
+                    <span>🌙 Vespertino</span>
+                  </button>
                 </div>
+              </div>
 
-                <div>
-                  <label className="font-bold text-stone-800 block mb-1">Turno Asignado:</label>
-                  <select
-                    value={turno}
-                    onChange={e => setTurno(e.target.value as any)}
-                    className="w-full p-2.5 sm:p-2 border border-stone-300 rounded-lg bg-white text-sm sm:text-xs font-semibold"
-                  >
-                    <option value="MATUTINO">Turno Matutino</option>
-                    <option value="VESPERTINO">Turno Vespertino</option>
-                  </select>
+              {/* Grupo Grid Selector */}
+              <div>
+                <label className="font-bold text-stone-800 block mb-1.5">Grupo (1.° Semestre) *</label>
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                  {['1°A', '1°B', '1°C', '1°D', '1°E', '1°F'].map(g => (
+                    <button
+                      key={g}
+                      type="button"
+                      onClick={() => setGrupo(g)}
+                      className={`py-2.5 text-xs font-mono-code font-bold rounded-xl border text-center transition-all cursor-pointer ${
+                        grupo === g
+                          ? 'bg-[#721B32] text-white border-[#721B32] shadow-xs ring-2 ring-[#721B32]/30'
+                          : 'bg-white text-stone-700 border-stone-300 hover:bg-stone-50'
+                      }`}
+                    >
+                      {g}
+                    </button>
+                  ))}
                 </div>
               </div>
 
               <div>
-                <label className="font-bold text-stone-800 block mb-1">Teléfono o WhatsApp del Alumno (Opcional):</label>
+                <label className="font-bold text-stone-800 block mb-1">Teléfono Celular del Alumno (Opcional):</label>
                 <input
                   type="tel"
                   inputMode="tel"
+                  autoComplete="tel"
                   value={telefonoAlumno}
                   onChange={e => setTelefonoAlumno(e.target.value)}
                   placeholder="ej. 55 1234 5678"
-                  className="w-full p-2.5 sm:p-2 border border-stone-300 rounded-lg bg-white focus:bg-white text-sm sm:text-xs font-mono-code"
+                  className="w-full px-3.5 py-3 sm:py-2 border border-stone-300 rounded-xl bg-white text-base sm:text-sm font-mono-code shadow-2xs focus:ring-2 focus:ring-[#721B32] focus:outline-none"
                 />
               </div>
 
               {errorMsg && (
-                <div className="p-2.5 bg-red-50 border border-red-200 rounded-lg text-red-900 text-xs">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-900 text-xs sm:text-sm font-medium animate-in fade-in">
                   {errorMsg}
                 </div>
               )}
@@ -293,13 +320,13 @@ export const StudentSelfRegistrationModal: React.FC<StudentSelfRegistrationModal
                 <button
                   type="button"
                   onClick={onClose}
-                  className="w-full sm:w-auto px-4 py-2.5 text-stone-600 hover:bg-stone-100 rounded-lg font-medium cursor-pointer"
+                  className="w-full sm:w-auto px-4 py-3 sm:py-2.5 text-stone-600 hover:bg-stone-100 rounded-xl font-bold cursor-pointer text-xs"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="w-full sm:w-auto px-5 py-2.5 bg-[#721B32] hover:bg-[#5b1528] active:bg-[#4a1020] text-white rounded-lg font-bold flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
+                  className="w-full sm:w-auto px-5 py-3.5 sm:py-2.5 bg-[#721B32] hover:bg-[#5b1528] active:bg-[#4a1020] active:scale-[0.99] text-white rounded-xl text-sm font-bold flex items-center justify-center gap-1.5 shadow-md cursor-pointer"
                 >
                   <span>Siguiente: Datos de Papá o Tutor</span>
                   <ArrowRight className="w-4 h-4 shrink-0" />
@@ -307,80 +334,94 @@ export const StudentSelfRegistrationModal: React.FC<StudentSelfRegistrationModal
               </div>
             </form>
           ) : (
-            <form onSubmit={handleFinalizarRegistro} className="space-y-3.5 sm:space-y-4 text-xs">
-              <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 leading-relaxed space-y-1">
-                <span className="font-bold flex items-center gap-1 text-xs">
-                  <Shield className="w-3.5 h-3.5 text-amber-700 shrink-0" />
+            <form onSubmit={handleFinalizarRegistro} className="space-y-4 text-xs">
+              <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 leading-relaxed space-y-1">
+                <span className="font-bold flex items-center gap-1 text-xs sm:text-sm text-amber-950">
+                  <Shield className="w-4 h-4 text-amber-700 shrink-0" />
                   <span>¿Por qué necesitamos el correo de tu papá o tutor?</span>
                 </span>
-                <p className="text-[11px] text-amber-950">
-                  El sistema del CETis 7 enviará a este correo la confirmación de tu perfil vocacional. <strong>Tu Pase Digital QR solo podrá imprimirse cuando tu papá o tutor confirme y firme digitalmente con su correo en la base de datos.</strong>
+                <p className="text-xs text-amber-950">
+                  El sistema del CETis 7 vinculará este correo oficial en la base de datos. <strong>Tu Pase Digital QR solo podrá imprimirse cuando tu papá o tutor confirme y firme digitalmente con su correo.</strong>
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-2">
-                <div className="sm:col-span-2">
-                  <label className="font-bold text-stone-800 block mb-1">Nombre Completo del Papá, Mamá o Tutor:</label>
-                  <input
-                    type="text"
-                    required
-                    value={nombreTutor}
-                    onChange={e => setNombreTutor(e.target.value)}
-                    placeholder="ej. Lic. Roberto Sánchez Morales"
-                    className="w-full p-2.5 sm:p-2 border border-stone-300 rounded-lg bg-white focus:bg-white text-sm sm:text-xs font-medium"
-                  />
+              {/* Parentesco Segmented Control */}
+              <div>
+                <label className="font-bold text-stone-800 block mb-1.5">Parentesco con el Alumno *</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {(['Padre', 'Madre', 'Tutor Legal'] as const).map(p => (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => setParentesco(p)}
+                      className={`py-2.5 px-2 rounded-xl border text-xs font-bold text-center transition-all cursor-pointer truncate ${
+                        parentesco === p
+                          ? 'bg-[#721B32] text-white border-[#721B32] shadow-xs ring-2 ring-[#721B32]/30'
+                          : 'bg-white text-stone-700 border-stone-300 hover:bg-stone-50'
+                      }`}
+                    >
+                      {p === 'Padre' ? '👨 Padre' : p === 'Madre' ? '👩 Madre' : '⚖️ Tutor'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="font-bold text-stone-800 block mb-1">Nombre Completo del Papá, Mamá o Tutor *</label>
+                <input
+                  type="text"
+                  required
+                  autoComplete="name"
+                  autoCapitalize="words"
+                  value={nombreTutor}
+                  onChange={e => setNombreTutor(e.target.value)}
+                  placeholder="ej. Lic. Roberto Sánchez Morales"
+                  className="w-full px-3.5 py-3 sm:py-2 border border-stone-300 rounded-xl bg-white text-base sm:text-sm font-medium shadow-2xs focus:ring-2 focus:ring-[#721B32] focus:outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-stone-800 block mb-1">
+                    Correo Electrónico del Tutor *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="email"
+                      inputMode="email"
+                      autoCapitalize="none"
+                      autoCorrect="off"
+                      autoComplete="email"
+                      required
+                      value={correoTutor}
+                      onChange={e => setCorreoTutor(e.target.value)}
+                      placeholder="ej. papa.tutor@gmail.com"
+                      className="w-full pl-10 pr-3.5 py-3 sm:py-2 border border-stone-300 rounded-xl bg-white text-base sm:text-sm font-mono-code font-medium shadow-2xs focus:ring-2 focus:ring-[#721B32] focus:outline-none"
+                    />
+                    <Mail className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
+                  </div>
                 </div>
 
                 <div>
-                  <label className="font-bold text-stone-800 block mb-1">Parentesco:</label>
-                  <select
-                    value={parentesco}
-                    onChange={e => setParentesco(e.target.value as any)}
-                    className="w-full p-2.5 sm:p-2 border border-stone-300 rounded-lg bg-white text-sm sm:text-xs font-semibold"
-                  >
-                    <option value="Padre">Padre</option>
-                    <option value="Madre">Madre</option>
-                    <option value="Tutor Legal">Tutor Legal</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="font-bold text-stone-800 block mb-1">
-                  Correo Electrónico de tu Papá o Tutor (Requisito Obligatorio):
-                </label>
-                <div className="relative">
-                  <input
-                    type="email"
-                    inputMode="email"
-                    autoCapitalize="none"
-                    required
-                    value={correoTutor}
-                    onChange={e => setCorreoTutor(e.target.value)}
-                    placeholder="ej. papa.tutor@gmail.com"
-                    className="w-full pl-9 pr-3 py-2.5 sm:py-2 border border-stone-300 rounded-lg bg-white focus:bg-white text-sm sm:text-xs font-mono-code font-medium"
-                  />
-                  <Mail className="w-4 h-4 text-stone-400 absolute left-3 top-3" />
-                </div>
-              </div>
-
-              <div>
-                <label className="font-bold text-stone-800 block mb-1">Teléfono de Contacto del Papá o Tutor:</label>
-                <div className="relative">
-                  <input
-                    type="tel"
-                    inputMode="tel"
-                    value={telefonoTutor}
-                    onChange={e => setTelefonoTutor(e.target.value)}
-                    placeholder="ej. 55 9876 5432"
-                    className="w-full pl-9 pr-3 py-2.5 sm:py-2 border border-stone-300 rounded-lg bg-white focus:bg-white text-sm sm:text-xs font-mono-code"
-                  />
-                  <Phone className="w-4 h-4 text-stone-400 absolute left-3 top-3" />
+                  <label className="font-bold text-stone-800 block mb-1">Teléfono Celular del Tutor *</label>
+                  <div className="relative">
+                    <input
+                      type="tel"
+                      inputMode="tel"
+                      autoComplete="tel"
+                      required
+                      value={telefonoTutor}
+                      onChange={e => setTelefonoTutor(e.target.value)}
+                      placeholder="ej. 55 9876 5432"
+                      className="w-full pl-10 pr-3.5 py-3 sm:py-2 border border-stone-300 rounded-xl bg-white text-base sm:text-sm font-mono-code shadow-2xs focus:ring-2 focus:ring-[#721B32] focus:outline-none"
+                    />
+                    <Phone className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
+                  </div>
                 </div>
               </div>
 
               {errorMsg && (
-                <div className="p-2.5 bg-red-50 border border-red-200 rounded-lg text-red-900 text-xs">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-900 text-xs sm:text-sm font-medium animate-in fade-in">
                   {errorMsg}
                 </div>
               )}
@@ -389,17 +430,17 @@ export const StudentSelfRegistrationModal: React.FC<StudentSelfRegistrationModal
                 <button
                   type="button"
                   onClick={() => setPaso(1)}
-                  className="w-full sm:w-auto px-4 py-2.5 text-stone-600 hover:bg-stone-100 rounded-lg font-medium flex items-center justify-center gap-1 cursor-pointer"
+                  className="w-full sm:w-auto px-4 py-3 sm:py-2.5 border border-stone-300 text-stone-700 rounded-xl text-xs font-bold hover:bg-stone-50 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                 >
-                  <ArrowLeft className="w-3.5 h-3.5" />
-                  <span>Regresar</span>
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>Regresar al Paso 1</span>
                 </button>
                 <button
                   type="submit"
-                  className="w-full sm:w-auto px-5 py-2.5 bg-[#721B32] hover:bg-[#5b1528] active:bg-[#4a1020] text-white rounded-lg font-bold flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
+                  className="w-full sm:w-auto px-6 py-3.5 sm:py-2.5 bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 active:scale-[0.99] text-white rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
                 >
-                  <Check className="w-4 h-4" />
-                  <span>Completar Registro e Iniciar Recorrido</span>
+                  <Check className="w-5 h-5" />
+                  <span>Completar Registro Oficial</span>
                 </button>
               </div>
             </form>
