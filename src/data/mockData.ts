@@ -410,6 +410,123 @@ export const ESPECIALIDADES: SpecialtyInfo[] = [
         tipo: 'foto',
         url_media: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80',
         descripcion: 'Cálculo de finiquitos y elaboración de contratos individuales de trabajo.'
+      },
+      {
+        id: 'rrhh-drive-1',
+        titulo: 'Galería Recursos Humanos 1',
+        alumnos: 'Academia de Recursos Humanos',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1z1J_aJjy2Q-T_45u8diRfxJ2FjV76K-s/view',
+        descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+      },
+      {
+        id: 'rrhh-drive-2',
+        titulo: 'Galería Recursos Humanos 2',
+        alumnos: 'Academia de Recursos Humanos',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1gXIDhbqHZF4sUiMBqqGGqLZGA75bXcCM/view',
+        descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+      },
+      {
+        id: 'rrhh-drive-3',
+        titulo: 'Galería Recursos Humanos 3',
+        alumnos: 'Academia de Recursos Humanos',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1SFHJ40OSkVZ74LUJqcDkB2E11nX7UMAC/view',
+        descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+      },
+      {
+        id: 'rrhh-drive-4',
+        titulo: 'Galería Recursos Humanos 4',
+        alumnos: 'Academia de Recursos Humanos',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/179DDIy40OcR_hkXvmlMxiGydn1V0NpYx/view',
+        descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+      },
+      {
+        id: 'rrhh-drive-5',
+        titulo: 'Galería Recursos Humanos 5',
+        alumnos: 'Academia de Recursos Humanos',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/11TDlo7eCej-l_zLDpdIKF4X8S78Zips5/view',
+        descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+      },
+      {
+        id: 'rrhh-drive-6',
+        titulo: 'Galería Recursos Humanos 6',
+        alumnos: 'Academia de Recursos Humanos',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/10Q259Ru8A2Bs5VEdpd9rcVMULM6WfjEk/view',
+        descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+      },
+      {
+        id: 'rrhh-drive-7',
+        titulo: 'Galería Recursos Humanos 7',
+        alumnos: 'Academia de Recursos Humanos',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1pw5POoViC6fBeAAUzu1KI6n8YMXXjOQQ/view',
+        descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+      },
+      {
+        id: 'rrhh-drive-8',
+        titulo: 'Galería Recursos Humanos 8',
+        alumnos: 'Academia de Recursos Humanos',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1XgCf4NtjSegIhgVVb_muuRSK7c5rXZid/view',
+        descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+      },
+      {
+        id: 'rrhh-drive-9',
+        titulo: 'Galería Recursos Humanos 9',
+        alumnos: 'Academia de Recursos Humanos',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1FYeCnE67aYON3B5tHurZk-0k4JCocWmG/view',
+        descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+      },
+      {
+        id: 'rrhh-drive-10',
+        titulo: 'Galería Recursos Humanos 10',
+        alumnos: 'Academia de Recursos Humanos',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1ta8qYsEK4XymD3RN1j-uMChpphfMQt_q/view',
+        descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+      },
+      {
+        id: 'rrhh-drive-11',
+        titulo: 'Galería Recursos Humanos 11',
+        alumnos: 'Academia de Recursos Humanos',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1XM14-DMZIwI2y3F7Zw-im-wWSdxhSIhM/view',
+        descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+      },
+      {
+        id: 'rrhh-drive-12',
+        titulo: 'Galería Recursos Humanos 12',
+        alumnos: 'Academia de Recursos Humanos',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1BN2fwadPlO41zECa_swTQM0gpYDZYAtz/view',
+        descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+      },
+      {
+        id: 'rrhh-drive-13',
+        titulo: 'Galería Recursos Humanos 13',
+        alumnos: 'Academia de Recursos Humanos',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1RyHLrFkcBoU5eqfqzxP5agv_gHdDBWRs/view',
+        descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
       }
     ],
     preguntas_quiz: [
@@ -566,6 +683,177 @@ export const ESPECIALIDADES: SpecialtyInfo[] = [
         tipo: 'foto',
         url_media: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=1200&q=80',
         descripcion: 'Evaluación del pH y biotipo cutáneo en modelos con estándares de higiene COFEPRIS.'
+      },
+      {
+        id: 'cos-drive-1',
+        titulo: 'Galería Cosmetología 1A',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1-mf-kQ3XbtJhhqXjIbQXBUMufRVzH3KE/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+      },
+      {
+        id: 'cos-drive-1b',
+        titulo: 'Galería Cosmetología 1B',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1Qga3N-jPbgvzkxP77YIonj4kfGQoEgvH/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+      },
+      {
+        id: 'cos-drive-2',
+        titulo: 'Galería Cosmetología 2',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1GZr1qoER1RcQoLmdAKxRONuaRAIiX5nN/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+      },
+      {
+        id: 'cos-drive-3',
+        titulo: 'Galería Cosmetología 3',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/12-iS6SE6f9CguqfYH92-ulmSMAVV_yGA/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+      },
+      {
+        id: 'cos-drive-4',
+        titulo: 'Galería Cosmetología 4',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1MMdvqBJ-CMc028BqFEh4GSt8oS8HcH4x/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+      },
+      {
+        id: 'cos-drive-5',
+        titulo: 'Galería Cosmetología 5',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1RA2LJwdg43BxzABTTB9YGgah1fPGhcuU/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+      },
+      {
+        id: 'cos-drive-6',
+        titulo: 'Galería Cosmetología 6',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1WQ5oFJYIkGflMEyhIPCwvO3AZoxolErR/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+      },
+      {
+        id: 'cos-drive-7',
+        titulo: 'Galería Cosmetología 7',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1UBGaafhZAX1mIBLETmmbSzROR-fqOB1r/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+      },
+      {
+        id: 'cos-drive-8',
+        titulo: 'Galería Cosmetología 8',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1f-KwkMWiVBswbk62sK4r2bEVniDFLHxj/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+      },
+      {
+        id: 'cos-drive-9',
+        titulo: 'Galería Cosmetología 9',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/17dtK-zvRd_VHlqRYPgLQ-RJEX2XtJxlq/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+      },
+      {
+        id: 'cos-drive-10',
+        titulo: 'Galería Cosmetología 10',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1xMoy_N002pDv3mR6ubB3Wbh-AdRyuVLj/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+      },
+      {
+        id: 'cos-drive-11',
+        titulo: 'Galería Cosmetología 11',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1jRyBM7jml-3uz6iLR3bKrICY4-5SMNAW/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+      },
+      {
+        id: 'cos-drive-12',
+        titulo: 'Galería Cosmetología 12',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1WWlLoJxj1pHA-mHWKyXwLhYH_9iSJ8cd/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+      },
+      {
+        id: 'cos-drive-13',
+        titulo: 'Galería Cosmetología 13',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1CoucVHk_ABYd27Rdwr3V-oYwR32vVEl_/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+      },
+      {
+        id: 'cos-drive-14',
+        titulo: 'Galería Cosmetología 14',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1jOp4ZvOUseoisRepWisipoUyXmfOszqO/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+      },
+      {
+        id: 'cos-drive-15',
+        titulo: 'Galería Cosmetología 15',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1Q7tSK_1qmNFK4nhOSfXHvd_Ya5ipHnQK/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+      },
+      {
+        id: 'cos-drive-16',
+        titulo: 'Galería Cosmetología 16',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1v4nceILyr_Be2KoQycLDxtD5LqLYbC37/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+      },
+      {
+        id: 'cos-drive-17',
+        titulo: 'Galería Cosmetología 17',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1LVH1_DmcYhWYwvZaTJHV1kq6CwQGg0dJ/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+      },
+      {
+        id: 'cos-drive-18',
+        titulo: 'Galería Cosmetología 18',
+        alumnos: 'Academia de Cosmetología',
+        semestre: 'Evidencia Estudiantil',
+        tipo: 'foto',
+        url_media: 'https://drive.google.com/file/d/1D-Gpsqx7k2zzvH9L5f9Hr_vIQsBUFOiV/view',
+        descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
       }
     ],
     preguntas_quiz: [
@@ -1054,6 +1342,152 @@ export const FICHAS_ACADEMIA_DEFAULT: Record<string, FichaAcademiaReq> = {
         'Diagnóstico de Clima Laboral NOM-035',
         'Simulador Digital de Entrevistas STAR',
         'Manual de Inducción Digital Orgullo Lerdo'
+      ],
+      galeria_alumnos: [
+        {
+          id: 'rrhh-gal-1',
+          titulo: 'Roleplay de Entrevistas Estructuradas por Competencias',
+          alumnos: 'Alumnos de 4° Semestre',
+          semestre: '4° Semestre',
+          tipo: 'video',
+          url_media: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+          descripcion: 'Simulación interactiva de reclutamiento y selección de personal con retroalimentación en vivo.'
+        },
+        {
+          id: 'rrhh-gal-2',
+          titulo: 'Jornada de Diagnóstico de Clima Laboral NOM-035',
+          alumnos: 'Grupo 5°D RRHH',
+          semestre: '5° Semestre',
+          tipo: 'foto',
+          url_media: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
+          descripcion: 'Aplicación de cuestionarios de bienestar organizacional y pausas activas para la comunidad.'
+        },
+        {
+          id: 'rrhh-gal-3',
+          titulo: 'Taller Practico de Nóminas y Contratos LFT',
+          alumnos: 'Alumnos de 6° Semestre',
+          semestre: '6° Semestre',
+          tipo: 'foto',
+          url_media: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80',
+          descripcion: 'Cálculo de finiquitos y elaboración de contratos individuales de trabajo.'
+        },
+        {
+          id: 'rrhh-drive-1',
+          titulo: 'Galería Recursos Humanos 1',
+          alumnos: 'Academia de Recursos Humanos',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1z1J_aJjy2Q-T_45u8diRfxJ2FjV76K-s/view',
+          descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+        },
+        {
+          id: 'rrhh-drive-2',
+          titulo: 'Galería Recursos Humanos 2',
+          alumnos: 'Academia de Recursos Humanos',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1gXIDhbqHZF4sUiMBqqGGqLZGA75bXcCM/view',
+          descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+        },
+        {
+          id: 'rrhh-drive-3',
+          titulo: 'Galería Recursos Humanos 3',
+          alumnos: 'Academia de Recursos Humanos',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1SFHJ40OSkVZ74LUJqcDkB2E11nX7UMAC/view',
+          descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+        },
+        {
+          id: 'rrhh-drive-4',
+          titulo: 'Galería Recursos Humanos 4',
+          alumnos: 'Academia de Recursos Humanos',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/179DDIy40OcR_hkXvmlMxiGydn1V0NpYx/view',
+          descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+        },
+        {
+          id: 'rrhh-drive-5',
+          titulo: 'Galería Recursos Humanos 5',
+          alumnos: 'Academia de Recursos Humanos',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/11TDlo7eCej-l_zLDpdIKF4X8S78Zips5/view',
+          descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+        },
+        {
+          id: 'rrhh-drive-6',
+          titulo: 'Galería Recursos Humanos 6',
+          alumnos: 'Academia de Recursos Humanos',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/10Q259Ru8A2Bs5VEdpd9rcVMULM6WfjEk/view',
+          descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+        },
+        {
+          id: 'rrhh-drive-7',
+          titulo: 'Galería Recursos Humanos 7',
+          alumnos: 'Academia de Recursos Humanos',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1pw5POoViC6fBeAAUzu1KI6n8YMXXjOQQ/view',
+          descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+        },
+        {
+          id: 'rrhh-drive-8',
+          titulo: 'Galería Recursos Humanos 8',
+          alumnos: 'Academia de Recursos Humanos',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1XgCf4NtjSegIhgVVb_muuRSK7c5rXZid/view',
+          descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+        },
+        {
+          id: 'rrhh-drive-9',
+          titulo: 'Galería Recursos Humanos 9',
+          alumnos: 'Academia de Recursos Humanos',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1FYeCnE67aYON3B5tHurZk-0k4JCocWmG/view',
+          descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+        },
+        {
+          id: 'rrhh-drive-10',
+          titulo: 'Galería Recursos Humanos 10',
+          alumnos: 'Academia de Recursos Humanos',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1ta8qYsEK4XymD3RN1j-uMChpphfMQt_q/view',
+          descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+        },
+        {
+          id: 'rrhh-drive-11',
+          titulo: 'Galería Recursos Humanos 11',
+          alumnos: 'Academia de Recursos Humanos',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1XM14-DMZIwI2y3F7Zw-im-wWSdxhSIhM/view',
+          descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+        },
+        {
+          id: 'rrhh-drive-12',
+          titulo: 'Galería Recursos Humanos 12',
+          alumnos: 'Academia de Recursos Humanos',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1BN2fwadPlO41zECa_swTQM0gpYDZYAtz/view',
+          descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+        },
+        {
+          id: 'rrhh-drive-13',
+          titulo: 'Galería Recursos Humanos 13',
+          alumnos: 'Academia de Recursos Humanos',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1RyHLrFkcBoU5eqfqzxP5agv_gHdDBWRs/view',
+          descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
+        }
       ]
     },
     banco_reactivos: [
@@ -1110,6 +1544,206 @@ export const FICHAS_ACADEMIA_DEFAULT: Record<string, FichaAcademiaReq> = {
         'Línea Dermocosmética Botánica Xochitl-Lerdo',
         'Protocolo de Drenaje Linfático Manual',
         'Atlas Interactivo de Biotipos y Lesiones Dérmicas'
+      ],
+      galeria_alumnos: [
+        {
+          id: 'cos-gal-1',
+          titulo: 'Demostración de Drenaje Linfático y Masaje Facial',
+          alumnos: 'Alumnas de 6° Semestre',
+          semestre: '6° Semestre',
+          tipo: 'video',
+          url_media: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+          descripcion: 'Técnica de maniobras suaves de descongestión ganglionar en cabina didáctica.'
+        },
+        {
+          id: 'cos-gal-2',
+          titulo: 'Línea Dermocosmética Botánica Xochitl-Lerdo',
+          alumnos: 'Grupo 5°F Cosmetología',
+          semestre: '5° Semestre',
+          tipo: 'foto',
+          url_media: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=80',
+          descripcion: 'Presentación de lociones, tónicos y mascarillas con aloe vera y caléndula.'
+        },
+        {
+          id: 'cos-gal-3',
+          titulo: 'Análisis Cutáneo con Lupa Dermatológica y Luz LED',
+          alumnos: 'Alumnos de 3° Semestre',
+          semestre: '3° Semestre',
+          tipo: 'foto',
+          url_media: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=1200&q=80',
+          descripcion: 'Evaluación del pH y biotipo cutáneo en modelos con estándares de higiene COFEPRIS.'
+        },
+        {
+          id: 'cos-drive-1',
+          titulo: 'Galería Cosmetología 1A',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1-mf-kQ3XbtJhhqXjIbQXBUMufRVzH3KE/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        },
+        {
+          id: 'cos-drive-1b',
+          titulo: 'Galería Cosmetología 1B',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1Qga3N-jPbgvzkxP77YIonj4kfGQoEgvH/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        },
+        {
+          id: 'cos-drive-2',
+          titulo: 'Galería Cosmetología 2',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1GZr1qoER1RcQoLmdAKxRONuaRAIiX5nN/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        },
+        {
+          id: 'cos-drive-3',
+          titulo: 'Galería Cosmetología 3',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/12-iS6SE6f9CguqfYH92-ulmSMAVV_yGA/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        },
+        {
+          id: 'cos-drive-4',
+          titulo: 'Galería Cosmetología 4',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1MMdvqBJ-CMc028BqFEh4GSt8oS8HcH4x/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        },
+        {
+          id: 'cos-drive-5',
+          titulo: 'Galería Cosmetología 5',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1RA2LJwdg43BxzABTTB9YGgah1fPGhcuU/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        },
+        {
+          id: 'cos-drive-6',
+          titulo: 'Galería Cosmetología 6',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1WQ5oFJYIkGflMEyhIPCwvO3AZoxolErR/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        },
+        {
+          id: 'cos-drive-7',
+          titulo: 'Galería Cosmetología 7',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1UBGaafhZAX1mIBLETmmbSzROR-fqOB1r/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        },
+        {
+          id: 'cos-drive-8',
+          titulo: 'Galería Cosmetología 8',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1f-KwkMWiVBswbk62sK4r2bEVniDFLHxj/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        },
+        {
+          id: 'cos-drive-9',
+          titulo: 'Galería Cosmetología 9',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/17dtK-zvRd_VHlqRYPgLQ-RJEX2XtJxlq/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        },
+        {
+          id: 'cos-drive-10',
+          titulo: 'Galería Cosmetología 10',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1xMoy_N002pDv3mR6ubB3Wbh-AdRyuVLj/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        },
+        {
+          id: 'cos-drive-11',
+          titulo: 'Galería Cosmetología 11',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1jRyBM7jml-3uz6iLR3bKrICY4-5SMNAW/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        },
+        {
+          id: 'cos-drive-12',
+          titulo: 'Galería Cosmetología 12',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1WWlLoJxj1pHA-mHWKyXwLhYH_9iSJ8cd/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        },
+        {
+          id: 'cos-drive-13',
+          titulo: 'Galería Cosmetología 13',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1CoucVHk_ABYd27Rdwr3V-oYwR32vVEl_/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        },
+        {
+          id: 'cos-drive-14',
+          titulo: 'Galería Cosmetología 14',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1jOp4ZvOUseoisRepWisipoUyXmfOszqO/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        },
+        {
+          id: 'cos-drive-15',
+          titulo: 'Galería Cosmetología 15',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1Q7tSK_1qmNFK4nhOSfXHvd_Ya5ipHnQK/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        },
+        {
+          id: 'cos-drive-16',
+          titulo: 'Galería Cosmetología 16',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1v4nceILyr_Be2KoQycLDxtD5LqLYbC37/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        },
+        {
+          id: 'cos-drive-17',
+          titulo: 'Galería Cosmetología 17',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1LVH1_DmcYhWYwvZaTJHV1kq6CwQGg0dJ/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        },
+        {
+          id: 'cos-drive-18',
+          titulo: 'Galería Cosmetología 18',
+          alumnos: 'Academia de Cosmetología',
+          semestre: 'Evidencia Estudiantil',
+          tipo: 'foto',
+          url_media: 'https://drive.google.com/file/d/1D-Gpsqx7k2zzvH9L5f9Hr_vIQsBUFOiV/view',
+          descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
+        }
       ]
     },
     banco_reactivos: [

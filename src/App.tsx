@@ -385,7 +385,7 @@ export default function App() {
               Centro de Estudios Tecnológicos industrial y de servicios No. 7 "Miguel Lerdo de Tejada"
             </div>
             <div className="text-stone-500">
-              DGETI · SEMS · Secretaría de Educación Pública · Av. Puerto Mazatlán No. 185, Col. La Pastora, Cuautepec, Gustavo A. Madero, C.P. 07290, CDMX.
+              DGETI · SEMS · Secretaría de Educación Pública · Av. Luis Espinoza s/n (entre Av. Benito Juárez y Solidaridad, frente al antiguo Museo del Drenaje Profundo), Colonia Solidaridad Nacional, Alcaldía Gustavo A. Madero, Ciudad de México, C.P. 07268 · Teléfono: 55 5039 2650.
             </div>
           </div>
           <div className="font-mono-code text-[11px] text-stone-500">

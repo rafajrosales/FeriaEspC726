@@ -703,7 +703,41 @@ export function saveAsistenciaPresencial(asistencia: AsistenciaPresencial): void
 export function getFichasAcademia(): Record<string, FichaAcademiaReq> {
   initializeStorage();
   const raw = localStorage.getItem(STORAGE_KEYS.FICHAS);
-  return raw ? JSON.parse(raw) : FICHAS_ACADEMIA_DEFAULT;
+  if (!raw) return FICHAS_ACADEMIA_DEFAULT;
+
+  const fichas: Record<string, FichaAcademiaReq> = JSON.parse(raw);
+  const syncKey = 'cetis7_drive_gallery_v1_synced';
+
+  if (!localStorage.getItem(syncKey)) {
+    let changed = false;
+    (['rrhh', 'cosmetologia'] as SpecialtyId[]).forEach(specId => {
+      const defaultGal = FICHAS_ACADEMIA_DEFAULT[specId]?.recursos_multimedia?.galeria_alumnos;
+      if (fichas[specId] && defaultGal && defaultGal.length > 0) {
+        const currentGal = fichas[specId].recursos_multimedia?.galeria_alumnos || [];
+        const existingIds = new Set(currentGal.map(item => item.id));
+        const missingDriveItems = defaultGal.filter(
+          item => item.id.includes('-drive-') && !existingIds.has(item.id)
+        );
+        if (missingDriveItems.length > 0) {
+          fichas[specId].recursos_multimedia = {
+            ...fichas[specId].recursos_multimedia,
+            galeria_alumnos: [
+              ...(currentGal.length > 0 ? currentGal : defaultGal.filter(item => !item.id.includes('-drive-'))),
+              ...missingDriveItems
+            ]
+          };
+          changed = true;
+        }
+      }
+    });
+
+    if (changed) {
+      localStorage.setItem(STORAGE_KEYS.FICHAS, JSON.stringify(fichas));
+    }
+    localStorage.setItem(syncKey, '1');
+  }
+
+  return fichas;
 }
 
 export function saveFichaAcademia(ficha: FichaAcademiaReq): void {
