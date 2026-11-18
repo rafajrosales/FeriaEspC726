@@ -57,6 +57,7 @@ export const SpecialtyModules: React.FC<SpecialtyModulesProps> = ({
   const [simulatedVideoPlaying, setSimulatedVideoPlaying] = useState<boolean>(false);
   const [galleryFilter, setGalleryFilter] = useState<'todos' | 'video' | 'foto'>('todos');
   const [activeLightboxItem, setActiveLightboxItem] = useState<ItemGaleriaAlumno | null>(null);
+  const [infografiaZoomOpen, setInfografiaZoomOpen] = useState<boolean>(false);
 
   // Fichas de academia sincronizadas con el Banco de Reactivos (CRUD)
   const [fichas, setFichas] = useState(() => getFichasAcademia());
@@ -74,16 +75,32 @@ export const SpecialtyModules: React.FC<SpecialtyModulesProps> = ({
   // Banco de preguntas de evaluación dinámico
   const preguntasQuiz = useMemo(() => {
     if (currentFicha?.banco_reactivos && currentFicha.banco_reactivos.length > 0) {
-      return currentFicha.banco_reactivos.map((r, i) => ({
-        id: typeof r.id === 'number' ? r.id : (i + 1),
-        pregunta: r.pregunta,
-        opciones: r.opciones,
-        respuesta_correcta: letraIdxMap[r.correcta.toLowerCase()] ?? 0,
-        explicacion: r.explicacion || `La opción oficial correcta es la (${r.correcta.toUpperCase()}).`
-      }));
+      return currentFicha.banco_reactivos.map((r, i) => {
+        const isInfo = Boolean(r.es_informativa || r.correcta.toLowerCase() === 'na');
+        return {
+          id: typeof r.id === 'number' ? r.id : (i + 1),
+          bloque: r.bloque,
+          pregunta: r.pregunta,
+          opciones: r.opciones,
+          respuesta_correcta: isInfo ? -1 : (letraIdxMap[r.correcta.toLowerCase()] ?? 0),
+          explicacion: r.explicacion || `La opción oficial correcta es la (${r.correcta.toUpperCase()}).`,
+          es_informativa: isInfo,
+          aspecto_evaluado: r.aspecto_evaluado
+        };
+      });
     }
     return currentSpecialty.preguntas_quiz;
   }, [currentFicha, currentSpecialty]);
+
+  // Preload saved answers if already submitted
+  useEffect(() => {
+    if (currentProgress.respuestas_detalle && Object.keys(currentProgress.respuestas_detalle).length > 0) {
+      setQuizAnswers(currentProgress.respuestas_detalle);
+    } else {
+      setQuizAnswers({});
+    }
+    setQuizSubmitted(currentProgress.quiz_aprobado || (currentProgress.puntaje_maximo ?? 0) > 0);
+  }, [selectedId]);
 
   const handleTabChange = (tab: 'curricular' | 'video' | 'proyectos' | 'quiz' | 'reto') => {
     setActiveTab(tab);
@@ -116,19 +133,37 @@ export const SpecialtyModules: React.FC<SpecialtyModulesProps> = ({
 
   const handleGradeQuiz = () => {
     if (preguntasQuiz.length === 0) return;
+    const scoredQuestions = preguntasQuiz.filter(q => !q.es_informativa && q.respuesta_correcta >= 0);
+    const divisor = scoredQuestions.length > 0 ? scoredQuestions.length : preguntasQuiz.length;
+
     let correctCount = 0;
-    preguntasQuiz.forEach(q => {
+    scoredQuestions.forEach(q => {
       if (quizAnswers[q.id] === q.respuesta_correcta) {
         correctCount++;
       }
     });
 
-    const score = Math.round((correctCount / preguntasQuiz.length) * 100);
-    const passed = score >= 60; // 60% minimum passing grade
+    const score = Math.round((correctCount / divisor) * 100);
+    const minPassPct = divisor === 16 ? 56 : 60; // 9/16 = 56.25% -> Perfil en Desarrollo o Alto
+    const passed = score >= minPassPct;
+
+    let nivelPerfil: 'ALTO' | 'EN_DESARROLLO' | 'EXPLORATORIO' | undefined;
+    if (divisor === 16) {
+      nivelPerfil = correctCount >= 13 ? 'ALTO' : correctCount >= 9 ? 'EN_DESARROLLO' : 'EXPLORATORIO';
+    } else {
+      nivelPerfil = score >= 80 ? 'ALTO' : score >= 60 ? 'EN_DESARROLLO' : 'EXPLORATORIO';
+    }
 
     const updated = { ...progreso };
-    updated.progreso_especialidades[selectedId].quiz_aprobado = passed;
-    updated.progreso_especialidades[selectedId].calificacion_quiz = score;
+    updated.progreso_especialidades[selectedId] = {
+      ...updated.progreso_especialidades[selectedId],
+      quiz_aprobado: passed,
+      calificacion_quiz: score,
+      puntaje_obtenido: correctCount,
+      puntaje_maximo: divisor,
+      nivel_perfil: nivelPerfil,
+      respuestas_detalle: { ...quizAnswers }
+    };
     onUpdateProgreso(updated);
     setQuizSubmitted(true);
   };
@@ -152,7 +187,7 @@ export const SpecialtyModules: React.FC<SpecialtyModulesProps> = ({
             <h3 className="text-lg font-bold text-stone-900">Módulos Temáticos de Carrera Técnica</h3>
           </div>
           <div className="text-xs text-stone-600">
-            Explora cada especialidad y aprueba sus 5 reactivos para acreditar el 70% virtual
+            Explora cada especialidad y resuelve su cuestionario diagnóstico para acreditar el 70% virtual
           </div>
         </div>
 
@@ -226,7 +261,7 @@ export const SpecialtyModules: React.FC<SpecialtyModulesProps> = ({
             </div>
 
             {/* Status chip */}
-            <div className="bg-stone-50 p-3 rounded-lg border border-stone-200 shrink-0 text-xs space-y-1">
+            <div className="bg-stone-50 p-3 rounded-lg border border-stone-200 shrink-0 text-xs space-y-1.5">
               <div className="text-stone-500 uppercase tracking-wide text-[10px] font-semibold">Estatus del Módulo:</div>
               <div className="flex items-center gap-2">
                 <span className={`w-2.5 h-2.5 rounded-full ${currentProgress.quiz_aprobado ? 'bg-emerald-600' : 'bg-amber-500'}`}></span>
@@ -237,6 +272,23 @@ export const SpecialtyModules: React.FC<SpecialtyModulesProps> = ({
               <div className="text-[11px] text-stone-500">
                 Video: {currentProgress.video_visto ? '✓ Visto' : 'Pendiente'} · Lectura: {currentProgress.infografia_explorada ? '✓ Leída' : 'Pendiente'}
               </div>
+              {currentSpecialty.infografia_url && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setInfografiaZoomOpen(true);
+                    if (!currentProgress.infografia_explorada) {
+                      const updated = { ...progreso };
+                      updated.progreso_especialidades[selectedId].infografia_explorada = true;
+                      onUpdateProgreso(updated);
+                    }
+                  }}
+                  className="w-full mt-1 px-2.5 py-1.5 bg-[#721B32] hover:bg-[#5b1528] text-white rounded-md text-[11px] font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <ImageIcon className="w-3.5 h-3.5" />
+                  Ver Infografía Oficial
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -396,6 +448,40 @@ export const SpecialtyModules: React.FC<SpecialtyModulesProps> = ({
         {/* Tab 1: Mapa Curricular & Infografía */}
         {activeTab === 'curricular' && (
           <div className="space-y-6">
+            {currentSpecialty.infografia_url && (
+              <div className="bg-stone-50 rounded-2xl border-2 border-[#721B32]/20 p-4 sm:p-6 space-y-4 shadow-xs">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-stone-200 pb-3">
+                  <div>
+                    <span className="text-[10px] font-mono-code uppercase tracking-wider text-[#721B32] font-bold block">
+                      ★ Infografía Oficial de la Especialidad · CETis 7
+                    </span>
+                    <h4 className="text-base font-bold text-stone-900">
+                      Perfil de Egreso: {currentSpecialty.nombre}
+                    </h4>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setInfografiaZoomOpen(true)}
+                    className="px-3.5 py-1.5 bg-[#721B32] hover:bg-[#5b1528] text-white rounded-lg text-xs font-bold flex items-center gap-1.5 self-start sm:self-auto cursor-pointer transition-colors"
+                  >
+                    <Maximize2 className="w-3.5 h-3.5" />
+                    Ampliar Infografía
+                  </button>
+                </div>
+
+                <div
+                  onClick={() => setInfografiaZoomOpen(true)}
+                  className="bg-white rounded-xl border border-stone-200 overflow-hidden cursor-pointer shadow-xs hover:shadow-md transition-shadow"
+                >
+                  <img
+                    src={currentSpecialty.infografia_url}
+                    alt={`Infografía ${currentSpecialty.nombre}`}
+                    className="w-full h-auto max-h-[680px] object-contain mx-auto"
+                  />
+                </div>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Left Column: Submódulos I a V */}
               <div className="space-y-3">
@@ -458,6 +544,7 @@ export const SpecialtyModules: React.FC<SpecialtyModulesProps> = ({
                 </div>
               </div>
             </div>
+
           </div>
         )}
 
@@ -561,6 +648,21 @@ export const SpecialtyModules: React.FC<SpecialtyModulesProps> = ({
                               }
                             }}
                           ></iframe>
+                        ) : parsed.type === 'direct_video' ? (
+                          <video
+                            src={parsed.embedUrl}
+                            controls
+                            playsInline
+                            preload="metadata"
+                            className="w-full h-full object-contain bg-black"
+                            onPlay={() => {
+                              if (!currentProgress.video_visto) {
+                                const updated = { ...progreso };
+                                updated.progreso_especialidades[selectedId].video_visto = true;
+                                onUpdateProgreso(updated);
+                              }
+                            }}
+                          />
                         ) : !simulatedVideoPlaying ? (
                           <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-stone-900 to-black">
                             <button
@@ -927,22 +1029,79 @@ export const SpecialtyModules: React.FC<SpecialtyModulesProps> = ({
           <div className="space-y-6 max-w-3xl mx-auto">
             <div className="bg-stone-50 p-4 rounded-xl border border-stone-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <span className="text-xs uppercase tracking-wider text-stone-500 font-semibold">Evaluación Formativa</span>
+                <span className="text-xs uppercase tracking-wider text-stone-500 font-semibold">
+                  {selectedId === 'cosmetologia' && preguntasQuiz.length >= 16
+                    ? 'Test Diagnóstico de Intereses, Actitudes y Perfil Vocacional'
+                    : 'Evaluación Formativa'}
+                </span>
                 <h4 className="text-sm font-bold text-stone-900">
-                  Cuestionario de {preguntasQuiz.length} {preguntasQuiz.length === 1 ? 'Pregunta' : 'Preguntas'} · {currentSpecialty.titulo_corto}
+                  Cuestionario de {preguntasQuiz.length} {preguntasQuiz.length === 1 ? 'Reactivo' : 'Reactivos'} · {currentSpecialty.titulo_corto}
                 </h4>
+                {selectedId === 'cosmetologia' && preguntasQuiz.length >= 16 && (
+                  <p className="text-[11px] text-stone-600 mt-0.5">
+                    16 reactivos puntuables (1 pt c/u) + 1 reactivo de contexto logístico sobre disponibilidad de modelos (Pregunta 4, sin puntaje).
+                  </p>
+                )}
               </div>
               {quizSubmitted && (
-                <div className="text-right">
-                  <span className="text-xs text-stone-500 block">Calificación Obtenida:</span>
+                <div className="text-right shrink-0">
+                  <span className="text-xs text-stone-500 block">Resultado Obtenido:</span>
                   <span className={`text-base font-bold font-mono-code ${
-                    currentProgress.calificacion_quiz >= 60 ? 'text-emerald-700' : 'text-red-600'
+                    currentProgress.quiz_aprobado ? 'text-emerald-700' : 'text-amber-700'
                   }`}>
-                    {currentProgress.calificacion_quiz} / 100 pts
+                    {currentProgress.puntaje_maximo
+                      ? `${currentProgress.puntaje_obtenido ?? 0} / ${currentProgress.puntaje_maximo} pts (${currentProgress.calificacion_quiz}%)`
+                      : `${currentProgress.calificacion_quiz} / 100 pts`}
                   </span>
                 </div>
               )}
             </div>
+
+            {/* Automatic Vocational Tier Feedback Banner when Submitted */}
+            {quizSubmitted && selectedId === 'cosmetologia' && (currentProgress.puntaje_maximo ?? 0) === 16 && (
+              (() => {
+                const pts = currentProgress.puntaje_obtenido ?? 0;
+                const isAlto = pts >= 13;
+                const isDesarrollo = pts >= 9 && pts <= 12;
+                const q4Choice = quizAnswers[4];
+
+                return (
+                  <div className={`p-4 rounded-xl border-2 space-y-2 ${
+                    isAlto
+                      ? 'bg-emerald-50 border-emerald-300 text-emerald-950'
+                      : isDesarrollo
+                        ? 'bg-amber-50 border-amber-300 text-amber-950'
+                        : 'bg-stone-100 border-stone-300 text-stone-900'
+                  }`}>
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="text-xs font-black uppercase tracking-wider">
+                        {isAlto
+                          ? '★ 13 a 16 puntos — Perfil Vocacional Alto'
+                          : isDesarrollo
+                            ? '◆ 9 a 12 puntos — Perfil Vocacional en Desarrollo'
+                            : '○ 0 a 8 puntos — Perfil Exploratorio / Baja Afinidad'}
+                      </span>
+                      <span className="text-xs font-mono-code font-bold px-2 py-0.5 rounded bg-white/80 border border-black/10">
+                        {pts} / 16 pts
+                      </span>
+                    </div>
+                    <p className="text-xs leading-relaxed">
+                      {isAlto &&
+                        '¡Tienes una excelente afinidad con la carrera técnica de Cosmetología! Muestras interés genuino por el cuidado integral de la piel, disposición para el trabajo práctico con personas, sentido de responsabilidad y ética profesional.'}
+                      {isDesarrollo &&
+                        'Tienes buen potencial para integrarte a Cosmetología. Te recomendamos acercarte al stand de la especialidad para conocer más sobre los protocolos de higiene, el trabajo práctico de pie y los materiales requeridos en taller.'}
+                      {!isAlto && !isDesarrollo &&
+                        'Tus respuestas sugieren que podrías tener mayor afinidad con otras áreas técnicas. Te invitamos a explorar el resto de las especialidades del CETis No. 7 antes de tomar tu decisión.'}
+                    </p>
+                    {(q4Choice === 2 || q4Choice === 3) && (
+                      <div className="text-[11px] bg-white/70 p-2 rounded-lg border border-black/10">
+                        <strong>Nota logística (Pregunta 4 - Sin puntaje):</strong> La disponibilidad de modelos no afecta tu calificación ni tu ingreso. El equipo docente organizará prácticas cruzadas o banco de voluntarios para acompañarte.
+                      </div>
+                    )}
+                  </div>
+                );
+              })()
+            )}
 
             {preguntasQuiz.length === 0 ? (
               <div className="text-center py-10 bg-white rounded-xl border border-dashed border-stone-300 p-6">
@@ -956,21 +1115,33 @@ export const SpecialtyModules: React.FC<SpecialtyModulesProps> = ({
               <div className="space-y-6">
                 {preguntasQuiz.map((q, qIdx) => {
                   const userSelected = quizAnswers[q.id];
-                  const isCorrect = userSelected === q.respuesta_correcta;
+                  const isInfo = Boolean(q.es_informativa || q.respuesta_correcta < 0);
+                  const isCorrect = !isInfo && userSelected === q.respuesta_correcta;
 
                   return (
                     <div key={q.id} className="p-4 rounded-xl border border-stone-200 bg-white space-y-3">
+                      {q.bloque && (
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-[#721B32] bg-[#721B32]/5 px-2.5 py-1 rounded inline-block">
+                          {q.bloque}
+                        </div>
+                      )}
                       <div className="flex items-start justify-between gap-2">
                         <p className="text-sm font-semibold text-stone-900">
                           <span className="text-[#721B32] mr-1.5">{qIdx + 1}.</span>
                           {q.pregunta}
                         </p>
-                        {quizSubmitted && (
-                          <span className={`text-xs font-semibold px-2 py-0.5 rounded ${
-                            isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
-                          }`}>
-                            {isCorrect ? 'Correcta' : 'Incorrecta'}
+                        {isInfo ? (
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-indigo-50 text-indigo-800 border border-indigo-200 shrink-0">
+                            Contexto Logístico (0 pts)
                           </span>
+                        ) : (
+                          quizSubmitted && (
+                            <span className={`text-xs font-semibold px-2 py-0.5 rounded shrink-0 ${
+                              isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
+                            }`}>
+                              {isCorrect ? '1 pt ✓' : '0 pts'}
+                            </span>
+                          )
                         )}
                       </div>
 
@@ -980,7 +1151,11 @@ export const SpecialtyModules: React.FC<SpecialtyModulesProps> = ({
                           let itemClass = 'bg-stone-50/50 border-stone-200 text-stone-700 hover:bg-stone-100';
 
                           if (quizSubmitted) {
-                            if (optIdx === q.respuesta_correcta) {
+                            if (isInfo) {
+                              if (isChosen) {
+                                itemClass = 'bg-indigo-50 border-indigo-400 text-indigo-950 font-medium';
+                              }
+                            } else if (optIdx === q.respuesta_correcta) {
                               itemClass = 'bg-emerald-50 border-emerald-500 text-emerald-950 font-medium';
                             } else if (isChosen) {
                               itemClass = 'bg-red-50 border-red-400 text-red-950';
@@ -998,8 +1173,8 @@ export const SpecialtyModules: React.FC<SpecialtyModulesProps> = ({
                               className={`w-full text-left p-3 rounded-lg text-xs md:text-sm border transition-all ${itemClass}`}
                             >
                               <div className="flex items-start gap-2.5">
-                                <span className="w-5 h-5 rounded-full border border-stone-400 flex items-center justify-center shrink-0 text-xs font-semibold">
-                                  {String.fromCharCode(97 + optIdx)}
+                                <span className="w-5 h-5 rounded-full border border-stone-400 flex items-center justify-center shrink-0 text-xs font-semibold uppercase">
+                                  {String.fromCharCode(65 + optIdx)}
                                 </span>
                                 <span>{opt}</span>
                               </div>
@@ -1010,7 +1185,10 @@ export const SpecialtyModules: React.FC<SpecialtyModulesProps> = ({
 
                       {quizSubmitted && (
                         <div className="text-xs text-stone-600 bg-stone-50 p-2.5 rounded border border-stone-200 mt-2">
-                          <strong className="text-stone-800">Fundamentación:</strong> {q.explicacion}
+                          <strong className="text-stone-800">
+                            {isInfo ? 'Criterio Pedagógico:' : 'Aspecto Vocacional:'}
+                          </strong>{' '}
+                          {q.explicacion}
                         </div>
                       )}
                     </div>
@@ -1020,22 +1198,31 @@ export const SpecialtyModules: React.FC<SpecialtyModulesProps> = ({
             )}
 
             {preguntasQuiz.length > 0 && (
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-stone-200">
-                <span className="text-xs text-stone-500">
-                  Se requiere un mínimo de 60 pts ({Math.ceil(preguntasQuiz.length * 0.6)} de {preguntasQuiz.length} correctas) para aprobar el módulo.
-                </span>
-                <button
-                  disabled={Object.keys(quizAnswers).length < preguntasQuiz.length}
-                  onClick={handleGradeQuiz}
-                  className={`w-full sm:w-auto px-5 py-2.5 text-sm font-semibold rounded-lg transition-colors ${
-                    Object.keys(quizAnswers).length === preguntasQuiz.length
-                      ? 'bg-[#721B32] text-white hover:bg-[#5b1528] cursor-pointer'
-                      : 'bg-stone-200 text-stone-400 cursor-not-allowed'
-                  }`}
-                >
-                  {quizSubmitted ? 'Volver a Evaluar Cuestionario' : 'Enviar Respuestas y Calificar'}
-                </button>
-              </div>
+              (() => {
+                const scoredCount = preguntasQuiz.filter(q => !q.es_informativa && q.respuesta_correcta >= 0).length || preguntasQuiz.length;
+                const requiredCorrect = scoredCount === 16 ? 9 : Math.ceil(scoredCount * 0.6);
+
+                return (
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-stone-200">
+                    <span className="text-xs text-stone-500">
+                      {scoredCount === 16
+                        ? `Instrumento diagnóstico de ${scoredCount} reactivos puntuables (mínimo ${requiredCorrect} de ${scoredCount} para perfil en desarrollo/alto). La pregunta 4 no penaliza puntaje.`
+                        : `Se requiere un mínimo de 60 pts (${requiredCorrect} de ${scoredCount} correctas) para aprobar el módulo.`}
+                    </span>
+                    <button
+                      disabled={Object.keys(quizAnswers).length < preguntasQuiz.length}
+                      onClick={handleGradeQuiz}
+                      className={`w-full sm:w-auto px-5 py-2.5 text-sm font-semibold rounded-lg transition-colors shrink-0 ${
+                        Object.keys(quizAnswers).length === preguntasQuiz.length
+                          ? 'bg-[#721B32] text-white hover:bg-[#5b1528] cursor-pointer'
+                          : 'bg-stone-200 text-stone-400 cursor-not-allowed'
+                      }`}
+                    >
+                      {quizSubmitted ? 'Volver a Evaluar Cuestionario' : 'Enviar Respuestas y Calificar'}
+                    </button>
+                  </div>
+                );
+              })()
             )}
           </div>
         )}
@@ -1087,6 +1274,38 @@ export const SpecialtyModules: React.FC<SpecialtyModulesProps> = ({
           </div>
         )}
       </div>
+
+      {infografiaZoomOpen && currentSpecialty.infografia_url && (
+        <div
+          onClick={() => setInfografiaZoomOpen(false)}
+          className="fixed inset-0 z-50 bg-stone-950/85 backdrop-blur-xs flex items-center justify-center p-4"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-stone-900 rounded-2xl max-w-5xl w-full overflow-hidden shadow-2xl border border-stone-700 flex flex-col max-h-[92vh]"
+          >
+            <div className="p-3 sm:p-4 bg-stone-950 border-b border-stone-800 flex items-center justify-between gap-3 text-white">
+              <h4 className="text-sm sm:text-base font-bold truncate">
+                Infografía Oficial · {currentSpecialty.nombre}
+              </h4>
+              <button
+                type="button"
+                onClick={() => setInfografiaZoomOpen(false)}
+                className="p-1.5 bg-stone-800 hover:bg-stone-700 text-stone-200 rounded-lg cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-3 sm:p-4 overflow-auto flex items-center justify-center bg-black">
+              <img
+                src={currentSpecialty.infografia_url}
+                alt={`Infografía ${currentSpecialty.nombre}`}
+                className="max-w-full max-h-[78vh] object-contain"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

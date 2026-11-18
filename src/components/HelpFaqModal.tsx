@@ -398,7 +398,7 @@ export const HelpFaqModal: React.FC<HelpFaqModalProps> = ({
                   </div>
                   <h4 className="font-bold text-sm text-stone-900">2. Algoritmo Radar de 4 Ejes</h4>
                   <p className="text-xs text-stone-600 leading-relaxed">
-                    Mapea en un espacio vectorial las 4 especialidades ofertadas por el plantel: Programación, Comercio Exterior, Administración de RH y Cosmetología. Permite identificar la 1.ª Opción Ideal y la 2.ª Opción Afín.
+                    Mapea en un espacio vectorial las 4 especialidades ofertadas por el plantel: Programación, Comercio Internacional y Aduanas, Administración de RH y Cosmetología. Permite identificar la 1.ª Opción Ideal y la 2.ª Opción Afín.
                   </p>
                   <div className="p-2 bg-stone-50 rounded-lg border border-stone-200 text-[11px] font-mono-code text-stone-700">
                     Área = Polígono Vectorial SVG (0 - 100%)
@@ -443,12 +443,12 @@ export const HelpFaqModal: React.FC<HelpFaqModalProps> = ({
                   {/* Item 2 */}
                   <div className="p-4 rounded-xl bg-stone-50 border border-stone-200 space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-[#721B32]">🌐 Comercio Exterior y Aduanas</span>
+                      <span className="font-bold text-[#721B32]">🌐 Comercio Internacional y Aduanas</span>
                       <span className="px-2 py-0.5 bg-amber-100 text-amber-900 font-mono-code text-[10px] rounded font-bold">Vector B</span>
                     </div>
                     <p className="text-stone-600 leading-relaxed">
-                      **Aptitud:** Pensamiento estratégico, organización logística, comprensión de normativas e idiomas.<br />
-                      **Interés:** Negocios internacionales, aranceles, cadenas de suministro globales y legislación aduanera.
+                      **Aptitud:** Gestión de importaciones y exportaciones, estimación de costos y clasificación arancelaria.<br />
+                      **Interés:** Procesos aduaneros, logística internacional, tráfico o embarques y desarrollo sostenible.
                     </p>
                   </div>
 

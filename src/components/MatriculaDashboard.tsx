@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Estudiante, ProgresoVirtual, EvaluacionVocacional, SpecialtyId } from '../types';
+import { COSMETOLOGIA_DIAGNOSTICO_REACTIVOS } from '../data/mockData';
 import { 
   getEstudiantes, 
   getProgresoVirtual, 
@@ -17,7 +18,10 @@ import {
   Award,
   Layers,
   ArrowUpRight,
-  ShieldCheck
+  ShieldCheck,
+  Sparkles,
+  AlertTriangle,
+  ClipboardCheck
 } from 'lucide-react';
 
 export const MatriculaDashboard: React.FC = () => {
@@ -56,7 +60,7 @@ export const MatriculaDashboard: React.FC = () => {
       finalizadosConSugerida: number;
     }> = {
       programacion: { nombre: 'Programación', color: '#1d4ed8', quizAprobados: 0, finalizadosConSugerida: 0 },
-      comercio: { nombre: 'Comercio Int.', color: '#047857', quizAprobados: 0, finalizadosConSugerida: 0 },
+      comercio: { nombre: 'Comercio y Aduanas', color: '#047857', quizAprobados: 0, finalizadosConSugerida: 0 },
       rrhh: { nombre: 'Recursos Humanos', color: '#7c3aed', quizAprobados: 0, finalizadosConSugerida: 0 },
       cosmetologia: { nombre: 'Cosmetología', color: '#be185d', quizAprobados: 0, finalizadosConSugerida: 0 }
     };
@@ -73,6 +77,27 @@ export const MatriculaDashboard: React.FC = () => {
     let pipelineEmitieronToken = 0;
     let pipelineCheckinPresencial = 0;
     let pipelineAcreditacionFinal = 0;
+
+    // Cosmetología 17-reactivos diagnostic stats (16 scorable + Q4 logistic)
+    const letterToIdx: Record<string, number> = { a: 0, b: 1, c: 2, d: 3 };
+    let cosmeEvaluados = 0;
+    let cosmeTotalPuntos = 0;
+    let cosmeConPuntaje = 0;
+    const cosmeNiveles = {
+      ALTO: 0,          // 13–16 pts
+      EN_DESARROLLO: 0, // 9–12 pts
+      EXPLORATORIO: 0   // 0–8 pts
+    };
+    const cosmeModelosQ4 = [0, 0, 0, 0]; // A:4, B:2-3, C:1, D:0
+    let cosmeModelosTotalRespuestas = 0;
+
+    const bloquesMap: Record<string, { nombre: string; correctas: number; posibles: number }> = {
+      'I. Intereses y conocimiento inicial': { nombre: 'I. Intereses y Conocimiento (P1–P3, P5)', correctas: 0, posibles: 0 },
+      'II. Actitudes y disposición para las prácticas': { nombre: 'II. Actitudes y Disposición (P6–P9)', correctas: 0, posibles: 0 },
+      'III. Responsabilidad y materiales de trabajo': { nombre: 'III. Responsabilidad y Materiales (P10–P12)', correctas: 0, posibles: 0 },
+      'IV. Habilidades personales y ética profesional': { nombre: 'IV. Habilidades y Ética (P13–P16)', correctas: 0, posibles: 0 },
+      'V. Expectativas profesionales': { nombre: 'V. Expectativas Profesionales (P17)', correctas: 0, posibles: 0 }
+    };
 
     estudiantesFiltrados.forEach(est => {
       const prog = getProgresoVirtual(est.num_control);
@@ -132,6 +157,54 @@ export const MatriculaDashboard: React.FC = () => {
       // Presencial pipeline
       if (asis?.checkin_realizado) pipelineCheckinPresencial++;
       if (asis?.estatus_final === 'ACREDITADO') pipelineAcreditacionFinal++;
+
+      // Cosmetología 17-reactivos diagnostic metrics
+      const cosme = prog.progreso_especialidades.cosmetologia;
+      const hasCosmeData = Boolean(cosme && (cosme.respuestas_detalle || typeof cosme.puntaje_obtenido === 'number' || cosme.quiz_aprobado));
+      if (hasCosmeData && cosme) {
+        cosmeEvaluados++;
+        let puntos = cosme.puntaje_obtenido;
+
+        if (cosme.respuestas_detalle) {
+          // Q4 logistic item (id: 4, 0 pts)
+          const q4Val = cosme.respuestas_detalle[4];
+          if (typeof q4Val === 'number' && q4Val >= 0 && q4Val <= 3) {
+            cosmeModelosQ4[q4Val]++;
+            cosmeModelosTotalRespuestas++;
+          }
+
+          // Block-level performance across 16 scorable items
+          let computedPts = 0;
+          COSMETOLOGIA_DIAGNOSTICO_REACTIVOS.forEach((item, idx) => {
+            if (item.es_informativa || item.correcta === 'na') return;
+            const qId = typeof item.id === 'number' ? item.id : idx + 1;
+            const selected = cosme.respuestas_detalle?.[qId];
+            const expected = letterToIdx[item.correcta.toLowerCase()] ?? 0;
+            const bKey = item.bloque || '';
+            if (bloquesMap[bKey]) {
+              bloquesMap[bKey].posibles++;
+              if (selected === expected) {
+                bloquesMap[bKey].correctas++;
+                computedPts++;
+              }
+            } else if (selected === expected) {
+              computedPts++;
+            }
+          });
+          if (typeof puntos !== 'number') {
+            puntos = computedPts;
+          }
+        }
+
+        if (typeof puntos === 'number') {
+          cosmeTotalPuntos += puntos;
+          cosmeConPuntaje++;
+          const nivel = cosme.nivel_perfil || (puntos >= 13 ? 'ALTO' : puntos >= 9 ? 'EN_DESARROLLO' : 'EXPLORATORIO');
+          cosmeNiveles[nivel]++;
+        } else if (cosme.nivel_perfil) {
+          cosmeNiveles[cosme.nivel_perfil]++;
+        }
+      }
     });
 
     const pctTest = totalMatricula > 0 ? Math.round((testCompletados / totalMatricula) * 100) : 0;
@@ -151,6 +224,20 @@ export const MatriculaDashboard: React.FC = () => {
       pctTutores,
       especialidadesStats,
       gruposStats,
+      cosmetologiaDiagnostico: {
+        evaluados: cosmeEvaluados,
+        promedioPuntos: cosmeConPuntaje > 0 ? (cosmeTotalPuntos / cosmeConPuntaje).toFixed(1) : '0.0',
+        niveles: cosmeNiveles,
+        modelosQ4: cosmeModelosQ4,
+        modelosTotal: cosmeModelosTotalRespuestas,
+        requierenApoyoModelos: cosmeModelosQ4[2] + cosmeModelosQ4[3],
+        bloques: Object.values(bloquesMap).map(b => ({
+          nombre: b.nombre,
+          pct: b.posibles > 0 ? Math.round((b.correctas / b.posibles) * 100) : 0,
+          correctas: b.correctas,
+          posibles: b.posibles
+        }))
+      },
       funnel: [
         { label: 'Matrícula Padrón', count: totalMatricula, pct: 100, color: 'bg-stone-600' },
         { label: 'Test Vocacional Listo', count: testCompletados, pct: pctTest, color: 'bg-[#721B32]' },
@@ -450,7 +537,7 @@ export const MatriculaDashboard: React.FC = () => {
           </div>
 
           <p className="text-xs text-stone-600 leading-relaxed">
-            Compara cuántos alumnos han acreditado el contenido académico y cuestionario de 5 reactivos de cada academia, frente a cuántos concluyeron la fase virtual completa (100%) y fueron orientados a esa carrera como su opción prioritaria:
+            Compara cuántos alumnos han acreditado el contenido académico y cuestionario diagnóstico de cada academia, frente a cuántos concluyeron la fase virtual completa (100%) y fueron orientados a esa carrera como su opción prioritaria:
           </p>
 
           {/* Vertical / Horizontal Multi-Bar Chart per Specialty */}
@@ -543,6 +630,175 @@ export const MatriculaDashboard: React.FC = () => {
                   </div>
                 );
               })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SECTION 2B: Estadística Diagnóstica · Cosmetología (Test de 17 Reactivos) */}
+      {(activeChartMode === 'ambos' || activeChartMode === 'especialidades') && (
+        <div className="bg-white rounded-xl border border-pink-200 p-6 shadow-xs space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-pink-100 pb-4">
+            <div>
+              <span className="text-xs uppercase tracking-wider text-pink-700 font-semibold flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-pink-600" />
+                Instrumento Diagnóstico Oficial · Academia de Cosmetología
+              </span>
+              <h4 className="text-base font-bold text-stone-900 mt-0.5">
+                Estadística Vocacional de 17 Reactivos (16 Puntuables + Pregunta 4 Logística)
+              </h4>
+              <p className="text-xs text-stone-600 mt-0.5">
+                Distribución automática por niveles de perfil vocacional, disponibilidad semanal de modelos para prácticas y dominio por bloque.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="px-3 py-1.5 bg-pink-50 border border-pink-200 rounded-lg text-right">
+                <div className="text-[10px] uppercase tracking-wider text-pink-700 font-bold">Evaluados</div>
+                <div className="text-sm font-bold font-mono-code text-pink-900">
+                  {metrics.cosmetologiaDiagnostico.evaluados} / {totalMatricula}
+                </div>
+              </div>
+              <div className="px-3 py-1.5 bg-stone-50 border border-stone-200 rounded-lg text-right">
+                <div className="text-[10px] uppercase tracking-wider text-stone-500 font-bold">Promedio Puntaje</div>
+                <div className="text-sm font-bold font-mono-code text-stone-900">
+                  {metrics.cosmetologiaDiagnostico.promedioPuntos} <span className="text-xs font-normal text-stone-500">/ 16 pts</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left Column: Niveles de Perfil + Bloques I-V */}
+            <div className="space-y-5">
+              <div>
+                <h5 className="text-xs font-bold uppercase tracking-wider text-stone-700 mb-3 flex items-center gap-1.5">
+                  <ClipboardCheck className="w-4 h-4 text-[#721B32]" />
+                  Distribución por Nivel de Perfil Vocacional (sobre 16 pts)
+                </h5>
+                <div className="grid grid-cols-3 gap-2.5">
+                  <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
+                    <div className="text-[11px] font-bold text-emerald-800">Perfil Alto</div>
+                    <div className="text-[10px] text-emerald-700 font-mono-code">13–16 pts</div>
+                    <div className="text-xl font-bold font-mono-code text-emerald-900 mt-1">
+                      {metrics.cosmetologiaDiagnostico.niveles.ALTO}
+                    </div>
+                    <div className="text-[10px] text-emerald-700 mt-0.5">
+                      {metrics.cosmetologiaDiagnostico.evaluados > 0
+                        ? Math.round((metrics.cosmetologiaDiagnostico.niveles.ALTO / metrics.cosmetologiaDiagnostico.evaluados) * 100)
+                        : 0}% evaluados
+                    </div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-amber-50 border border-amber-200">
+                    <div className="text-[11px] font-bold text-amber-800">En Desarrollo</div>
+                    <div className="text-[10px] text-amber-700 font-mono-code">9–12 pts</div>
+                    <div className="text-xl font-bold font-mono-code text-amber-900 mt-1">
+                      {metrics.cosmetologiaDiagnostico.niveles.EN_DESARROLLO}
+                    </div>
+                    <div className="text-[10px] text-amber-700 mt-0.5">
+                      {metrics.cosmetologiaDiagnostico.evaluados > 0
+                        ? Math.round((metrics.cosmetologiaDiagnostico.niveles.EN_DESARROLLO / metrics.cosmetologiaDiagnostico.evaluados) * 100)
+                        : 0}% evaluados
+                    </div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-rose-50 border border-rose-200">
+                    <div className="text-[11px] font-bold text-rose-800">Exploratorio</div>
+                    <div className="text-[10px] text-rose-700 font-mono-code">0–8 pts</div>
+                    <div className="text-xl font-bold font-mono-code text-rose-900 mt-1">
+                      {metrics.cosmetologiaDiagnostico.niveles.EXPLORATORIO}
+                    </div>
+                    <div className="text-[10px] text-rose-700 mt-0.5">
+                      {metrics.cosmetologiaDiagnostico.evaluados > 0
+                        ? Math.round((metrics.cosmetologiaDiagnostico.niveles.EXPLORATORIO / metrics.cosmetologiaDiagnostico.evaluados) * 100)
+                        : 0}% evaluados
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bloque I - V performance */}
+              <div className="space-y-2.5 pt-1">
+                <h5 className="text-xs font-bold uppercase tracking-wider text-stone-700">
+                  Desempeño por Bloque Diagnóstico (I a V)
+                </h5>
+                {metrics.cosmetologiaDiagnostico.bloques.map((bloque, idx) => (
+                  <div key={idx} className="space-y-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-medium text-stone-700">{bloque.nombre}</span>
+                      <span className="font-mono-code font-bold text-stone-900">
+                        {bloque.pct}% <span className="text-[10px] font-normal text-stone-500">({bloque.correctas}/{bloque.posibles})</span>
+                      </span>
+                    </div>
+                    <div className="h-2.5 w-full bg-stone-100 rounded-full overflow-hidden border border-stone-200">
+                      <div
+                        className="h-full bg-pink-600 rounded-full transition-all duration-500"
+                        style={{ width: `${bloque.pct}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column: Pregunta 4 Logística (0 pts - No penaliza) */}
+            <div className="bg-stone-50 rounded-xl border border-stone-200 p-4 flex flex-col justify-between space-y-4">
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <h5 className="text-xs font-bold uppercase tracking-wider text-stone-800">
+                    Pregunta 4 · Disponibilidad de Modelos (0 pts)
+                  </h5>
+                  <span className="text-[10px] font-mono-code font-semibold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
+                    No penaliza puntaje
+                  </span>
+                </div>
+                <p className="text-xs text-stone-600 mb-4 leading-relaxed">
+                  Conteo diagnóstico para planear prácticas semanales en cabina (meta: 4 modelos/semana). Las opciones C y D no afectan la calificación del estudiante.
+                </p>
+
+                <div className="space-y-3">
+                  {[
+                    { idx: 0, label: 'A) 4 modelos por semana (Meta completa)', color: 'bg-emerald-600', badge: 'text-emerald-800 bg-emerald-50 border-emerald-200' },
+                    { idx: 1, label: 'B) 2 a 3 modelos por semana', color: 'bg-blue-600', badge: 'text-blue-800 bg-blue-50 border-blue-200' },
+                    { idx: 2, label: 'C) Solo 1 modelo por semana', color: 'bg-amber-500', badge: 'text-amber-800 bg-amber-50 border-amber-200' },
+                    { idx: 3, label: 'D) Sin posibilidad actual de modelos', color: 'bg-rose-500', badge: 'text-rose-800 bg-rose-50 border-rose-200' }
+                  ].map(opt => {
+                    const count = metrics.cosmetologiaDiagnostico.modelosQ4[opt.idx] || 0;
+                    const total = metrics.cosmetologiaDiagnostico.modelosTotal;
+                    const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+                    return (
+                      <div key={opt.idx} className="space-y-1">
+                        <div className="flex items-center justify-between text-xs gap-2">
+                          <span className="font-medium text-stone-800">{opt.label}</span>
+                          <span className={`text-[11px] font-mono-code font-bold px-1.5 py-0.5 rounded border ${opt.badge}`}>
+                            {count} ({pct}%)
+                          </span>
+                        </div>
+                        <div className="h-2.5 w-full bg-stone-200 rounded-full overflow-hidden">
+                          <div
+                            className={`h-full ${opt.color} rounded-full transition-all duration-500`}
+                            style={{ width: `${pct}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {metrics.cosmetologiaDiagnostico.requierenApoyoModelos > 0 ? (
+                <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-2.5 text-xs text-amber-900">
+                  <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                  <div>
+                    <strong>Planeación Docente Sugerida:</strong>{' '}
+                    <span className="font-mono-code font-bold">{metrics.cosmetologiaDiagnostico.requierenApoyoModelos}</span>{' '}
+                    estudiante(s) respondieron opción C o D en disponibilidad de modelos. Se recomienda organizar{' '}
+                    <strong>prácticas cruzadas entre pares</strong> o activar el <strong>banco de modelos voluntarios del plantel</strong>.
+                  </div>
+                </div>
+              ) : (
+                <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800">
+                  La cohorte evaluada cuenta con cobertura suficiente de modelos semanales (opciones A y B).
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -94,7 +94,7 @@ export const VocationalDiagnostic: React.FC<VocationalDiagnosticProps> = ({
   const nombreEspecialidad = (id: SpecialtyId) => {
     switch (id) {
       case 'programacion': return 'Programación';
-      case 'comercio': return 'Comercio Internacional';
+      case 'comercio': return 'Comercio Internacional y Aduanas';
       case 'rrhh': return 'Administración de Recursos Humanos';
       case 'cosmetologia': return 'Cosmetología';
     }

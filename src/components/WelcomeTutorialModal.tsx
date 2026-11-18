@@ -115,7 +115,7 @@ export const WelcomeTutorialModal: React.FC<WelcomeTutorialModalProps> = ({
       description: 'Entra a cada uno de los 4 stands virtuales con viñetas de cómic y material oficial de la DGETI:',
       specialtiesList: [
         { name: 'Programación', icon: Laptop, text: 'Software, bases de datos y desarrollo web.', color: 'text-indigo-600 bg-indigo-50 border-indigo-200' },
-        { name: 'Comercio Int.', icon: Globe2, text: 'Aduanas, logística y exportación mundial.', color: 'text-emerald-600 bg-emerald-50 border-emerald-200' },
+        { name: 'Comercio y Aduanas', icon: Globe2, text: 'Importaciones, exportación, clasificación arancelaria y aduanas.', color: 'text-emerald-600 bg-emerald-50 border-emerald-200' },
         { name: 'Recursos Humanos', icon: Users2, text: 'Liderazgo, clima laboral y talento humano.', color: 'text-amber-600 bg-amber-50 border-amber-200' },
         { name: 'Cosmetología', icon: Sparkle, text: 'Dermocosmiatría, salud de la piel y bienestar.', color: 'text-rose-600 bg-rose-50 border-rose-200' },
       ],

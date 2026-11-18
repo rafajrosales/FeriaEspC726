@@ -216,7 +216,7 @@ export const RallyGames: React.FC<RallyGamesProps> = ({
         {yaCompletado && (
           <div className="p-2.5 bg-emerald-100 text-emerald-900 rounded-lg text-xs font-semibold flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-700" />
-            Reto Presencial Acreditado en Estación de Comercio Internacional.
+            Reto Presencial Acreditado en Estación de Comercio Internacional y Aduanas.
           </div>
         )}
       </div>

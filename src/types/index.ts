@@ -51,6 +51,10 @@ export interface ProgresoEspecialidad {
   proyectos_revisados: boolean;
   quiz_aprobado: boolean;
   calificacion_quiz: number; // 0 to 100
+  puntaje_obtenido?: number;
+  puntaje_maximo?: number;
+  nivel_perfil?: 'ALTO' | 'EN_DESARROLLO' | 'EXPLORATORIO';
+  respuestas_detalle?: Record<number, number>;
 }
 
 export interface ProgresoVirtual {
@@ -103,6 +107,7 @@ export interface SpecialtyInfo {
   color_badge: string;
   icono: string;
   resumen_ejecutivo: string;
+  infografia_url?: string;
   perfil_ingreso: string[];
   perfil_egreso: string[];
   campo_laboral: string[];
@@ -129,10 +134,13 @@ export interface SpecialtyInfo {
   galeria_alumnos?: ItemGaleriaAlumno[];
   preguntas_quiz: {
     id: number;
+    bloque?: string;
     pregunta: string;
     opciones: string[];
     respuesta_correcta: number;
     explicacion: string;
+    es_informativa?: boolean;
+    aspecto_evaluado?: string;
   }[];
   reto_presencial: {
     nombre: string;
@@ -164,10 +172,13 @@ export interface ItemGaleriaAlumno {
 
 export interface ReactivoExamen {
   id?: string | number;
+  bloque?: string;
   pregunta: string;
   opciones: string[];
-  correcta: string; // 'a' | 'b' | 'c' | 'd'
+  correcta: string; // 'a' | 'b' | 'c' | 'd' | 'na'
   explicacion?: string;
+  es_informativa?: boolean;
+  aspecto_evaluado?: string;
 }
 
 export interface CuestionarioEspecialidad {

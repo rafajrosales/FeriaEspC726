@@ -397,7 +397,7 @@ export const PresencialScanner: React.FC<PresencialScannerProps> = ({ estudiante
             <div className="grid grid-cols-2 md:grid-cols-4 p-2 gap-2 bg-stone-100/50 border-b border-stone-200">
               {[
                 { id: 'programacion', name: '1. Programación', label: 'Escape Room Algoritmo', status: asistenciaActual.retos_estaciones.programacion },
-                { id: 'comercio', name: '2. Comercio Int.', label: 'Rally Aduanero', status: asistenciaActual.retos_estaciones.comercio },
+                { id: 'comercio', name: '2. Comercio y Aduanas', label: 'Rally Aduanero', status: asistenciaActual.retos_estaciones.comercio },
                 { id: 'rrhh', name: '3. Recursos Humanos', label: 'Match Laboral', status: asistenciaActual.retos_estaciones.rrhh },
                 { id: 'cosmetologia', name: '4. Cosmetología', label: 'Taller Sensorial', status: asistenciaActual.retos_estaciones.cosmetologia }
               ].map(st => (

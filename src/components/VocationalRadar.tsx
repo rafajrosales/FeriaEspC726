@@ -13,7 +13,7 @@ export const VocationalRadar: React.FC<VocationalRadarProps> = ({ evaluacion }) 
   // 4 axes: Top = Programación, Right = Comercio, Bottom = Recursos Humanos, Left = Cosmetología
   const axes = [
     { key: 'programacion', label: 'Programación', aptitud: evaluacion.score_aptitud_programacion, gusto: evaluacion.score_gusto_programacion, angle: -Math.PI / 2 },
-    { key: 'comercio', label: 'Comercio Int.', aptitud: evaluacion.score_aptitud_comercio, gusto: evaluacion.score_gusto_comercio, angle: 0 },
+    { key: 'comercio', label: 'Comercio y Aduanas', aptitud: evaluacion.score_aptitud_comercio, gusto: evaluacion.score_gusto_comercio, angle: 0 },
     { key: 'rrhh', label: 'Recursos Humanos', aptitud: evaluacion.score_aptitud_rrhh, gusto: evaluacion.score_gusto_rrhh, angle: Math.PI / 2 },
     { key: 'cosmetologia', label: 'Cosmetología', aptitud: evaluacion.score_aptitud_cosmetologia, gusto: evaluacion.score_gusto_cosmetologia, angle: Math.PI }
   ];
@@ -120,7 +120,7 @@ export const VocationalRadar: React.FC<VocationalRadarProps> = ({ evaluacion }) 
             </text>
             {/* Right: Comercio */}
             <text x={center + radius + 10} y={center + 4} textAnchor="start" className="text-xs font-semibold fill-stone-800">
-              Comercio Int.
+              Comercio y Aduanas
             </text>
             {/* Bottom: RRHH */}
             <text x={center} y={center + radius + 20} textAnchor="middle" className="text-xs font-semibold fill-stone-800">

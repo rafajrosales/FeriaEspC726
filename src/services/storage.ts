@@ -1,5 +1,5 @@
-import { Estudiante, EvaluacionVocacional, ProgresoVirtual, AsistenciaPresencial, FichaAcademiaReq, OficioCircular, SpecialtyId, DocenteAutorizado, CuestionarioEspecialidad, ReactivoExamen } from '../types';
-import { ESTUDIANTES_INICIALES, FICHAS_ACADEMIA_DEFAULT, OFICIO_CIRCULAR_DEFAULT, CUESTIONARIOS_DEFAULT } from '../data/mockData';
+import { Estudiante, EvaluacionVocacional, ProgresoVirtual, ProgresoEspecialidad, AsistenciaPresencial, FichaAcademiaReq, OficioCircular, SpecialtyId, DocenteAutorizado, CuestionarioEspecialidad, ReactivoExamen } from '../types';
+import { ESTUDIANTES_INICIALES, FICHAS_ACADEMIA_DEFAULT, OFICIO_CIRCULAR_DEFAULT, CUESTIONARIOS_DEFAULT, COSMETOLOGIA_DIAGNOSTICO_REACTIVOS } from '../data/mockData';
 import { cloudSaveEstudiante, cloudSaveDocente, cloudSaveCuestionario, cloudDeleteCuestionario } from './firebase';
 
 const STORAGE_KEYS = {
@@ -97,6 +97,46 @@ export function parseTokenPayload(token: string): { numControl: string; timestam
   } catch {
     return null;
   }
+}
+
+const LETTER_TO_IDX: Record<string, number> = { a: 0, b: 1, c: 2, d: 3 };
+
+function buildCosmetologiaSeedProgress(q4OptionIdx: number, wrongQuestionIds: number[]): ProgresoEspecialidad {
+  const wrongSet = new Set(wrongQuestionIds);
+  const respuestas_detalle: Record<number, number> = {};
+  let correctCount = 0;
+
+  COSMETOLOGIA_DIAGNOSTICO_REACTIVOS.forEach((item, index) => {
+    const qId = typeof item.id === 'number' ? item.id : index + 1;
+    if (item.es_informativa || item.correcta === 'na') {
+      respuestas_detalle[qId] = q4OptionIdx;
+      return;
+    }
+    const correctIdx = LETTER_TO_IDX[item.correcta.toLowerCase()] ?? 0;
+    if (wrongSet.has(qId)) {
+      respuestas_detalle[qId] = (correctIdx + 1) % item.opciones.length;
+    } else {
+      respuestas_detalle[qId] = correctIdx;
+      correctCount++;
+    }
+  });
+
+  const puntaje_maximo = 16;
+  const calificacion_quiz = Math.round((correctCount / puntaje_maximo) * 100);
+  const nivel_perfil: 'ALTO' | 'EN_DESARROLLO' | 'EXPLORATORIO' =
+    correctCount >= 13 ? 'ALTO' : correctCount >= 9 ? 'EN_DESARROLLO' : 'EXPLORATORIO';
+
+  return {
+    video_visto: true,
+    infografia_explorada: true,
+    proyectos_revisados: true,
+    quiz_aprobado: correctCount >= 9,
+    calificacion_quiz,
+    puntaje_obtenido: correctCount,
+    puntaje_maximo,
+    nivel_perfil,
+    respuestas_detalle
+  };
 }
 
 // Initial state builder
@@ -248,20 +288,22 @@ export function initializeStorage() {
       }
     };
 
-    const allFinishedSpecs = {
+    const baseFinishedSpecs = {
       programacion: { video_visto: true, infografia_explorada: true, proyectos_revisados: true, quiz_aprobado: true, calificacion_quiz: 100 },
       comercio: { video_visto: true, infografia_explorada: true, proyectos_revisados: true, quiz_aprobado: true, calificacion_quiz: 100 },
-      rrhh: { video_visto: true, infografia_explorada: true, proyectos_revisados: true, quiz_aprobado: true, calificacion_quiz: 80 },
-      cosmetologia: { video_visto: true, infografia_explorada: true, proyectos_revisados: true, quiz_aprobado: true, calificacion_quiz: 100 }
+      rrhh: { video_visto: true, infografia_explorada: true, proyectos_revisados: true, quiz_aprobado: true, calificacion_quiz: 80 }
     };
 
     const defaultProgresos: Record<string, ProgresoVirtual> = {
       [gaelNC]: {
         num_control: gaelNC,
         test_vocacional_completado: true,
-        progreso_especialidades: allFinishedSpecs,
+        progreso_especialidades: {
+          ...baseFinishedSpecs,
+          cosmetologia: buildCosmetologiaSeedProgress(2, [3, 6, 10, 11, 16])
+        },
         porcentaje_virtual: 100,
-        promedio_cuestionarios: 95.0,
+        promedio_cuestionarios: 87.3,
         clave_unica_token: gaelToken,
         estatus_fase_virtual: 'COMPLETADO',
         fecha_termino: new Date(Date.now() - 3600000).toISOString()
@@ -269,9 +311,12 @@ export function initializeStorage() {
       [valeriaNC]: {
         num_control: valeriaNC,
         test_vocacional_completado: true,
-        progreso_especialidades: allFinishedSpecs,
+        progreso_especialidades: {
+          ...baseFinishedSpecs,
+          cosmetologia: buildCosmetologiaSeedProgress(2, [5, 11, 17])
+        },
         porcentaje_virtual: 100,
-        promedio_cuestionarios: 98.0,
+        promedio_cuestionarios: 90.3,
         clave_unica_token: valeriaToken,
         estatus_fase_virtual: 'COMPLETADO',
         fecha_termino: new Date(Date.now() - 7200000).toISOString()
@@ -279,9 +324,12 @@ export function initializeStorage() {
       [diegoNC]: {
         num_control: diegoNC,
         test_vocacional_completado: true,
-        progreso_especialidades: allFinishedSpecs,
+        progreso_especialidades: {
+          ...baseFinishedSpecs,
+          cosmetologia: buildCosmetologiaSeedProgress(1, [3, 10, 13, 17])
+        },
         porcentaje_virtual: 100,
-        promedio_cuestionarios: 92.0,
+        promedio_cuestionarios: 88.8,
         clave_unica_token: diegoToken,
         estatus_fase_virtual: 'COMPLETADO',
         fecha_termino: new Date(Date.now() - 10800000).toISOString()
@@ -289,9 +337,12 @@ export function initializeStorage() {
       [ximenaNC]: {
         num_control: ximenaNC,
         test_vocacional_completado: true,
-        progreso_especialidades: allFinishedSpecs,
+        progreso_especialidades: {
+          ...baseFinishedSpecs,
+          cosmetologia: buildCosmetologiaSeedProgress(0, [])
+        },
         porcentaje_virtual: 100,
-        promedio_cuestionarios: 96.0,
+        promedio_cuestionarios: 95.0,
         clave_unica_token: ximenaToken,
         estatus_fase_virtual: 'COMPLETADO',
         fecha_termino: new Date(Date.now() - 14400000).toISOString()
@@ -317,19 +368,22 @@ export function initializeStorage() {
           programacion: { video_visto: false, infografia_explorada: false, proyectos_revisados: false, quiz_aprobado: false, calificacion_quiz: 0 },
           comercio: { video_visto: false, infografia_explorada: false, proyectos_revisados: false, quiz_aprobado: false, calificacion_quiz: 0 },
           rrhh: { video_visto: false, infografia_explorada: false, proyectos_revisados: false, quiz_aprobado: false, calificacion_quiz: 0 },
-          cosmetologia: { video_visto: true, infografia_explorada: true, proyectos_revisados: true, quiz_aprobado: true, calificacion_quiz: 100 }
+          cosmetologia: buildCosmetologiaSeedProgress(1, [11])
         },
         porcentaje_virtual: 40,
-        promedio_cuestionarios: 100.0,
+        promedio_cuestionarios: 94.0,
         clave_unica_token: '',
         estatus_fase_virtual: 'EN_PROCESO'
       },
       [leonardoNC]: {
         num_control: leonardoNC,
         test_vocacional_completado: true,
-        progreso_especialidades: allFinishedSpecs,
+        progreso_especialidades: {
+          ...baseFinishedSpecs,
+          cosmetologia: buildCosmetologiaSeedProgress(3, [1, 3, 5, 10, 11, 17])
+        },
         porcentaje_virtual: 100,
-        promedio_cuestionarios: 90.0,
+        promedio_cuestionarios: 85.8,
         clave_unica_token: leonardoToken,
         estatus_fase_virtual: 'COMPLETADO',
         fecha_termino: new Date(Date.now() - 18000000).toISOString()
@@ -337,9 +391,12 @@ export function initializeStorage() {
       [renataNC]: {
         num_control: renataNC,
         test_vocacional_completado: true,
-        progreso_especialidades: allFinishedSpecs,
+        progreso_especialidades: {
+          ...baseFinishedSpecs,
+          cosmetologia: buildCosmetologiaSeedProgress(0, [7, 13])
+        },
         porcentaje_virtual: 100,
-        promedio_cuestionarios: 94.0,
+        promedio_cuestionarios: 92.0,
         clave_unica_token: renataToken,
         estatus_fase_virtual: 'COMPLETADO',
         fecha_termino: new Date(Date.now() - 21600000).toISOString()
@@ -602,6 +659,35 @@ export function getProgresoVirtual(nc: string): ProgresoVirtual {
   if (nc) {
     const raw = localStorage.getItem(STORAGE_KEYS.PROGRESOS);
     const dict: Record<string, ProgresoVirtual> = raw ? JSON.parse(raw) : {};
+
+    const cosmeStatsSyncKey = 'cetis7_cosmetologia_stats_v1_synced';
+    if (!localStorage.getItem(cosmeStatsSyncKey)) {
+      const sampleSeeds: Record<string, { q4: number; wrong: number[] }> = {
+        [ESTUDIANTES_INICIALES[0].num_control]: { q4: 2, wrong: [3, 6, 10, 11, 16] },
+        [ESTUDIANTES_INICIALES[1].num_control]: { q4: 2, wrong: [5, 11, 17] },
+        [ESTUDIANTES_INICIALES[2].num_control]: { q4: 1, wrong: [3, 10, 13, 17] },
+        [ESTUDIANTES_INICIALES[3].num_control]: { q4: 0, wrong: [] },
+        [ESTUDIANTES_INICIALES[5].num_control]: { q4: 1, wrong: [11] },
+        [ESTUDIANTES_INICIALES[6].num_control]: { q4: 3, wrong: [1, 3, 5, 10, 11, 17] },
+        [ESTUDIANTES_INICIALES[7].num_control]: { q4: 0, wrong: [7, 13] }
+      };
+      let changedStats = false;
+      Object.entries(sampleSeeds).forEach(([studentNc, cfg]) => {
+        const entry = dict[studentNc];
+        if (entry?.progreso_especialidades?.cosmetologia?.quiz_aprobado && !entry.progreso_especialidades.cosmetologia.respuestas_detalle) {
+          entry.progreso_especialidades.cosmetologia = {
+            ...entry.progreso_especialidades.cosmetologia,
+            ...buildCosmetologiaSeedProgress(cfg.q4, cfg.wrong)
+          };
+          changedStats = true;
+        }
+      });
+      if (changedStats) {
+        localStorage.setItem(STORAGE_KEYS.PROGRESOS, JSON.stringify(dict));
+      }
+      localStorage.setItem(cosmeStatsSyncKey, '1');
+    }
+
     if (dict[nc]) {
       return dict[nc];
     }
@@ -735,6 +821,110 @@ export function getFichasAcademia(): Record<string, FichaAcademiaReq> {
       localStorage.setItem(STORAGE_KEYS.FICHAS, JSON.stringify(fichas));
     }
     localStorage.setItem(syncKey, '1');
+  }
+
+  const comercioSyncKey = 'cetis7_comercio_aduanas_v1_synced';
+  if (!localStorage.getItem(comercioSyncKey)) {
+    const defaultComercio = FICHAS_ACADEMIA_DEFAULT.comercio;
+    if (fichas.comercio && defaultComercio) {
+      let changedComercio = false;
+      if (fichas.comercio.nombre_especialidad === 'Técnico en Comercio Internacional') {
+        fichas.comercio.nombre_especialidad = defaultComercio.nombre_especialidad;
+        changedComercio = true;
+      }
+      if (
+        fichas.comercio.resumen_ejecutivo &&
+        fichas.comercio.resumen_ejecutivo.startsWith('Prepara profesionistas técnicos capaces de coordinar')
+      ) {
+        fichas.comercio.resumen_ejecutivo = defaultComercio.resumen_ejecutivo;
+        changedComercio = true;
+      }
+      if (fichas.comercio.recursos_multimedia) {
+        fichas.comercio.recursos_multimedia.infografia_formato =
+          defaultComercio.recursos_multimedia.infografia_formato;
+        const currentComGal = fichas.comercio.recursos_multimedia.galeria_alumnos || defaultComercio.recursos_multimedia.galeria_alumnos || [];
+        const hasInfografia = currentComGal.some(item => item.id === 'com-infografia-oficial');
+        const defaultInfoItem = defaultComercio.recursos_multimedia.galeria_alumnos?.find(item => item.id === 'com-infografia-oficial');
+        if (!hasInfografia && defaultInfoItem) {
+          fichas.comercio.recursos_multimedia.galeria_alumnos = [defaultInfoItem, ...currentComGal];
+        }
+        changedComercio = true;
+      }
+      if (changedComercio) {
+        localStorage.setItem(STORAGE_KEYS.FICHAS, JSON.stringify(fichas));
+      }
+    }
+    localStorage.setItem(comercioSyncKey, '1');
+  }
+
+  const comercioInfoGalSyncKey = 'cetis7_comercio_infografia_gal_v1_synced';
+  if (!localStorage.getItem(comercioInfoGalSyncKey)) {
+    const defaultComercio = FICHAS_ACADEMIA_DEFAULT.comercio;
+    const defaultInfoItem = defaultComercio?.recursos_multimedia?.galeria_alumnos?.find(item => item.id === 'com-infografia-oficial');
+    if (fichas.comercio && defaultInfoItem) {
+      const currentComGal = fichas.comercio.recursos_multimedia?.galeria_alumnos || defaultComercio.recursos_multimedia?.galeria_alumnos || [];
+      if (!currentComGal.some(item => item.id === 'com-infografia-oficial')) {
+        fichas.comercio.recursos_multimedia = {
+          ...fichas.comercio.recursos_multimedia,
+          galeria_alumnos: [defaultInfoItem, ...currentComGal]
+        };
+        localStorage.setItem(STORAGE_KEYS.FICHAS, JSON.stringify(fichas));
+      }
+    }
+    localStorage.setItem(comercioInfoGalSyncKey, '1');
+  }
+
+  const cosmeInfoGalSyncKey = 'cetis7_cosmetologia_infografia_v1_synced';
+  if (!localStorage.getItem(cosmeInfoGalSyncKey)) {
+    const defaultCosme = FICHAS_ACADEMIA_DEFAULT.cosmetologia;
+    const defaultCosInfoItem = defaultCosme?.recursos_multimedia?.galeria_alumnos?.find(item => item.id === 'cos-infografia-oficial');
+    if (fichas.cosmetologia && defaultCosInfoItem) {
+      const currentCosGal = fichas.cosmetologia.recursos_multimedia?.galeria_alumnos || defaultCosme.recursos_multimedia?.galeria_alumnos || [];
+      let changedCos = false;
+      if (!currentCosGal.some(item => item.id === 'cos-infografia-oficial')) {
+        fichas.cosmetologia.recursos_multimedia = {
+          ...fichas.cosmetologia.recursos_multimedia,
+          infografia_formato: defaultCosme.recursos_multimedia.infografia_formato,
+          galeria_alumnos: [defaultCosInfoItem, ...currentCosGal]
+        };
+        changedCos = true;
+      }
+      if (changedCos) {
+        localStorage.setItem(STORAGE_KEYS.FICHAS, JSON.stringify(fichas));
+      }
+    }
+    localStorage.setItem(cosmeInfoGalSyncKey, '1');
+  }
+
+  const comercioVideoSyncKey = 'cetis7_comercio_video_principal_v1_synced';
+  if (!localStorage.getItem(comercioVideoSyncKey)) {
+    const defaultComercio = FICHAS_ACADEMIA_DEFAULT.comercio;
+    const defaultVideo = defaultComercio?.recursos_multimedia?.video_academia;
+    if (fichas.comercio && defaultVideo) {
+      const currentVideoUrl = fichas.comercio.recursos_multimedia?.video_academia?.url_video;
+      if (!currentVideoUrl || currentVideoUrl.includes('dQw4w9WgXcQ')) {
+        fichas.comercio.recursos_multimedia = {
+          ...fichas.comercio.recursos_multimedia,
+          video_url_o_estado: defaultComercio.recursos_multimedia.video_url_o_estado,
+          video_academia: defaultVideo
+        };
+        localStorage.setItem(STORAGE_KEYS.FICHAS, JSON.stringify(fichas));
+      }
+    }
+    localStorage.setItem(comercioVideoSyncKey, '1');
+  }
+
+  const cosmeReactivosSyncKey = 'cetis7_cosmetologia_17reactivos_v1_synced';
+  if (!localStorage.getItem(cosmeReactivosSyncKey)) {
+    const defaultCosme = FICHAS_ACADEMIA_DEFAULT.cosmetologia;
+    if (fichas.cosmetologia && defaultCosme?.banco_reactivos?.length === 17) {
+      const currentCount = fichas.cosmetologia.banco_reactivos?.length || 0;
+      if (currentCount <= 5) {
+        fichas.cosmetologia.banco_reactivos = defaultCosme.banco_reactivos;
+        localStorage.setItem(STORAGE_KEYS.FICHAS, JSON.stringify(fichas));
+      }
+    }
+    localStorage.setItem(cosmeReactivosSyncKey, '1');
   }
 
   return fichas;

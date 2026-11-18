@@ -132,7 +132,7 @@ export const DigitalPassQR: React.FC<DigitalPassQRProps> = ({
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-stone-700">3. Cuestionario de Comercio Internacional</span>
+            <span className="text-stone-700">3. Cuestionario de Comercio Internacional y Aduanas</span>
             <span className={progreso.progreso_especialidades.comercio.quiz_aprobado ? 'text-emerald-700 font-semibold' : 'text-amber-700'}>
               {progreso.progreso_especialidades.comercio.quiz_aprobado ? '✓ Aprobado' : 'Pendiente'}
             </span>

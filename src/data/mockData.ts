@@ -1,4 +1,246 @@
-import { SpecialtyInfo, Estudiante, EvaluacionVocacional, ProgresoVirtual, AsistenciaPresencial, FichaAcademiaReq, OficioCircular, CuestionarioEspecialidad } from '../types';
+import { SpecialtyInfo, Estudiante, EvaluacionVocacional, ProgresoVirtual, AsistenciaPresencial, FichaAcademiaReq, OficioCircular, CuestionarioEspecialidad, ReactivoExamen } from '../types';
+
+export const COSMETOLOGIA_DIAGNOSTICO_REACTIVOS: ReactivoExamen[] = [
+  {
+    id: 1,
+    bloque: 'I. Intereses y conocimiento inicial',
+    pregunta: '¿Cuál es tu principal interés al estudiar la carrera técnica de Cosmetología?',
+    opciones: [
+      'Aprender sobre el cuidado de la piel y los tratamientos faciales y corporales.',
+      'Conocer únicamente sobre maquillaje y arreglo personal.',
+      'Tener una actividad para ocupar mi tiempo libre.',
+      'Estudiar la carrera porque fue la opción que eligieron por mí.'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Interés real por el cuidado estético integral de la piel.',
+    explicacion: 'Interés real por el cuidado estético integral de la piel y los tratamientos faciales y corporales (1 pt).'
+  },
+  {
+    id: 2,
+    bloque: 'I. Intereses y conocimiento inicial',
+    pregunta: '¿Cómo te sentirías al tener contacto directo con la piel de diferentes clientes durante las prácticas?',
+    opciones: [
+      'Me sentiría incómodo(a) y evitaría hacerlo.',
+      'Tendría disposición para aprender y realizar los procedimientos con respeto e higiene.',
+      'Preferiría trabajar solamente con productos y no con personas.',
+      'No estoy interesado(a) en realizar este tipo de actividades.'
+    ],
+    correcta: 'b',
+    aspecto_evaluado: 'Disposición al contacto profesional y trato humano.',
+    explicacion: 'Disposición al contacto profesional directo y trato humano con respeto e higiene (1 pt).'
+  },
+  {
+    id: 3,
+    bloque: 'I. Intereses y conocimiento inicial',
+    pregunta: '¿Cuál de las siguientes opciones describe correctamente qué estudia la carrera técnica de Cosmetología, a qué se dedica y qué necesitas para realizar tus prácticas en el CETis No. 7?',
+    opciones: [
+      'Estudia principalmente maquillaje, peinados y arreglo personal; para las prácticas solamente se necesita maquillaje y ropa cómoda.',
+      'Estudia el cuidado estético de la piel, tratamientos cosmetológicos faciales y corporales, higiene, protocolos de atención y uso de productos y equipos especializados; requiere materiales, accesorios, productos cosmetológicos y uniforme de prácticas, conforme a las indicaciones de la escuela.',
+      'Estudia medicina, dermatología y procedimientos quirúrgicos; requiere instrumental médico y uniforme hospitalario.',
+      'Estudia exclusivamente la venta de productos de belleza y administración de establecimientos; requiere únicamente una libreta y una calculadora.'
+    ],
+    correcta: 'b',
+    aspecto_evaluado: 'Conocimiento real del campo de estudio y requerimientos.',
+    explicacion: 'Conocimiento real del campo de estudio estético de la piel y requerimientos oficiales de práctica en el CETis No. 7 (1 pt).'
+  },
+  {
+    id: 4,
+    bloque: 'I. Intereses y conocimiento inicial',
+    pregunta: 'Durante tu formación en la carrera técnica de Cosmetología necesitarás conseguir cuatro modelos por semana para realizar tus prácticas de tratamientos faciales y corporales. ¿Tienes la posibilidad de conseguirlos?',
+    opciones: [
+      'Sí, puedo conseguir cuatro modelos por semana.',
+      'Puedo conseguir entre dos y tres modelos por semana.',
+      'Solamente puedo conseguir un modelo por semana.',
+      'Actualmente no tengo la posibilidad de conseguir modelos.'
+    ],
+    correcta: 'na',
+    es_informativa: true,
+    aspecto_evaluado: 'Disponibilidad logística de modelos (no penaliza puntaje).',
+    explicacion: 'Pregunta de contexto logístico (0 pts · No penaliza puntaje). Permite a los docentes prever prácticas cruzadas o banco de voluntarios si seleccionas C o D.'
+  },
+  {
+    id: 5,
+    bloque: 'I. Intereses y conocimiento inicial',
+    pregunta: 'En las prácticas de cosmetología es necesario permanecer de pie aproximadamente dos horas. ¿Cómo actuarías?',
+    opciones: [
+      'Mantendría una postura ergonómica y seguiría las indicaciones para realizar la actividad de manera segura.',
+      'Me negaría a realizar la práctica.',
+      'Realizaría la actividad sin cuidar mi postura.',
+      'Buscaría evitar las prácticas que requieren permanecer de pie.'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Disposición física y cuidado ergonómico en taller.',
+    explicacion: 'Disposición física para el trabajo en cabina y cuidado ergonómico seguro durante las prácticas (1 pt).'
+  },
+  {
+    id: 6,
+    bloque: 'II. Actitudes y disposición para las prácticas',
+    pregunta: 'Durante las prácticas podrías trabajar con personas que presentan acné, manchas, sensibilidad u otras condiciones de la piel. ¿Cuál sería tu actitud?',
+    opciones: [
+      'Evitaría atender a las personas que presentan estas condiciones.',
+      'Haría comentarios sobre el aspecto de su piel.',
+      'Las atendería con respeto, siguiendo los protocolos de higiene y las indicaciones de mi docente.',
+      'Recomendaría productos sin conocer previamente sus características.'
+    ],
+    correcta: 'c',
+    aspecto_evaluado: 'Empatía, respeto al cliente y apego a protocolos.',
+    explicacion: 'Empatía, respeto hacia la condición cutánea del cliente y apego estricto a los protocolos e indicaciones docentes (1 pt).'
+  },
+  {
+    id: 7,
+    bloque: 'II. Actitudes y disposición para las prácticas',
+    pregunta: 'Si una técnica de masaje o tratamiento facial no te sale correctamente, ¿qué harías?',
+    opciones: [
+      'Dejaría de intentarlo.',
+      'Culparía a mis compañeros.',
+      'Pediría orientación a mi docente y practicaría en casa hasta mejorar.',
+      'Evitaría volver a realizar esa técnica.'
+    ],
+    correcta: 'c',
+    aspecto_evaluado: 'Perseverancia, tolerancia a la frustración y apertura.',
+    explicacion: 'Perseverancia, tolerancia a la frustración y apertura para recibir orientación y practicar hasta dominar la técnica (1 pt).'
+  },
+  {
+    id: 8,
+    bloque: 'II. Actitudes y disposición para las prácticas',
+    pregunta: '¿Qué importancia tiene para ti la limpieza y desinfección de los materiales y áreas cosmetológicas?',
+    opciones: [
+      'Es una actividad que puede realizarse solamente cuando se observa suciedad.',
+      'Es fundamental antes y después de cada práctica para prevenir riesgos y proteger tanto al cliente como al profesional.',
+      'Es responsabilidad exclusiva del docente o del personal de limpieza.',
+      'Solo es necesaria cuando se utilizan aparatos eléctricos especializados.'
+    ],
+    correcta: 'b',
+    aspecto_evaluado: 'Cultura de higiene, bioseguridad y prevención de riesgos.',
+    explicacion: 'Cultura de higiene, asepsia, bioseguridad y prevención de riesgos antes y después de cada práctica (1 pt).'
+  },
+  {
+    id: 9,
+    bloque: 'II. Actitudes y disposición para las prácticas',
+    pregunta: 'Si durante un tratamiento facial un cliente manifiesta molestias, ¿qué harías?',
+    opciones: [
+      'Continuaría el tratamiento para terminarlo.',
+      'Ignoraría sus comentarios.',
+      'Suspendería el procedimiento y comunicaría la situación al docente o responsable.',
+      'Le pediría que soportara las molestias.'
+    ],
+    correcta: 'c',
+    aspecto_evaluado: 'Atención oportuna al usuario y comunicación con docente.',
+    explicacion: 'Atención oportuna ante cualquier molestia del usuario, suspensión preventiva y aviso inmediato al docente (1 pt).'
+  },
+  {
+    id: 10,
+    bloque: 'III. Responsabilidad y materiales de trabajo',
+    pregunta: 'Para realizar las prácticas necesitarás accesorios, productos y materiales cosmetológicos. ¿Qué actitud asumirías ante esta responsabilidad?',
+    opciones: [
+      'Consideraría que la escuela debe proporcionar absolutamente todos los materiales.',
+      'Me organizaría para conocer las listas de materiales y planear su adquisición gradual con apoyo de mis padres o tutores.',
+      'No compraría ningún material.',
+      'Esperaría hasta el día de la práctica para conseguirlos.'
+    ],
+    correcta: 'b',
+    aspecto_evaluado: 'Planeación y organización familiar para insumos.',
+    explicacion: 'Planeación y organización gradual con padres o tutores para contar oportunamente con los insumos requeridos (1 pt).'
+  },
+  {
+    id: 11,
+    bloque: 'III. Responsabilidad y materiales de trabajo',
+    pregunta: 'Si te solicitan un producto cosmetológico específico (por ejemplo, una ampolleta y una mascarilla para acné), ¿qué harías?',
+    opciones: [
+      'Compraría cualquier producto económico, aunque no cumpla con las indicaciones.',
+      'No participaría en las prácticas.',
+      'Consultaría con mi docente las especificaciones exactas y me organizaría con mis padres o tutores para adquirirlo.',
+      'Sustituiría el producto por otro casero sin consultar.'
+    ],
+    correcta: 'c',
+    aspecto_evaluado: 'Toma de decisiones responsable y consulta docente/familiar.',
+    explicacion: 'Toma de decisiones responsable verificando especificaciones técnicas con la docente y organizando con padres/tutores (1 pt).'
+  },
+  {
+    id: 12,
+    bloque: 'III. Responsabilidad y materiales de trabajo',
+    pregunta: '¿Cómo cuidarías los accesorios y equipos que utilizarás durante las prácticas?',
+    opciones: [
+      'Los utilizaría sin preocuparme por su conservación.',
+      'Los limpiaría, almacenaría y utilizaría siguiendo las indicaciones correspondientes.',
+      'Los dejaría en cualquier lugar después de utilizarlos.',
+      'Esperaría a que otra persona se encargara de ellos.'
+    ],
+    correcta: 'b',
+    aspecto_evaluado: 'Cuidado, mantenimiento y conservación de equipo.',
+    explicacion: 'Cuidado, limpieza, almacenamiento y conservación responsable del equipo y accesorios de taller (1 pt).'
+  },
+  {
+    id: 13,
+    bloque: 'IV. Habilidades personales y ética profesional',
+    pregunta: '¿Cómo consideras tu disposición para realizar actividades manuales que requieren precisión y coordinación?',
+    opciones: [
+      'Tengo disposición para aprender y mejorar mis habilidades manuales.',
+      'No me gustan las actividades manuales.',
+      'Prefiero realizar únicamente actividades teóricas.',
+      'No tengo interés en desarrollar estas habilidades.'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Disposición para desarrollar destreza motriz fina.',
+    explicacion: 'Disposición y apertura para entrenar precisión manual y coordinación motriz fina en cabina (1 pt).'
+  },
+  {
+    id: 14,
+    bloque: 'IV. Habilidades personales y ética profesional',
+    pregunta: 'Cuando recibes una observación de tu docente para mejorar una práctica, ¿cómo reaccionas?',
+    opciones: [
+      'Me molesto porque considero que mi trabajo está bien.',
+      'Ignoro las observaciones.',
+      'Escucho las recomendaciones y las aplico para mejorar.',
+      'Dejo de participar en la actividad.'
+    ],
+    correcta: 'c',
+    aspecto_evaluado: 'Apertura a la retroalimentación y mejora continua.',
+    explicacion: 'Apertura a la retroalimentación docente y actitud de mejora continua en procedimientos (1 pt).'
+  },
+  {
+    id: 15,
+    bloque: 'IV. Habilidades personales y ética profesional',
+    pregunta: 'Durante una práctica debes trabajar con un compañero. ¿Qué comportamiento consideras más adecuado?',
+    opciones: [
+      'Realizar solamente la parte que me corresponde y desentenderme del resto.',
+      'Colaborar, respetar las funciones y compartir responsabilidades.',
+      'Esperar a que mi compañero realice toda la actividad.',
+      'Trabajar sin tomar en cuenta las indicaciones del equipo.'
+    ],
+    correcta: 'b',
+    aspecto_evaluado: 'Trabajo colaborativo y corresponsabilidad en taller.',
+    explicacion: 'Trabajo colaborativo, respeto a las funciones y corresponsabilidad dentro de las prácticas en taller (1 pt).'
+  },
+  {
+    id: 16,
+    bloque: 'IV. Habilidades personales y ética profesional',
+    pregunta: 'Si un cliente presenta una condición de la piel que requiere valoración médica, ¿qué harías?',
+    opciones: [
+      'Le recomendaría un tratamiento médico sin tener preparación para ello.',
+      'Aplicaría cualquier producto para solucionar el problema.',
+      'Le explicaría los límites de mi intervención cosmetológica y recomendaría acudir con un profesional de la salud.',
+      'Ignoraría la situación y continuaría el tratamiento.'
+    ],
+    correcta: 'c',
+    aspecto_evaluado: 'Ética profesional y reconocimiento de límites de intervención.',
+    explicacion: 'Ética profesional y reconocimiento responsable de los límites de la intervención cosmetológica frente a padecimientos médicos (1 pt).'
+  },
+  {
+    id: 17,
+    bloque: 'V. Expectativas profesionales',
+    pregunta: '¿Cuál es tu principal expectativa al concluir la carrera técnica de Cosmetología?',
+    opciones: [
+      'Contar con conocimientos y habilidades para desempeñarme profesionalmente en el área de cosmetología.',
+      'Obtener únicamente un certificado de bachillerato.',
+      'Aprender solamente técnicas de belleza superficial.',
+      'Todavía no tengo interés en desarrollarme en esta especialidad.'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Proyección y expectativa de desarrollo profesional.',
+    explicacion: 'Proyección vocacional sólida y expectativa de desarrollo profesional en el campo de la cosmetología (1 pt).'
+  }
+];
 
 export const ESPECIALIDADES: SpecialtyInfo[] = [
   {
@@ -162,34 +404,39 @@ export const ESPECIALIDADES: SpecialtyInfo[] = [
   },
   {
     id: 'comercio',
-    nombre: 'Técnico en Comercio Internacional',
-    titulo_corto: 'Comercio Internacional',
+    nombre: 'Bachillerato Tecnológico en Comercio Internacional y Aduanas',
+    titulo_corto: 'Comercio Int. y Aduanas',
     area: 'Ciencias Económico-Administrativas y Logística Global',
     color_acento: '#047857',
     color_badge: 'bg-emerald-50 text-emerald-700 border-emerald-200',
     icono: 'Globe2',
-    resumen_ejecutivo: 'Capacita a técnicos expertos en la gestión de cadenas logísticas globales, despacho y clasificación arancelaria en aduanas mexicanas, regulación de importaciones y exportaciones e interpretación de tratados comerciales internacionales (T-MEC).',
+    resumen_ejecutivo: 'Bachillerato Tecnológico en Comercio Internacional y Aduanas. Transmite competencias profesionales para la gestión de importaciones y exportaciones, estimación de costos y planes de exportación, clasificación arancelaria, procesos aduaneros, empleabilidad y economía ecológica con desarrollo sostenible.',
+    infografia_url: '/assets/aistudio/image_ed736886.png',
     perfil_ingreso: [
       'Gusto por la geografía económica, monedas y logística internacional.',
       'Habilidad negociadora y capacidad organizativa en flujos de suministros.',
       'Curiosidad por tratados comerciales y regulaciones aduaneras.'
     ],
     perfil_egreso: [
-      'Elaboración e integración de pedimentos aduanales y documentación comercial.',
-      'Aplicación de Incoterms 2020-2026 y cálculo de impuestos arancelarios.',
-      'Supervisión de cadenas de frío, transporte multimodal y almacenamiento logístico.'
+      'Gestión de importaciones y exportaciones.',
+      'Estimación de costos y planes de exportación.',
+      'Clasificación arancelaria y procesos aduaneros.',
+      'Desarrollo de empleabilidad, liderazgo y trabajo en equipo.',
+      'Aplicación de economía ecológica y desarrollo sostenible.'
     ],
     campo_laboral: [
-      'Agencias aduanales en aeropuertos, puertos marítimos y fronteras.',
-      'Empresas de logística internacional, paquetería global y transporte multimodal.',
-      'Departamentos de importación/exportación de maquiladoras e industrias mexicanas.'
+      'Auxiliar de aduanas.',
+      'Auxiliar de comercio exterior.',
+      'Auxiliar de logística internacional.',
+      'Auxiliar de tráfico o embarques.',
+      'Auxiliar de clasificación arancelaria.'
     ],
     submodulos: [
-      { semestre: '2° Semestre', nombre: 'Módulo I: Fundamentos del comercio exterior y aduanas', competencia: 'Identifica la estructura del sistema aduanero mexicano y marco legal.' },
-      { semestre: '3° Semestre', nombre: 'Módulo II: Clasificación arancelaria y tratados', competencia: 'Aplica la tarifa de los impuestos generales de importación y exportación (TIGIE).' },
-      { semestre: '4° Semestre', nombre: 'Módulo III: Logística y transporte multimodal', competencia: 'Coordina rutas terrestres, marítimas, ferroviarias y aéreas con Incoterms.' },
-      { semestre: '5° Semestre', nombre: 'Módulo IV: Despacho aduanal y pedimento digital', competencia: 'Genera pedimentos y valida documentación complementaria ante SAT/ANAM.' },
-      { semestre: '6° Semestre', nombre: 'Módulo V: Plan de negocios y proyectos de exportación', competencia: 'Estructura planes estratégicos para posicionar productos mexicanos en el extranjero.' }
+      { semestre: '2° Semestre', nombre: 'Módulo I: Fundamentos del comercio exterior y aduanas', competencia: 'Identifica la estructura del sistema aduanero mexicano y procesos aduaneros.' },
+      { semestre: '3° Semestre', nombre: 'Módulo II: Clasificación arancelaria y tratados', competencia: 'Aplica la clasificación arancelaria y tarifa de impuestos de importación y exportación (TIGIE).' },
+      { semestre: '4° Semestre', nombre: 'Módulo III: Logística y transporte multimodal', competencia: 'Coordina operaciones de tráfico o embarques y logística internacional con Incoterms.' },
+      { semestre: '5° Semestre', nombre: 'Módulo IV: Despacho aduanal y pedimento digital', competencia: 'Ejecuta gestión de importaciones y exportaciones y valida procesos aduaneros ante SAT/ANAM.' },
+      { semestre: '6° Semestre', nombre: 'Módulo V: Plan de negocios y proyectos de exportación', competencia: 'Realiza estimación de costos, planes de exportación y economía ecológica con desarrollo sostenible.' }
     ],
     proyectos_destacados: [
       {
@@ -208,27 +455,36 @@ export const ESPECIALIDADES: SpecialtyInfo[] = [
       },
       {
         titulo: 'Manual de Cumplimiento Arancelario para PYMES Artesanales',
-        alumnos: 'Academia de Comercio Internacional',
+        alumnos: 'Academia de Comercio Internacional y Aduanas',
         semestre: '4° Semestre',
         descripcion: 'Guía paso a paso para artesanos del Valle de México sobre cómo exportar a Estados Unidos bajo facilidades del T-MEC.',
         impacto: 'Distribuido a 45 talleres cooperativos locales.'
       }
     ],
     video_demo: {
-      titulo: 'De Cuautepec para el Mundo: Logística y Aduanas 2026',
-      duracion: '3:10 min',
-      presentador: 'Lic. Claudia Becerril (Presidenta de Academia de Comercio)',
-      descripcion: 'Explicación didáctica sobre cómo viaja un producto desde una fábrica hasta el otro lado del mundo pasando por aduanas y verificación fiscal.',
-      url_video: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+      titulo: 'Comercio Internacional y Aduanas · Video Oficial DGETI',
+      duracion: '0:45 min',
+      presentador: 'Lic. Claudia Becerril (Presidenta de Academia de Comercio Internacional y Aduanas)',
+      descripcion: 'Domina las reglas que rigen el comercio mundial: gestión de importaciones y exportaciones, logística internacional y doble ventaja DGETI (certificado de bachillerato y título técnico).',
+      url_video: '/assets/aistudio/Comercio_internacional_y_aduanas_video_principal_979d88d2.mp4'
     },
     video_academia: {
-      titulo: 'Video Oficial de la Academia de Comercio Internacional',
-      duracion: '3:40 min',
-      presentador: 'Lic. Claudia Becerril Morales y Colegiado de Comercio',
-      descripcion: 'Recorrido interactivo por el taller de aduanas, revisión del pedimento SAT y demostración de las rutas logísticas de importación y exportación.',
-      url_video: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+      titulo: 'Video Principal: Comercio Internacional y Aduanas',
+      duracion: '0:45 min',
+      presentador: 'DGETI · Academia de Comercio Internacional y Aduanas CETis 7',
+      descripcion: 'Cada producto que usas y cada mercancía que llega necesita un estratega. Conoce la carrera técnica en Comercio Internacional y Aduanas y sus oportunidades laborales y universitarias.',
+      url_video: '/assets/aistudio/Comercio_internacional_y_aduanas_video_principal_979d88d2.mp4'
     },
     galeria_alumnos: [
+      {
+        id: 'com-infografia-oficial',
+        titulo: 'Infografía Oficial: Perfil de Egreso y Puestos de Trabajo',
+        alumnos: 'Academia de Comercio Internacional y Aduanas',
+        semestre: 'Material Oficial',
+        tipo: 'foto',
+        url_media: '/assets/aistudio/image_ed736886.png',
+        descripcion: 'Infografía institucional con las competencias laborales principales, formación integral y principales puestos de trabajo de Comercio Internacional y Aduanas.'
+      },
       {
         id: 'com-gal-1',
         titulo: 'Simulador Digital de Cubicaje de Contenedores 40ft',
@@ -296,14 +552,14 @@ export const ESPECIALIDADES: SpecialtyInfo[] = [
       },
       {
         id: 5,
-        pregunta: '¿Dónde puede desempeñarse profesionalmente un egresado de Comercio Internacional?',
+        pregunta: '¿Cuáles son algunos de los principales puestos de trabajo para el egresado de Comercio Internacional y Aduanas?',
         opciones: [
-          'Agencias aduanales, terminales de carga aérea/marítima y empresas exportadoras.',
+          'Auxiliar de aduanas, de comercio exterior, logística internacional, tráfico o clasificación arancelaria.',
           'Únicamente en salones de belleza.',
           'Instalando cableado eléctrico en hogares.'
         ],
         respuesta_correcta: 0,
-        explicacion: 'Tienen amplia inserción en agencias aduanales, terminales intermodales y aduanas del país.'
+        explicacion: 'El perfil de egreso prepara al estudiante como auxiliar de aduanas, comercio exterior, logística internacional, tráfico o embarques y clasificación arancelaria.'
       }
     ],
     reto_presencial: {
@@ -595,29 +851,31 @@ export const ESPECIALIDADES: SpecialtyInfo[] = [
     color_acento: '#be185d',
     color_badge: 'bg-pink-50 text-pink-700 border-pink-200',
     icono: 'Sparkles',
-    resumen_ejecutivo: 'Especialidad formativa en el diagnóstico integral del órgano cutáneo, técnicas de cabina facial y corporal, química cosmética aplicada, formulación botánica natural y protocolos de bioseguridad bajo estándares sanitarios de COFEPRIS.',
+    resumen_ejecutivo: 'La Cosmetología se encarga de los cuidados estéticos del rostro y cuerpo, asepsia, rejuvenecimiento y embellecimiento saludable de la piel, conocimiento de activos cosméticos y técnicas de relajación que generan bienestar integral.',
+    infografia_url: '/assets/aistudio/infografia_cosmetologia_cetis7.jpg',
     perfil_ingreso: [
       'Interés por las ciencias biológicas, dermatología preventiva y cuidado de la salud.',
       'Destreza manual fina, pulcritud, higiene y sensibilidad estética.',
       'Vocación de servicio al cliente y empatía con el bienestar de las personas.'
     ],
     perfil_egreso: [
-      'Identificación precisa de biotipos (graso, seco, mixto, sensible) y fototipos cutáneos.',
-      'Aplicación de protocolos de higiene profunda, drenaje linfático y tratamientos antiedad.',
-      'Formulación y preparación de insumos dermocosméticos seguros con ingredientes botánicos.',
-      'Manejo de aparatología estética básica y normatividad de bioseguridad sanitaria.'
+      'Identificación precisa de biotipos cutáneos y aplicación de procesos de cosmetología básica facial y corporal.',
+      'Aplicación de técnicas de activación facial profunda (antienvejecimiento y despigmentantes) y masaje relajante corporal.',
+      'Ejecución de técnicas drenantes faciales (acné y piel sensible) y corporales (celulitis, estrías, depilación y epilación).',
+      'Manipulación facial reafirmante (lifting), tratamientos corporales remodelantes y diseño de imagen y servicios de SPA.'
     ],
     campo_laboral: [
-      'Clínicas de dermatología estética y cabinas de bienestar integral.',
-      'Spas turísticos, centros de rejuvenecimiento y estética médica.',
-      'Emprendimiento de marcas de cosmética natural y dermoconsejería profesional.'
+      "SPA's de gran turismo y de ciudad, centros de bienestar y cabinas estéticas.",
+      'Clínicas dermatológicas, de cirugía estética y empresas de aparatología estética.',
+      'Laboratorios de cosmética profesional y aplicaciones digitales de bienestar y belleza.',
+      'Eventos sociales, servicios a domicilio y autoempleo.'
     ],
     submodulos: [
-      { semestre: '2° Semestre', nombre: 'Módulo I: Anatomía de la piel y bioseguridad en cabina', competencia: 'Reconoce la histología cutánea, anexos de la piel y esterilización.' },
-      { semestre: '3° Semestre', nombre: 'Módulo II: Diagnóstico de biotipos y tratamientos faciales', competencia: 'Ejecuta limpieza facial profunda, exfoliaciones y mascarillas personalizadas.' },
-      { semestre: '4° Semestre', nombre: 'Módulo III: Técnicas corporales y drenaje manual', competencia: 'Aplica maniobras de masaje relajante, drenaje linfático y modelado.' },
-      { semestre: '5° Semestre', nombre: 'Módulo IV: Química cosmética y formulación natural', competencia: 'Elabora tónicos, emulsiones y sérums con principios activos vegetales.' },
-      { semestre: '6° Semestre', nombre: 'Módulo V: Cosmiatría avanzada y gestión de cabina spa', competencia: 'Administra protocolos de cabina con aparatología y mercadotecnia de bienestar.' }
+      { semestre: '2° Semestre', nombre: 'Módulo I: Realiza procesos de Cosmetología básica', competencia: 'M1S1 Limpia el rostro (faciales hidratantes y oxigenantes) · M1S2 Limpia el cuerpo (hidratación y maniobras básicas de masaje).' },
+      { semestre: '3° Semestre', nombre: 'Módulo II: Aplica técnicas de activación facial y relajación corporal', competencia: 'M2S1 Faciales de activación profunda (antienvejecimiento y despigmentantes) · M2S2 Masaje relajante y tratamientos relajantes.' },
+      { semestre: '4° Semestre', nombre: 'Módulo III: Aplica técnica y proceso drenante facial y corporal', competencia: 'M3S1 Drenante facial (acné y piel sensible) · M3S2 Drenante corporal (celulitis, estrías, piernas cansadas, depilación y epilación).' },
+      { semestre: '5° Semestre', nombre: 'Módulo IV: Manipula el rostro y cuerpo con fines estéticos', competencia: 'M4S1 Manipula el rostro con fines reafirmantes (lifting) · M4S2 Tratamientos corporales remodelantes, reafirmantes y postoperatorios.' },
+      { semestre: '6° Semestre', nombre: 'Módulo V: Implementa el diseño de imagen y servicios de SPA', competencia: 'M5S1 Maquillaje y diseño de imagen · M5S2 Técnicas de SPA y supervisión de los procesos de SPA.' }
     ],
     proyectos_destacados: [
       {
@@ -643,20 +901,29 @@ export const ESPECIALIDADES: SpecialtyInfo[] = [
       }
     ],
     video_demo: {
-      titulo: 'Ciencia, Salud y Belleza: La Cabina Cosmetológica del CETis 7',
+      titulo: 'Ciencia, Salud y Belleza: Cosmetología CETis 7',
       duracion: '3:05 min',
       presentador: 'Cosmiatra Lic. Rosa Isela Romero (Titular de Cosmetología)',
-      descripcion: 'Demostración de lámpara de Wood, análisis dérmico de poros, bioseguridad con autoclave y preparación de activos naturales.',
-      url_video: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+      descripcion: 'Conoce lo que aprenderás en la carrera de Cosmetología en el canal oficial Cosmetología CETis 7.',
+      url_video: 'https://www.youtube.com/channel/UCWMj1ilClTm5xxW_t6FZ7mg'
     },
     video_academia: {
-      titulo: 'Video Oficial de la Academia de Cosmetología',
+      titulo: 'Canal Oficial de la Academia de Cosmetología CETis 7',
       duracion: '4:00 min',
       presentador: 'Cosmiatra Lic. Rosa Isela Romero Vargas y Colegiado',
-      descripcion: 'Recorrido detallado por la cabina didáctica, protocolos COFEPRIS de esterilización y bioseguridad, diagnóstico de biotipos cutáneos y muestras de proyectos botánicos.',
-      url_video: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+      descripcion: 'Visita el canal oficial de Cosmetología CETis 7 para conocer las prácticas en cabina, protocolos faciales y corporales, drenaje y servicios de SPA.',
+      url_video: 'https://www.youtube.com/channel/UCWMj1ilClTm5xxW_t6FZ7mg'
     },
     galeria_alumnos: [
+      {
+        id: 'cos-infografia-oficial',
+        titulo: 'Infografía Oficial: Qué se estudia en Cosmetología',
+        alumnos: 'Academia de Cosmetología CETis 7',
+        semestre: 'Material Oficial',
+        tipo: 'foto',
+        url_media: '/assets/aistudio/infografia_cosmetologia_cetis7.jpg',
+        descripcion: 'Infografía estandarizada con los 5 módulos profesionales (M1 a M5) y campo laboral de Cosmetología.'
+      },
       {
         id: 'cos-gal-1',
         titulo: 'Demostración de Drenaje Linfático y Masaje Facial',
@@ -856,51 +1123,16 @@ export const ESPECIALIDADES: SpecialtyInfo[] = [
         descripcion: 'Fotografía de prácticas en cabina y trabajos realizados por alumnos de Cosmetología.'
       }
     ],
-    preguntas_quiz: [
-      {
-        id: 1,
-        pregunta: '¿Cuál es el pH fisiológico promedio de una piel sana en el rostro humano?',
-        opciones: ['pH ácido cercano a 5.5', 'pH extremadamente alcalino de 11.0', 'pH neutro idéntico al agua de 7.0'],
-        respuesta_correcta: 0,
-        explicacion: 'El manto hidrolipídico mantiene un pH ligeramente ácido (4.5 a 5.5) para protegernos contra patógenos.'
-      },
-      {
-        id: 2,
-        pregunta: '¿Cuáles son los cuatro biotipos cutáneos fundamentales estudiados en el diagnóstico facial?',
-        opciones: [
-          'Piel Normal (eutérmica), Grasa (seborreica), Seca (alípica) y Mixta.',
-          'Piel Metálica, Plástica, Cerámica y Fibrosa.',
-          'Piel Tipo A, Tipo B, Tipo C y Tipo D.'
-        ],
-        respuesta_correcta: 0,
-        explicacion: 'El diagnóstico certero de estos 4 biotipos determina el tratamiento y productos adecuados.'
-      },
-      {
-        id: 3,
-        pregunta: '¿Qué instrumento óptico de cabina utiliza luz ultravioleta filtrada para observar la hidratación y manchas no visibles a simple vista?',
-        opciones: ['Lámpara de Wood', 'Microscopio de electrones', 'Telescopio reflector'],
-        respuesta_correcta: 0,
-        explicacion: 'La lámpara de Wood revela fluorescencias características de deshidratación, exceso de sebo o pigmentaciones profundas.'
-      },
-      {
-        id: 4,
-        pregunta: '¿Cuál es la diferencia medular entre la cosmiatría y la cosmetología convencional?',
-        opciones: [
-          'La cosmiatría profundiza en el conocimiento científico de la piel sana y con alteraciones leves bajo respaldo dermatológico.',
-          'La cosmiatría no requiere ninguna medida de higiene.',
-          'Son sinónimos exactos sin ninguna diferencia técnica.'
-        ],
-        respuesta_correcta: 0,
-        explicacion: 'La formación técnica cosmiátrica dota al alumno de bases científicas sólidas en anatomía, bioquímica y aparatología.'
-      },
-      {
-        id: 5,
-        pregunta: '¿Qué organismo sanitario en México regula las condiciones de higiene y productos en establecimientos cosmetológicos?',
-        opciones: ['COFEPRIS (Comisión Federal para la Protección contra Riesgos Sanitarios)', 'FIFA', 'NASA'],
-        respuesta_correcta: 0,
-        explicacion: 'COFEPRIS y la Secretaría de Salud vigilan las normas sanitarias de insumos y cabinas.'
-      }
-    ],
+    preguntas_quiz: COSMETOLOGIA_DIAGNOSTICO_REACTIVOS.map((r, idx) => ({
+      id: typeof r.id === 'number' ? r.id : idx + 1,
+      bloque: r.bloque,
+      pregunta: r.pregunta,
+      opciones: r.opciones,
+      respuesta_correcta: r.es_informativa ? -1 : ({ a: 0, b: 1, c: 2, d: 3 }[r.correcta] ?? 0),
+      explicacion: r.explicacion || '',
+      es_informativa: r.es_informativa,
+      aspecto_evaluado: r.aspecto_evaluado
+    })),
     reto_presencial: {
       nombre: 'Taller Sensorial de Biotipos Cutáneos',
       objetivo: 'Identificar el biotipo cutáneo en modelos didácticos y formular un tónico botánico equilibrante con hidrolatos naturales en 10 minutos.',
@@ -1270,7 +1502,7 @@ export const FICHAS_ACADEMIA_DEFAULT: Record<string, FichaAcademiaReq> = {
   },
   comercio: {
     especialidad_id: 'comercio',
-    nombre_especialidad: 'Técnico en Comercio Internacional',
+    nombre_especialidad: 'Bachillerato Tecnológico en Comercio Internacional y Aduanas',
     presidente_academia: 'Lic. Claudia Becerril Morales',
     integrantes_academia: [
       'Lic. Fernando Reyes Arredondo',
@@ -1278,14 +1510,59 @@ export const FICHAS_ACADEMIA_DEFAULT: Record<string, FichaAcademiaReq> = {
       'Lic. Ana María Padrón'
     ],
     fecha_entrega: '2026-11-15',
-    resumen_ejecutivo: 'Capacita a técnicos expertos en la gestión de cadenas logísticas globales, despacho y clasificación arancelaria en aduanas mexicanas, regulación de importaciones y exportaciones e interpretación de tratados comerciales internacionales.',
+    resumen_ejecutivo: 'Forma técnicos en Comercio Internacional y Aduanas con competencias en gestión de importaciones y exportaciones, estimación de costos y planes de exportación, clasificación arancelaria, procesos aduaneros, empleabilidad y economía ecológica.',
     recursos_multimedia: {
-      video_url_o_estado: 'Video promocional 3:10 min filmado con réplicas aduanales e infografías de puertos marítimos.',
-      infografia_formato: 'Póster infográfico digital con flujo del pedimento aduanal e Incoterms 2026.',
+      video_url_o_estado: 'Video oficial principal MP4 de Comercio Internacional y Aduanas integrado en plataforma.',
+      infografia_formato: 'Infografía oficial del Perfil de Egreso: Comercio Internacional y Aduanas (Competencias Laborales, Formación Integral y Principales Puestos de Trabajo).',
       proyectos_registrados: [
         'Ruta de Exportación: Miel de Agave a la Unión Europea',
         'Simulador Digital de Cubicaje de Contenedores 40ft',
         'Manual de Cumplimiento Arancelario para PYMES'
+      ],
+      video_academia: {
+        titulo: 'Video Principal: Comercio Internacional y Aduanas',
+        duracion: '0:45 min',
+        presentador: 'DGETI · Academia de Comercio Internacional y Aduanas CETis 7',
+        descripcion: 'Cada producto que usas y cada mercancía que llega necesita un estratega. Conoce la carrera técnica en Comercio Internacional y Aduanas y sus oportunidades laborales y universitarias.',
+        url_video: '/assets/aistudio/Comercio_internacional_y_aduanas_video_principal_979d88d2.mp4'
+      },
+      galeria_alumnos: [
+        {
+          id: 'com-infografia-oficial',
+          titulo: 'Infografía Oficial: Perfil de Egreso y Puestos de Trabajo',
+          alumnos: 'Academia de Comercio Internacional y Aduanas',
+          semestre: 'Material Oficial',
+          tipo: 'foto',
+          url_media: '/assets/aistudio/image_ed736886.png',
+          descripcion: 'Infografía institucional con las competencias laborales principales, formación integral y principales puestos de trabajo de Comercio Internacional y Aduanas.'
+        },
+        {
+          id: 'com-gal-1',
+          titulo: 'Simulador Digital de Cubicaje de Contenedores 40ft',
+          alumnos: 'Equipo Logistix 6°A',
+          semestre: '6° Semestre',
+          tipo: 'video',
+          url_media: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+          descripcion: 'Video demostrativo de estiba y optimización de espacio volumétrico en transporte marítimo.'
+        },
+        {
+          id: 'com-gal-2',
+          titulo: 'Maqueta de Garita Aduanal y Puerto de Veracruz',
+          alumnos: 'Alumnos de 3° Semestre',
+          semestre: '3° Semestre',
+          tipo: 'foto',
+          url_media: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80',
+          descripcion: 'Representación física a escala del proceso de desaduanamiento y semáforo fiscal.'
+        },
+        {
+          id: 'com-gal-3',
+          titulo: 'Ruta de Exportación de Miel de Agave a la UE',
+          alumnos: 'Grupo 5°B Comercio',
+          semestre: '5° Semestre',
+          tipo: 'foto',
+          url_media: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1200&q=80',
+          descripcion: 'Exposición de la carpeta técnica con Incoterms y certificado de origen bajo TLCUEM.'
+        }
       ]
     },
     banco_reactivos: [
@@ -1310,8 +1587,8 @@ export const FICHAS_ACADEMIA_DEFAULT: Record<string, FichaAcademiaReq> = {
         correcta: 'b'
       },
       {
-        pregunta: '¿Dónde labora un egresado técnico de Comercio Internacional?',
-        opciones: ['Agencias aduanales, terminales marítimas y empresas exportadoras', 'Laboratorios clínicos únicamente', 'Salones de manicura'],
+        pregunta: '¿Cuáles son los principales puestos de trabajo de un egresado de Comercio Internacional y Aduanas?',
+        opciones: ['Auxiliar de aduanas, comercio exterior, logística internacional, tráfico o clasificación arancelaria', 'Laboratorios clínicos únicamente', 'Salones de manicura'],
         correcta: 'a'
       }
     ],
@@ -1536,16 +1813,25 @@ export const FICHAS_ACADEMIA_DEFAULT: Record<string, FichaAcademiaReq> = {
       'Q.F.B. Andrés Delgado Cruz'
     ],
     fecha_entrega: '2026-11-15',
-    resumen_ejecutivo: 'Especialidad formativa en el diagnóstico integral del órgano cutáneo, técnicas de cabina facial y corporal, química cosmética aplicada, formulación botánica natural y protocolos de bioseguridad bajo estándares sanitarios de COFEPRIS.',
+    resumen_ejecutivo: 'La Cosmetología se encarga de los cuidados estéticos del rostro y cuerpo, asepsia, rejuvenecimiento y embellecimiento saludable de la piel, conocimiento de activos cosméticos y técnicas de relajación que generan bienestar integral.',
     recursos_multimedia: {
-      video_url_o_estado: 'Video 3:05 min grabado en cabina didáctica mostrando bioseguridad, lupa con luz LED y principios activos.',
-      infografia_formato: 'Infografía mural en alta definición sobre biotipos y fototipos de piel de Fitzpatrick.',
+      video_url_o_estado: 'Canal oficial de YouTube Cosmetología CETis 7 (https://www.youtube.com/channel/UCWMj1ilClTm5xxW_t6FZ7mg) y videos de cabina.',
+      infografia_formato: 'Infografía oficial estandarizada CETis 7 con los 5 módulos profesionales (M1 a M5) y campo de trabajo.',
       proyectos_registrados: [
         'Línea Dermocosmética Botánica Xochitl-Lerdo',
         'Protocolo de Drenaje Linfático Manual',
         'Atlas Interactivo de Biotipos y Lesiones Dérmicas'
       ],
       galeria_alumnos: [
+        {
+          id: 'cos-infografia-oficial',
+          titulo: 'Infografía Oficial: Qué se estudia en Cosmetología',
+          alumnos: 'Academia de Cosmetología CETis 7',
+          semestre: 'Material Oficial',
+          tipo: 'foto',
+          url_media: '/assets/aistudio/infografia_cosmetologia_cetis7.jpg',
+          descripcion: 'Infografía estandarizada con los 5 módulos profesionales (M1 a M5) y campo laboral de Cosmetología.'
+        },
         {
           id: 'cos-gal-1',
           titulo: 'Demostración de Drenaje Linfático y Masaje Facial',
@@ -1746,33 +2032,7 @@ export const FICHAS_ACADEMIA_DEFAULT: Record<string, FichaAcademiaReq> = {
         }
       ]
     },
-    banco_reactivos: [
-      {
-        pregunta: '¿Cuál es el valor fisiológico promedio del pH en un cutis facial saludable?',
-        opciones: ['pH ligeramente ácido de 4.5 a 5.5', 'pH neutro de 7.0 exacto', 'pH alcalino de 10.0'],
-        correcta: 'a'
-      },
-      {
-        pregunta: '¿Cuáles son los 4 biotipos cutáneos fundamentales para el diagnóstico facial?',
-        opciones: ['Eutérmica (Normal), Seborreica (Grasa), Alípica (Seca) y Mixta', 'Piel 1, 2, 3 y 4', 'Áspera, Lisa, Dura y Blanda'],
-        correcta: 'a'
-      },
-      {
-        pregunta: '¿Qué lámpara con luz ultravioleta permite analizar deshidratación y pigmentaciones en cabina?',
-        opciones: ['Lámpara de Wood', 'Lámpara de Halógeno', 'Foco incandescente ordinario'],
-        correcta: 'a'
-      },
-      {
-        pregunta: '¿En qué se distingue la Cosmiatría de la cosmetología empírica?',
-        opciones: ['Bases científicas de histología, química cosmética y protocolos sanitarios', 'En nada, son exactamente lo mismo', 'En que no usa cosméticos'],
-        correcta: 'a'
-      },
-      {
-        pregunta: '¿Qué autoridad sanitaria en México certifica y vigila los establecimientos y productos cosméticos?',
-        opciones: ['COFEPRIS (Secretaría de Salud)', 'PROFECO únicamente', 'SECTUR'],
-        correcta: 'a'
-      }
-    ],
+    banco_reactivos: COSMETOLOGIA_DIAGNOSTICO_REACTIVOS,
     reto_ludico: {
       nombre: 'Taller Sensorial de Biotipos Cutáneos',
       objetivo: 'Identificar el biotipo cutáneo en modelos didácticos y formular un tónico botánico equilibrante con hidrolatos naturales en 10 minutos.',
@@ -1792,7 +2052,7 @@ export const OFICIO_CIRCULAR_DEFAULT: OficioCircular = {
   cuerpo: [
     'Con fundamento en las directrices emitidas por la Dirección General de Educación Tecnológica Industrial y de Servicios (DGETI) relativas al fortalecimiento de la orientación vocacional y la elección informada de trayectoria técnica para el alumnado de primer semestre, se emite la presente CONVOCATORIA OFICIAL.',
     'La Feria de Especialidades e Innovación Tecnológica ciclo 2026 operará bajo el MODELO HÍBRIDO OBLIGATORIO (70% Virtual / 30% Presencial):',
-    '1. ETAPA VIRTUAL (70%): Los alumnos deberán registrarse con su Número de Control en la plataforma oficial, completar la Evaluación Diagnóstica Dual (Aptitudes vs. Intereses), explorar los contenidos de las cuatro carreras (Programación, Comercio Internacional, Recursos Humanos y Cosmetología) y aprobar los cuestionarios de comprensión. Al concluir, el sistema emitirá el Pase Digital QR y Clave Única Token.',
+    '1. ETAPA VIRTUAL (70%): Los alumnos deberán registrarse con su Número de Control en la plataforma oficial, completar la Evaluación Diagnóstica Dual (Aptitudes vs. Intereses), explorar los contenidos de las cuatro carreras (Programación, Comercio Internacional y Aduanas, Recursos Humanos y Cosmetología) y aprobar los cuestionarios de comprensión. Al concluir, el sistema emitirá el Pase Digital QR y Clave Única Token.',
     '2. ETAPA PRESENCIAL (30%): Presentándose en las instalaciones del plantel, el alumno validará su Pase Digital QR en el filtro de acceso y participará en el Rally de Retos Lúdicos Integradores en los talleres y laboratorios asignados.',
     '3. ACREDITACIÓN FINAL: Una vez selladas las estaciones presenciales, la Subdirección Académica y la Coordinación de Tutorías emitirán la Cédula Oficial de Acreditación Integral 100%, requisito indispensable para el registro definitivo de carrera técnica.',
     'Se instruye a las Academias de Especialidad y al personal docente a brindar todas las facilidades didácticas requeridas conforme a la ficha técnica estandarizada.'
@@ -1871,8 +2131,8 @@ export const CUESTIONARIOS_DEFAULT: CuestionarioEspecialidad[] = [
   {
     id: 'quiz-comercio-oficial',
     especialidad_id: 'comercio',
-    titulo: 'Evaluación Formativa de Comercio Internacional y Logística',
-    descripcion: 'Validación de conocimientos aduanales, pedimentos, clasificación arancelaria y tratados internacionales.',
+    titulo: 'Evaluación Formativa de Comercio Internacional y Aduanas',
+    descripcion: 'Validación de competencias sobre gestión de importaciones/exportaciones, costos, clasificación arancelaria, procesos aduaneros y tratados.',
     instrucciones: 'Analiza cada escenario de importación/exportación y marca la respuesta acertada. Mínimo 60% aprobatorio.',
     porcentaje_aprobatorio: 60,
     tiempo_limite_min: 15,
@@ -1910,10 +2170,10 @@ export const CUESTIONARIOS_DEFAULT: CuestionarioEspecialidad[] = [
       },
       {
         id: 5,
-        pregunta: '¿Dónde labora un egresado técnico de Comercio Internacional?',
-        opciones: ['Agencias aduanales, terminales marítimas y empresas exportadoras', 'Laboratorios clínicos únicamente', 'Salones de manicura'],
+        pregunta: '¿Cuáles son los principales puestos de trabajo de un egresado en Comercio Internacional y Aduanas?',
+        opciones: ['Auxiliar de aduanas, comercio exterior, logística internacional, tráfico o clasificación arancelaria', 'Laboratorios clínicos únicamente', 'Salones de manicura'],
         correcta: 'a',
-        explicacion: 'Los egresados operan en agencias aduanales, departamentos de tráfico internacional y centros de distribución logística.'
+        explicacion: 'El egresado se desempeña como auxiliar de aduanas, comercio exterior, logística internacional, tráfico o embarques y clasificación arancelaria.'
       }
     ]
   },
@@ -1969,50 +2229,14 @@ export const CUESTIONARIOS_DEFAULT: CuestionarioEspecialidad[] = [
   {
     id: 'quiz-cosmetologia-oficial',
     especialidad_id: 'cosmetologia',
-    titulo: 'Evaluación Formativa de Cosmetología y Dermocosmiatría',
-    descripcion: 'Evaluación sobre biotipos cutáneos, bioseguridad, química cosmética y protocolos en cabina estética.',
-    instrucciones: 'Selecciona la opción fundamentada en principios científicos de estética y salud. 60% aprobatorio.',
-    porcentaje_aprobatorio: 60,
+    titulo: 'Test Diagnóstico de Intereses, Actitudes y Perfil Vocacional · Cosmetología',
+    descripcion: '17 reactivos (16 puntuables + 1 reactivo logístico de disponibilidad de modelos sin puntaje) distribuidos en 5 bloques vocacionales.',
+    instrucciones: 'Lee cada pregunta y selecciona la respuesta que mejor represente tu opinión, conocimiento o disponibilidad. Es diagnóstico y de orientación vocacional.',
+    porcentaje_aprobatorio: 56,
     tiempo_limite_min: 15,
     activo: true,
-    fecha_actualizacion: '2026-11-03T09:00:00.000Z',
+    fecha_actualizacion: '2026-11-17T09:00:00.000Z',
     autor_docente: 'Cosmiatra Rosa Isela Romero Vargas (Jefa de Academia)',
-    preguntas: [
-      {
-        id: 1,
-        pregunta: '¿Cuáles son los 4 biotipos cutáneos fundamentales para el diagnóstico facial?',
-        opciones: ['Eutérmica (Normal), Seborreica (Grasa), Alípica (Seca) y Mixta', 'Piel 1, 2, 3 y 4', 'Áspera, Lisa, Dura y Blanda'],
-        correcta: 'a',
-        explicacion: 'La clasificación dérmica clásica permite formular el tratamiento cosmético preciso para cada tipo de piel.'
-      },
-      {
-        id: 2,
-        pregunta: '¿Qué lámpara con luz ultravioleta permite analizar deshidratación y pigmentaciones en cabina?',
-        opciones: ['Lámpara de Wood', 'Lámpara de Halógeno', 'Foco incandescente ordinario'],
-        correcta: 'a',
-        explicacion: 'La lámpara de Wood emite radiación UV de longitud de onda larga que fluoresce según la condición del estrato córneo.'
-      },
-      {
-        id: 3,
-        pregunta: '¿En qué se distingue la Cosmiatría de la cosmetología empírica?',
-        opciones: ['Bases científicas de histología, química cosmética y protocolos sanitarios', 'En nada, son exactamente lo mismo', 'En que no usa cosméticos'],
-        correcta: 'a',
-        explicacion: 'La cosmiatría integra conocimientos biológicos de la piel con activos dermocosméticos y aparatología certificada.'
-      },
-      {
-        id: 4,
-        pregunta: '¿Qué autoridad sanitaria en México certifica y vigila los establecimientos y productos cosméticos?',
-        opciones: ['COFEPRIS (Secretaría de Salud)', 'PROFECO únicamente', 'SECTUR'],
-        correcta: 'a',
-        explicacion: 'COFEPRIS emite avisos de funcionamiento, regulación de insumos y normas de bioseguridad higiénica.'
-      },
-      {
-        id: 5,
-        pregunta: '¿Cuál es la función del tónico facial en un protocolo de higiene profunda?',
-        opciones: ['Restablecer el manto hidrolipídico y equilibrar el pH de la piel', 'Pintar el rostro de color', 'Sustituir el protector solar'],
-        correcta: 'a',
-        explicacion: 'El tónico equilibra el pH ligeramente ácido natural de la piel tras la fase de emulsión desmaquillante o jabón.'
-      }
-    ]
+    preguntas: COSMETOLOGIA_DIAGNOSTICO_REACTIVOS
   }
 ];

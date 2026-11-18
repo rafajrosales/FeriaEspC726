@@ -100,6 +100,7 @@ export const AcademicDirection: React.FC = () => {
   const [reactivoOpciones, setReactivoOpciones] = useState<string[]>(['', '', '']);
   const [reactivoCorrecta, setReactivoCorrecta] = useState<'a' | 'b' | 'c' | 'd'>('a');
   const [reactivoExplicacion, setReactivoExplicacion] = useState('');
+  const [reactivoEsInformativo, setReactivoEsInformativo] = useState(false);
   const [reactivoError, setReactivoError] = useState<string | null>(null);
 
   const [estudiantesList, setEstudiantesList] = useState<Estudiante[]>(() => getEstudiantes());
@@ -109,8 +110,9 @@ export const AcademicDirection: React.FC = () => {
   const handleAbrirNuevoReactivo = () => {
     setEditandoReactivoIndex(null);
     setReactivoPregunta('');
-    setReactivoOpciones(['', '', '']);
+    setReactivoOpciones(['', '', '', '']);
     setReactivoCorrecta('a');
+    setReactivoEsInformativo(false);
     setReactivoExplicacion('');
     setReactivoError(null);
     setModalReactivoOpen(true);
@@ -123,6 +125,8 @@ export const AcademicDirection: React.FC = () => {
     setReactivoPregunta(r.pregunta);
     setReactivoOpciones(r.opciones.length >= 3 ? [...r.opciones] : [...r.opciones, '']);
     const c = r.correcta.toLowerCase();
+    const isInfo = Boolean(r.es_informativa || c === 'na');
+    setReactivoEsInformativo(isInfo);
     setReactivoCorrecta(c === 'b' ? 'b' : c === 'c' ? 'c' : c === 'd' ? 'd' : 'a');
     setReactivoExplicacion(r.explicacion || '');
     setReactivoError(null);
@@ -143,13 +147,19 @@ export const AcademicDirection: React.FC = () => {
       const spec = ESPECIALIDADES.find(s => s.id === currentFicha.especialidad_id);
       if (spec) {
         const letraIdxMap: Record<string, number> = { a: 0, b: 1, c: 2, d: 3 };
-        spec.preguntas_quiz = updatedReactivos.map((r, i) => ({
-          id: i + 1,
-          pregunta: r.pregunta,
-          opciones: r.opciones,
-          respuesta_correcta: letraIdxMap[r.correcta.toLowerCase()] ?? 0,
-          explicacion: r.explicacion || `La opción oficial correcta es la (${r.correcta.toUpperCase()}).`
-        }));
+        spec.preguntas_quiz = updatedReactivos.map((r, i) => {
+          const isInfo = Boolean(r.es_informativa || r.correcta.toLowerCase() === 'na');
+          return {
+            id: typeof r.id === 'number' ? r.id : i + 1,
+            bloque: r.bloque,
+            pregunta: r.pregunta,
+            opciones: r.opciones,
+            respuesta_correcta: isInfo ? -1 : (letraIdxMap[r.correcta.toLowerCase()] ?? 0),
+            explicacion: r.explicacion || `La opción oficial correcta es la (${r.correcta.toUpperCase()}).`,
+            es_informativa: isInfo,
+            aspecto_evaluado: r.aspecto_evaluado
+          };
+        });
       }
 
       setSavedNotice(`Reactivo #${idx + 1} eliminado correctamente.`);
@@ -158,8 +168,8 @@ export const AcademicDirection: React.FC = () => {
   };
 
   const handleRestablecerReactivosOriginales = () => {
-    if (window.confirm(`¿Restablecer los 5 reactivos originales sugeridos por la Academia de ${currentFicha.nombre_especialidad}?`)) {
-      const reactivosDefault = FICHAS_ACADEMIA_DEFAULT[selectedAcademia]?.banco_reactivos || [];
+    const reactivosDefault = FICHAS_ACADEMIA_DEFAULT[selectedAcademia]?.banco_reactivos || [];
+    if (window.confirm(`¿Restablecer los ${reactivosDefault.length} reactivos originales sugeridos por la Academia de ${currentFicha.nombre_especialidad}?`)) {
       const updatedFicha: FichaAcademiaReq = {
         ...currentFicha,
         banco_reactivos: JSON.parse(JSON.stringify(reactivosDefault))
@@ -171,13 +181,19 @@ export const AcademicDirection: React.FC = () => {
       const spec = ESPECIALIDADES.find(s => s.id === currentFicha.especialidad_id);
       if (spec) {
         const letraIdxMap: Record<string, number> = { a: 0, b: 1, c: 2, d: 3 };
-        spec.preguntas_quiz = reactivosDefault.map((r, i) => ({
-          id: i + 1,
-          pregunta: r.pregunta,
-          opciones: r.opciones,
-          respuesta_correcta: letraIdxMap[r.correcta.toLowerCase()] ?? 0,
-          explicacion: r.explicacion || `La opción oficial correcta es la (${r.correcta.toUpperCase()}).`
-        }));
+        spec.preguntas_quiz = reactivosDefault.map((r, i) => {
+          const isInfo = Boolean(r.es_informativa || r.correcta.toLowerCase() === 'na');
+          return {
+            id: typeof r.id === 'number' ? r.id : i + 1,
+            bloque: r.bloque,
+            pregunta: r.pregunta,
+            opciones: r.opciones,
+            respuesta_correcta: isInfo ? -1 : (letraIdxMap[r.correcta.toLowerCase()] ?? 0),
+            explicacion: r.explicacion || `La opción oficial correcta es la (${r.correcta.toUpperCase()}).`,
+            es_informativa: isInfo,
+            aspecto_evaluado: r.aspecto_evaluado
+          };
+        });
       }
 
       setSavedNotice(`Reactivos oficiales de ${currentFicha.nombre_especialidad} restablecidos.`);
@@ -203,16 +219,23 @@ export const AcademicDirection: React.FC = () => {
 
     const letraIdxMap: Record<string, number> = { a: 0, b: 1, c: 2, d: 3 };
     const correctIdx = letraIdxMap[reactivoCorrecta] ?? 0;
-    if (correctIdx >= cleanOpciones.length) {
+    if (!reactivoEsInformativo && correctIdx >= cleanOpciones.length) {
       setReactivoError(`La opción correcta seleccionada (${reactivoCorrecta.toUpperCase()}) no tiene texto. Selecciona una opción con contenido.`);
       return;
     }
 
+    const existingItem = editandoReactivoIndex !== null ? currentFicha.banco_reactivos[editandoReactivoIndex] : undefined;
     const nuevoReactivo: ReactivoExamen = {
+      ...(existingItem || {}),
       pregunta: cleanPregunta,
       opciones: cleanOpciones,
-      correcta: reactivoCorrecta,
-      explicacion: reactivoExplicacion.trim() || `La opción correcta oficial es la (${reactivoCorrecta.toUpperCase()}).`
+      correcta: reactivoEsInformativo ? 'na' : reactivoCorrecta,
+      es_informativa: reactivoEsInformativo,
+      explicacion: reactivoExplicacion.trim() || (
+        reactivoEsInformativo
+          ? 'Pregunta diagnóstica informativa (0 pts · No penaliza puntaje).'
+          : `La opción correcta oficial es la (${reactivoCorrecta.toUpperCase()}).`
+      )
     };
 
     let updatedReactivos = [...currentFicha.banco_reactivos];
@@ -235,10 +258,17 @@ export const AcademicDirection: React.FC = () => {
     if (spec) {
       spec.preguntas_quiz = updatedReactivos.map((r, i) => ({
         id: i + 1,
+        bloque: r.bloque,
         pregunta: r.pregunta,
         opciones: r.opciones,
-        respuesta_correcta: letraIdxMap[r.correcta.toLowerCase()] ?? 0,
-        explicacion: r.explicacion || `La opción correcta oficial es la (${r.correcta.toUpperCase()}).`
+        respuesta_correcta: (r.es_informativa || r.correcta === 'na') ? -1 : (letraIdxMap[r.correcta.toLowerCase()] ?? 0),
+        es_informativa: r.es_informativa,
+        aspecto_evaluado: r.aspecto_evaluado,
+        explicacion: r.explicacion || (
+          r.es_informativa
+            ? 'Pregunta diagnóstica informativa (0 pts · No penaliza puntaje).'
+            : `La opción correcta oficial es la (${r.correcta.toUpperCase()}).`
+        )
       }));
     }
 
@@ -380,13 +410,19 @@ export const AcademicDirection: React.FC = () => {
       }
       if (currentFicha.banco_reactivos && currentFicha.banco_reactivos.length > 0) {
         const letraIdxMap: Record<string, number> = { a: 0, b: 1, c: 2, d: 3 };
-        spec.preguntas_quiz = currentFicha.banco_reactivos.map((r, i) => ({
-          id: i + 1,
-          pregunta: r.pregunta,
-          opciones: r.opciones,
-          respuesta_correcta: letraIdxMap[r.correcta.toLowerCase()] ?? 0,
-          explicacion: r.explicacion || `La opción oficial correcta es la (${r.correcta.toUpperCase()}).`
-        }));
+        spec.preguntas_quiz = currentFicha.banco_reactivos.map((r, i) => {
+          const isInfo = Boolean(r.es_informativa || r.correcta.toLowerCase() === 'na');
+          return {
+            id: typeof r.id === 'number' ? r.id : i + 1,
+            bloque: r.bloque,
+            pregunta: r.pregunta,
+            opciones: r.opciones,
+            respuesta_correcta: isInfo ? -1 : (letraIdxMap[r.correcta.toLowerCase()] ?? 0),
+            explicacion: r.explicacion || `La opción oficial correcta es la (${r.correcta.toUpperCase()}).`,
+            es_informativa: isInfo,
+            aspecto_evaluado: r.aspecto_evaluado
+          };
+        });
       }
     }
 
@@ -1201,7 +1237,8 @@ export const AcademicDirection: React.FC = () => {
                 <div className="space-y-3">
                   {currentFicha.banco_reactivos.map((r, rIdx) => {
                     const letraIdxMap: Record<string, number> = { a: 0, b: 1, c: 2, d: 3 };
-                    const correctIdx = letraIdxMap[r.correcta.toLowerCase()] ?? 0;
+                    const isInfo = Boolean(r.es_informativa || r.correcta.toLowerCase() === 'na');
+                    const correctIdx = isInfo ? -1 : (letraIdxMap[r.correcta.toLowerCase()] ?? 0);
 
                     return (
                       <div
@@ -1213,10 +1250,21 @@ export const AcademicDirection: React.FC = () => {
                             <span className="px-2 py-0.5 rounded bg-stone-200/80 text-stone-800 text-[10px] font-mono-code font-bold">
                               Pregunta #{rIdx + 1}
                             </span>
-                            <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] font-bold flex items-center gap-1">
-                              <Check className="w-3 h-3 text-emerald-600" />
-                              Correcta: ({r.correcta.toUpperCase()})
-                            </span>
+                            {r.bloque && (
+                              <span className="px-2 py-0.5 rounded bg-[#721B32]/10 text-[#721B32] text-[10px] font-bold">
+                                {r.bloque}
+                              </span>
+                            )}
+                            {isInfo ? (
+                              <span className="px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 border border-indigo-200 text-[10px] font-bold">
+                                Informativa (0 pts · Contexto Logístico)
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] font-bold flex items-center gap-1">
+                                <Check className="w-3 h-3 text-emerald-600" />
+                                Correcta: ({r.correcta.toUpperCase()})
+                              </span>
+                            )}
                           </div>
 
                           <div className="flex items-center gap-1 shrink-0">
@@ -1888,7 +1936,7 @@ export const AcademicDirection: React.FC = () => {
                         className="w-full px-3.5 py-3 sm:py-2 text-base sm:text-xs border border-stone-300 rounded-xl bg-white"
                       >
                         <option value="programacion">Programación</option>
-                        <option value="comercio">Comercio Internacional</option>
+                        <option value="comercio">Comercio Internacional y Aduanas</option>
                         <option value="rrhh">Recursos Humanos</option>
                         <option value="cosmetologia">Cosmetología</option>
                         <option value="general">Formación General / Dirección</option>
@@ -2011,7 +2059,7 @@ export const AcademicDirection: React.FC = () => {
               >
                 <option value="TODAS">Todas las Academias</option>
                 <option value="programacion">Programación</option>
-                <option value="comercio">Comercio Internacional</option>
+                <option value="comercio">Comercio Internacional y Aduanas</option>
                 <option value="rrhh">Recursos Humanos</option>
                 <option value="cosmetologia">Cosmetología</option>
                 <option value="general">Formación General / Dir.</option>
@@ -2226,7 +2274,7 @@ export const AcademicDirection: React.FC = () => {
 
               const colors: Record<SpecialtyId, { border: string; bg: string; title: string }> = {
                 programacion: { border: 'border-blue-300', bg: 'bg-blue-50/40', title: '💻 1. Programación y Software' },
-                comercio: { border: 'border-amber-300', bg: 'bg-amber-50/40', title: '🌐 2. Comercio Exterior y Aduanas' },
+                comercio: { border: 'border-amber-300', bg: 'bg-amber-50/40', title: '🌐 2. Comercio Internacional y Aduanas' },
                 rrhh: { border: 'border-purple-300', bg: 'bg-purple-50/40', title: '👥 3. Recursos Humanos' },
                 cosmetologia: { border: 'border-pink-300', bg: 'bg-pink-50/40', title: '✨ 4. Cosmetología y Cuidado Personal' }
               };
@@ -2413,17 +2461,25 @@ export const AcademicDirection: React.FC = () => {
 
               {/* Opciones de respuesta */}
               <div className="space-y-2">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <label className="font-bold text-stone-900 block">
                     Opciones de Respuesta: *
                   </label>
-                  <span className="text-[11px] text-stone-500">Selecciona el círculo de la respuesta correcta</span>
+                  <label className="flex items-center gap-1.5 text-[11px] font-semibold text-indigo-900 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-200 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={reactivoEsInformativo}
+                      onChange={e => setReactivoEsInformativo(e.target.checked)}
+                      className="w-3.5 h-3.5 text-indigo-700 rounded"
+                    />
+                    <span>Reactivo informativo (0 pts · No penaliza)</span>
+                  </label>
                 </div>
 
                 <div className="space-y-2">
                   {reactivoOpciones.map((opt, idx) => {
                     const letra = String.fromCharCode(97 + idx); // 'a', 'b', 'c', 'd'
-                    const isSelected = reactivoCorrecta === letra;
+                    const isSelected = !reactivoEsInformativo && reactivoCorrecta === letra;
 
                     return (
                       <div
@@ -2433,20 +2489,26 @@ export const AcademicDirection: React.FC = () => {
                         }`}
                       >
                         {/* Radio selector */}
-                        <label className="flex items-center gap-1.5 cursor-pointer shrink-0">
-                          <input
-                            type="radio"
-                            name="correct_answer"
-                            checked={isSelected}
-                            onChange={() => setReactivoCorrecta(letra as any)}
-                            className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
-                          />
-                          <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                            isSelected ? 'bg-emerald-600 text-white' : 'bg-stone-200 text-stone-700'
-                          }`}>
+                        {!reactivoEsInformativo ? (
+                          <label className="flex items-center gap-1.5 cursor-pointer shrink-0">
+                            <input
+                              type="radio"
+                              name="correct_answer"
+                              checked={isSelected}
+                              onChange={() => setReactivoCorrecta(letra as any)}
+                              className="w-4 h-4 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+                            />
+                            <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                              isSelected ? 'bg-emerald-600 text-white' : 'bg-stone-200 text-stone-700'
+                            }`}>
+                              {letra.toUpperCase()}
+                            </span>
+                          </label>
+                        ) : (
+                          <span className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold bg-indigo-100 text-indigo-800 shrink-0">
                             {letra.toUpperCase()}
                           </span>
-                        </label>
+                        )}
 
                         {/* Text input */}
                         <input
