@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Estudiante, ProgresoVirtual, EvaluacionVocacional, SpecialtyId } from '../types';
-import { COSMETOLOGIA_DIAGNOSTICO_REACTIVOS } from '../data/mockData';
+import { COSMETOLOGIA_DIAGNOSTICO_REACTIVOS, RRHH_DIAGNOSTICO_REACTIVOS } from '../data/mockData';
 import { 
   getEstudiantes, 
   getProgresoVirtual, 
@@ -97,6 +97,23 @@ export const MatriculaDashboard: React.FC = () => {
       'III. Responsabilidad y materiales de trabajo': { nombre: 'III. Responsabilidad y Materiales (P10–P12)', correctas: 0, posibles: 0 },
       'IV. Habilidades personales y ética profesional': { nombre: 'IV. Habilidades y Ética (P13–P16)', correctas: 0, posibles: 0 },
       'V. Expectativas profesionales': { nombre: 'V. Expectativas Profesionales (P17)', correctas: 0, posibles: 0 }
+    };
+
+    // Recursos Humanos 20-reactivos Test de Habilidades stats (conteo de respuestas A)
+    let rrhhEvaluados = 0;
+    let rrhhTotalA = 0;
+    let rrhhConPuntaje = 0;
+    const rrhhNiveles = {
+      MUY_ALTO: 0,          // 15–20 A
+      MEDIO_ALTO: 0,        // 10–14 A
+      BAJO: 0,              // 5–9 A
+      OTRA_ESPECIALIDAD: 0  // 0–4 A
+    };
+    const rrhhBloquesMap: Record<string, { nombre: string; countA: number; posibles: number }> = {
+      'I. Liderazgo y organización': { nombre: 'I. Liderazgo y Organización (P1, P5, P10, P11, P15)', countA: 0, posibles: 0 },
+      'II. Empatía, escucha y trato humano': { nombre: 'II. Empatía, Escucha y Trato Humano (P3, P7, P8, P18, P19)', countA: 0, posibles: 0 },
+      'III. Comunicación asertiva y manejo de conflictos': { nombre: 'III. Comunicación y Conflictos (P2, P4, P6, P9, P14)', countA: 0, posibles: 0 },
+      'IV. Ética, adaptabilidad y proyección en RH': { nombre: 'IV. Ética, Adaptabilidad y Proyección RH (P12, P13, P16, P17, P20)', countA: 0, posibles: 0 }
     };
 
     estudiantesFiltrados.forEach(est => {
@@ -200,9 +217,66 @@ export const MatriculaDashboard: React.FC = () => {
           cosmeTotalPuntos += puntos;
           cosmeConPuntaje++;
           const nivel = cosme.nivel_perfil || (puntos >= 13 ? 'ALTO' : puntos >= 9 ? 'EN_DESARROLLO' : 'EXPLORATORIO');
-          cosmeNiveles[nivel]++;
-        } else if (cosme.nivel_perfil) {
+          if (nivel === 'ALTO' || nivel === 'EN_DESARROLLO' || nivel === 'EXPLORATORIO') {
+            cosmeNiveles[nivel]++;
+          }
+        } else if (cosme.nivel_perfil && (cosme.nivel_perfil === 'ALTO' || cosme.nivel_perfil === 'EN_DESARROLLO' || cosme.nivel_perfil === 'EXPLORATORIO')) {
           cosmeNiveles[cosme.nivel_perfil]++;
+        }
+      }
+
+      // Recursos Humanos 20-reactivos Test de Habilidades metrics
+      const rrhh = prog.progreso_especialidades.rrhh;
+      const hasRrhhData = Boolean(rrhh && (rrhh.respuestas_detalle || typeof rrhh.puntaje_obtenido === 'number' || rrhh.quiz_aprobado));
+      if (hasRrhhData && rrhh) {
+        rrhhEvaluados++;
+        let countA = rrhh.puntaje_obtenido;
+
+        if (rrhh.respuestas_detalle) {
+          let computedA = 0;
+          RRHH_DIAGNOSTICO_REACTIVOS.forEach((item, idx) => {
+            const qId = typeof item.id === 'number' ? item.id : idx + 1;
+            const selected = rrhh.respuestas_detalle?.[qId];
+            const bKey = item.bloque || '';
+            if (rrhhBloquesMap[bKey]) {
+              rrhhBloquesMap[bKey].posibles++;
+              if (selected === 0) {
+                rrhhBloquesMap[bKey].countA++;
+                computedA++;
+              }
+            } else if (selected === 0) {
+              computedA++;
+            }
+          });
+          if (typeof countA !== 'number') {
+            countA = computedA;
+          }
+        }
+
+        if (typeof countA === 'number') {
+          rrhhTotalA += countA;
+          rrhhConPuntaje++;
+          const nivelRh =
+            rrhh.nivel_perfil === 'MUY_ALTO' ||
+            rrhh.nivel_perfil === 'MEDIO_ALTO' ||
+            rrhh.nivel_perfil === 'BAJO' ||
+            rrhh.nivel_perfil === 'OTRA_ESPECIALIDAD'
+              ? rrhh.nivel_perfil
+              : countA >= 15
+                ? 'MUY_ALTO'
+                : countA >= 10
+                  ? 'MEDIO_ALTO'
+                  : countA >= 5
+                    ? 'BAJO'
+                    : 'OTRA_ESPECIALIDAD';
+          rrhhNiveles[nivelRh]++;
+        } else if (
+          rrhh.nivel_perfil === 'MUY_ALTO' ||
+          rrhh.nivel_perfil === 'MEDIO_ALTO' ||
+          rrhh.nivel_perfil === 'BAJO' ||
+          rrhh.nivel_perfil === 'OTRA_ESPECIALIDAD'
+        ) {
+          rrhhNiveles[rrhh.nivel_perfil]++;
         }
       }
     });
@@ -235,6 +309,19 @@ export const MatriculaDashboard: React.FC = () => {
           nombre: b.nombre,
           pct: b.posibles > 0 ? Math.round((b.correctas / b.posibles) * 100) : 0,
           correctas: b.correctas,
+          posibles: b.posibles
+        }))
+      },
+      rrhhDiagnostico: {
+        evaluados: rrhhEvaluados,
+        promedioA: rrhhConPuntaje > 0 ? (rrhhTotalA / rrhhConPuntaje).toFixed(1) : '0.0',
+        niveles: rrhhNiveles,
+        recomendables: rrhhNiveles.MUY_ALTO + rrhhNiveles.MEDIO_ALTO,
+        requierenOrientacion: rrhhNiveles.BAJO + rrhhNiveles.OTRA_ESPECIALIDAD,
+        bloques: Object.values(rrhhBloquesMap).map(b => ({
+          nombre: b.nombre,
+          pct: b.posibles > 0 ? Math.round((b.countA / b.posibles) * 100) : 0,
+          countA: b.countA,
           posibles: b.posibles
         }))
       },
@@ -799,6 +886,187 @@ export const MatriculaDashboard: React.FC = () => {
                   La cohorte evaluada cuenta con cobertura suficiente de modelos semanales (opciones A y B).
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SECTION 2C: Estadística Diagnóstica · Recursos Humanos (Test de Habilidades de 20 Reactivos) */}
+      {(activeChartMode === 'ambos' || activeChartMode === 'especialidades') && (
+        <div className="bg-white rounded-xl border border-violet-200 p-6 shadow-xs space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-violet-100 pb-4">
+            <div>
+              <span className="text-xs uppercase tracking-wider text-violet-700 font-semibold flex items-center gap-1.5">
+                <Users className="w-4 h-4 text-violet-600" />
+                Instrumento Diagnóstico Oficial · Academia de Recursos Humanos
+              </span>
+              <h4 className="text-base font-bold text-stone-900 mt-0.5">
+                Estadística del Test de Habilidades de 20 Reactivos (Conteo de Respuestas A)
+              </h4>
+              <p className="text-xs text-stone-600 mt-0.5">
+                Clasificación estandarizada en 4 niveles de perfil vocacional para Administración de Recursos Humanos y afinidad por bloque de habilidades.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="px-3 py-1.5 bg-violet-50 border border-violet-200 rounded-lg text-right">
+                <div className="text-[10px] uppercase tracking-wider text-violet-700 font-bold">Evaluados</div>
+                <div className="text-sm font-bold font-mono-code text-violet-900">
+                  {metrics.rrhhDiagnostico.evaluados} / {totalMatricula}
+                </div>
+              </div>
+              <div className="px-3 py-1.5 bg-stone-50 border border-stone-200 rounded-lg text-right">
+                <div className="text-[10px] uppercase tracking-wider text-stone-500 font-bold">Promedio Afinidad</div>
+                <div className="text-sm font-bold font-mono-code text-stone-900">
+                  {metrics.rrhhDiagnostico.promedioA} <span className="text-xs font-normal text-stone-500">/ 20 A</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left Column: 4 Tiers + 4 Blocks */}
+            <div className="space-y-5">
+              <div>
+                <h5 className="text-xs font-bold uppercase tracking-wider text-stone-700 mb-3 flex items-center gap-1.5">
+                  <ClipboardCheck className="w-4 h-4 text-[#721B32]" />
+                  Distribución por Nivel de Perfil RH (sobre 20 respuestas A)
+                </h5>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
+                    <div className="text-[11px] font-bold text-emerald-800">Muy Alto</div>
+                    <div className="text-[10px] text-emerald-700 font-mono-code">15–20 A</div>
+                    <div className="text-xl font-bold font-mono-code text-emerald-900 mt-1">
+                      {metrics.rrhhDiagnostico.niveles.MUY_ALTO}
+                    </div>
+                    <div className="text-[10px] text-emerald-700 mt-0.5">
+                      {metrics.rrhhDiagnostico.evaluados > 0
+                        ? Math.round((metrics.rrhhDiagnostico.niveles.MUY_ALTO / metrics.rrhhDiagnostico.evaluados) * 100)
+                        : 0}% eval.
+                    </div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-blue-50 border border-blue-200">
+                    <div className="text-[11px] font-bold text-blue-800">Medio-Alto</div>
+                    <div className="text-[10px] text-blue-700 font-mono-code">10–14 A</div>
+                    <div className="text-xl font-bold font-mono-code text-blue-900 mt-1">
+                      {metrics.rrhhDiagnostico.niveles.MEDIO_ALTO}
+                    </div>
+                    <div className="text-[10px] text-blue-700 mt-0.5">
+                      {metrics.rrhhDiagnostico.evaluados > 0
+                        ? Math.round((metrics.rrhhDiagnostico.niveles.MEDIO_ALTO / metrics.rrhhDiagnostico.evaluados) * 100)
+                        : 0}% eval.
+                    </div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-amber-50 border border-amber-200">
+                    <div className="text-[11px] font-bold text-amber-800">Perfil Bajo</div>
+                    <div className="text-[10px] text-amber-700 font-mono-code">5–9 A</div>
+                    <div className="text-xl font-bold font-mono-code text-amber-900 mt-1">
+                      {metrics.rrhhDiagnostico.niveles.BAJO}
+                    </div>
+                    <div className="text-[10px] text-amber-700 mt-0.5">
+                      {metrics.rrhhDiagnostico.evaluados > 0
+                        ? Math.round((metrics.rrhhDiagnostico.niveles.BAJO / metrics.rrhhDiagnostico.evaluados) * 100)
+                        : 0}% eval.
+                    </div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-rose-50 border border-rose-200">
+                    <div className="text-[11px] font-bold text-rose-800">Otra Área</div>
+                    <div className="text-[10px] text-rose-700 font-mono-code">0–4 A</div>
+                    <div className="text-xl font-bold font-mono-code text-rose-900 mt-1">
+                      {metrics.rrhhDiagnostico.niveles.OTRA_ESPECIALIDAD}
+                    </div>
+                    <div className="text-[10px] text-rose-700 mt-0.5">
+                      {metrics.rrhhDiagnostico.evaluados > 0
+                        ? Math.round((metrics.rrhhDiagnostico.niveles.OTRA_ESPECIALIDAD / metrics.rrhhDiagnostico.evaluados) * 100)
+                        : 0}% eval.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bloque I - IV affinity */}
+              <div className="space-y-2.5 pt-1">
+                <h5 className="text-xs font-bold uppercase tracking-wider text-stone-700">
+                  Afinidad por Bloque de Habilidades (I a IV)
+                </h5>
+                {metrics.rrhhDiagnostico.bloques.map((bloque, idx) => (
+                  <div key={idx} className="space-y-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-medium text-stone-700">{bloque.nombre}</span>
+                      <span className="font-mono-code font-bold text-stone-900">
+                        {bloque.pct}% <span className="text-[10px] font-normal text-stone-500">({bloque.countA}/{bloque.posibles} A)</span>
+                      </span>
+                    </div>
+                    <div className="h-2.5 w-full bg-stone-100 rounded-full overflow-hidden border border-stone-200">
+                      <div
+                        className="h-full bg-violet-600 rounded-full transition-all duration-500"
+                        style={{ width: `${bloque.pct}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column: Interpretación y Acción Docente */}
+            <div className="bg-stone-50 rounded-xl border border-stone-200 p-4 flex flex-col justify-between space-y-4">
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <h5 className="text-xs font-bold uppercase tracking-wider text-stone-800">
+                    Criterios de Interpretación Vocacional RH
+                  </h5>
+                  <span className="text-[10px] font-mono-code font-semibold px-2 py-0.5 rounded bg-violet-50 text-violet-700 border border-violet-200">
+                    Test sin penalización
+                  </span>
+                </div>
+                <p className="text-xs text-stone-600 mb-4 leading-relaxed">
+                  Resumen de orientación para el colegiado docente de Recursos Humanos durante la Feria de Especialidades, basado en el conteo de respuestas A:
+                </p>
+
+                <div className="space-y-2.5 text-xs">
+                  <div className="p-2.5 bg-white rounded-lg border border-emerald-200 flex items-center justify-between gap-2">
+                    <div>
+                      <span className="font-bold text-emerald-900 block">15–20 A · Candidatos Ideales</span>
+                      <span className="text-[11px] text-stone-600">Empatía, liderazgo, organización y gusto por la gente.</span>
+                    </div>
+                    <span className="font-mono-code font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 shrink-0">
+                      {metrics.rrhhDiagnostico.niveles.MUY_ALTO}
+                    </span>
+                  </div>
+                  <div className="p-2.5 bg-white rounded-lg border border-blue-200 flex items-center justify-between gap-2">
+                    <div>
+                      <span className="font-bold text-blue-900 block">10–14 A · Recomendar Especialidad</span>
+                      <span className="text-[11px] text-stone-600">Potencial alto; reforzar comunicación y manejo de conflictos.</span>
+                    </div>
+                    <span className="font-mono-code font-bold text-blue-800 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 shrink-0">
+                      {metrics.rrhhDiagnostico.niveles.MEDIO_ALTO}
+                    </span>
+                  </div>
+                  <div className="p-2.5 bg-white rounded-lg border border-amber-200 flex items-center justify-between gap-2">
+                    <div>
+                      <span className="font-bold text-amber-900 block">5–9 A · Explicar Alcance de RH</span>
+                      <span className="text-[11px] text-stone-600">Posible interés administrativo, menor trato directo con personas.</span>
+                    </div>
+                    <span className="font-mono-code font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 shrink-0">
+                      {metrics.rrhhDiagnostico.niveles.BAJO}
+                    </span>
+                  </div>
+                  <div className="p-2.5 bg-white rounded-lg border border-rose-200 flex items-center justify-between gap-2">
+                    <div>
+                      <span className="font-bold text-rose-900 block">0–4 A · Canalizar a Otras Áreas</span>
+                      <span className="text-[11px] text-stone-600">Mayor afinidad en Programación, Comercio o Cosmetología.</span>
+                    </div>
+                    <span className="font-mono-code font-bold text-rose-800 bg-rose-50 px-2 py-0.5 rounded border border-rose-200 shrink-0">
+                      {metrics.rrhhDiagnostico.niveles.OTRA_ESPECIALIDAD}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-3 bg-violet-50 border border-violet-200 rounded-lg text-xs text-violet-950">
+                <strong>Balance de Cohorte:</strong>{' '}
+                <span className="font-mono-code font-bold">{metrics.rrhhDiagnostico.recomendables}</span> alumno(s) con perfil compatible (Muy Alto / Medio-Alto) y{' '}
+                <span className="font-mono-code font-bold">{metrics.rrhhDiagnostico.requierenOrientacion}</span> que requieren orientación vocacional comparativa en stand.
+              </div>
             </div>
           </div>
         </div>

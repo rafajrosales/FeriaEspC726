@@ -242,6 +242,289 @@ export const COSMETOLOGIA_DIAGNOSTICO_REACTIVOS: ReactivoExamen[] = [
   }
 ];
 
+export const RRHH_DIAGNOSTICO_REACTIVOS: ReactivoExamen[] = [
+  {
+    id: 1,
+    bloque: 'I. Liderazgo y organización',
+    pregunta: 'En un trabajo en equipo, tú normalmente eres el que...',
+    opciones: [
+      'Organiza quién hace qué y pone fechas',
+      'Hace la parte más creativa',
+      'Prefiere trabajar solo',
+      'Solo hace lo que le piden'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Liderazgo organizativo y coordinación de equipos.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Capacidad natural de coordinación, delegación de funciones y seguimiento de tiempos en equipo.'
+  },
+  {
+    id: 2,
+    bloque: 'III. Comunicación asertiva y manejo de conflictos',
+    pregunta: 'Si dos compañeros se pelean, tú...',
+    opciones: [
+      'Intentas que hablen y se pongan de acuerdo',
+      'Te alejas para no meterte en problemas',
+      'Le das la razón al que te cae mejor',
+      'Les dices que lo arreglen solos'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Mediación imparcial y resolución constructiva de conflictos.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Disposición para mediar conflictos con imparcialidad y fomentar el diálogo respetuoso.'
+  },
+  {
+    id: 3,
+    bloque: 'II. Empatía, escucha y trato humano',
+    pregunta: 'Cuando alguien está triste, tú...',
+    opciones: [
+      'Lo escuchas y tratas de entender qué le pasa',
+      'Te incomoda y cambias de tema',
+      'Le dices que no llore',
+      'Le cuentas tus problemas para que se distraiga'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Empatía y escucha activa hacia el bienestar emocional.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Empatía genuina y escucha activa, cualidades esenciales para el acompañamiento humano y clima laboral.'
+  },
+  {
+    id: 4,
+    bloque: 'III. Comunicación asertiva y manejo de conflictos',
+    pregunta: '¿Cómo te sientes al hablar frente a un grupo?',
+    opciones: [
+      'Me gusta, me siento cómodo',
+      'Me da nervios pero lo intento',
+      'No me gusta nada, lo evito',
+      'Solo si me obligan'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Seguridad comunicativa y expresión ante grupos.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Facilidad y seguridad para dirigirse a grupos en capacitaciones, inducciones y juntas.'
+  },
+  {
+    id: 5,
+    bloque: 'I. Liderazgo y organización',
+    pregunta: 'Si tienes que organizar un evento de la escuela, tú...',
+    opciones: [
+      'Haces lista, presupuesto y repartes tareas',
+      'Solo ayudas el día del evento',
+      'Esperas a que otros organicen',
+      'Prefieres no participar'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Planeación operativa, control de recursos y delegación.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Planeación estructurada, manejo de presupuestos y distribución clara de responsabilidades.'
+  },
+  {
+    id: 6,
+    bloque: 'III. Comunicación asertiva y manejo de conflictos',
+    pregunta: 'Un compañero llega tarde siempre al equipo, tú...',
+    opciones: [
+      'Hablas con él en privado y le preguntas qué pasa',
+      'Lo acusas con el maestro',
+      'Lo dejas fuera sin avisarle',
+      'Haces su parte para no tener problemas'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Diálogo asertivo en privado y comprensión de causas.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Manejo asertivo y respetuoso de incidencias mediante diálogo directo antes de sancionar.'
+  },
+  {
+    id: 7,
+    bloque: 'II. Empatía, escucha y trato humano',
+    pregunta: '¿Qué te gusta más?',
+    opciones: [
+      'Tratar con personas, conocerlas y ayudarlas',
+      'Trabajar con números y computadoras',
+      'Trabajar con máquinas o en campo',
+      'Trabajar solo sin que nadie me moleste'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Vocación de servicio y gusto por la interacción humana.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Orientación vocacional directa hacia el trato humano, el servicio y el desarrollo de las personas.'
+  },
+  {
+    id: 8,
+    bloque: 'II. Empatía, escucha y trato humano',
+    pregunta: 'Cuando alguien no entiende una tarea, tú...',
+    opciones: [
+      'Le explicas con paciencia de otra forma',
+      'Le dices que le pregunte al profe',
+      'Te desesperas',
+      'Le pasas tu tarea para que copie'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Paciencia pedagógica y vocación para capacitar.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Paciencia y claridad didáctica para enseñar y capacitar a otros colaboradores.'
+  },
+  {
+    id: 9,
+    bloque: 'III. Comunicación asertiva y manejo de conflictos',
+    pregunta: 'En una discusión, tú...',
+    opciones: [
+      'Escuchas las dos partes antes de opinar',
+      'Interrumpes para dar tu punto',
+      'Te enojas rápido',
+      'Te quedas callado aunque no estés de acuerdo'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Objetividad, escucha imparcial y control emocional.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Objetividad y escucha equilibrada de todas las posturas antes de emitir juicios laborales.'
+  },
+  {
+    id: 10,
+    bloque: 'I. Liderazgo y organización',
+    pregunta: 'Si fueras jefe de una empresa, ¿qué harías primero?',
+    opciones: [
+      'Conocer a mi equipo y saber qué necesita cada uno',
+      'Poner reglas muy estrictas',
+      'Subirles el sueldo a todos',
+      'Que trabajen y no pregunten'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Liderazgo centrado en las personas y diagnóstico de necesidades.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Visión de liderazgo humano enfocada en conocer el talento y detectar necesidades del equipo.'
+  },
+  {
+    id: 11,
+    bloque: 'I. Liderazgo y organización',
+    pregunta: '¿Cómo eres con los horarios y entregas?',
+    opciones: [
+      'Muy puntual y organizado, tengo agenda',
+      'Más o menos, a veces se me olvida',
+      'Siempre entrego al último',
+      'No me fijo en las fechas'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Puntualidad, disciplina administrativa y uso de agenda.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Orden administrativo, puntualidad y control de fechas clave como nóminas, contratos y evaluaciones.'
+  },
+  {
+    id: 12,
+    bloque: 'IV. Ética, adaptabilidad y proyección en RH',
+    pregunta: 'Si un amigo te cuenta un secreto, tú...',
+    opciones: [
+      'Lo guardas, no lo cuentas a nadie',
+      'Se lo cuentas solo a tu mejor amigo',
+      'Lo publicas en tus estados',
+      'Se te olvida y lo cuentas sin querer'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Confidencialidad y ética en el manejo de información.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Discreción y ética profesional indispensables para resguardar expedientes, sueldos y casos sensibles.'
+  },
+  {
+    id: 13,
+    bloque: 'IV. Ética, adaptabilidad y proyección en RH',
+    pregunta: 'Cuando hay un cambio de planes de último momento, tú...',
+    opciones: [
+      'Te adaptas y buscas solución rápido',
+      'Te estresas y te bloqueas',
+      'Te enojas y ya no quieres hacer nada',
+      'Te quejas todo el tiempo'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Adaptabilidad al cambio y resolución ágil de imprevistos.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Flexibilidad y temple para resolver contingencias operativas y cambios organizacionales.'
+  },
+  {
+    id: 14,
+    bloque: 'III. Comunicación asertiva y manejo de conflictos',
+    pregunta: '¿Te gusta dar retroalimentación, decirle a alguien cómo mejorar sin ofenderlo?',
+    opciones: [
+      'Sí, se me facilita',
+      'Más o menos, me da pena',
+      'No, prefiero no decir nada',
+      'Sí, pero lo digo muy directo y a veces ofendo'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Retroalimentación constructiva y tacto interpersonal.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Habilidad para brindar retroalimentación asertiva enfocada en la mejora continua sin dañar la relación.'
+  },
+  {
+    id: 15,
+    bloque: 'I. Liderazgo y organización',
+    pregunta: 'En tu salón, ¿qué papel juegas?',
+    opciones: [
+      'El que une al grupo y ayuda a que todos participen',
+      'El que hace reír',
+      'El que casi no habla',
+      'El que siempre discute'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Integración grupal, inclusión y cohesión de equipos.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Capacidad integradora para promover la participación equitativa y fortalecer el sentido de equipo.'
+  },
+  {
+    id: 16,
+    bloque: 'IV. Ética, adaptabilidad y proyección en RH',
+    pregunta: 'Si tienes que entrevistar a una persona para un puesto, ¿qué le preguntarías?',
+    opciones: [
+      'Sus habilidades, su experiencia y cómo trabaja en equipo',
+      'Solo cuánto quiere ganar',
+      'Solo si tiene amigos en la empresa',
+      'Nada, que empiece a trabajar ya'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Criterio objetivo en entrevistas y selección por competencias.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Enfoque técnico en evaluación de competencias, trayectoria y colaboración por encima de favoritismos.'
+  },
+  {
+    id: 17,
+    bloque: 'IV. Ética, adaptabilidad y proyección en RH',
+    pregunta: '¿Cómo reaccionas cuando te critican?',
+    opciones: [
+      'Lo tomo para mejorar, aunque me duela un poco',
+      'Me pongo a la defensiva',
+      'Me siento mal todo el día y ya no hago nada',
+      'Ignoro todo lo que me dicen'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Madurez emocional y apertura a la mejora continua.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Inteligencia emocional y madurez profesional para convertir observaciones en aprendizaje.'
+  },
+  {
+    id: 18,
+    bloque: 'II. Empatía, escucha y trato humano',
+    pregunta: '¿Te interesa saber por qué las personas se comportan como se comportan?',
+    opciones: [
+      'Sí, mucho, me gusta entender a la gente',
+      'Un poco',
+      'No, cada quien sus cosas',
+      'Solo si me afecta a mí'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Interés en la conducta humana y psicología organizacional.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Curiosidad genuina por comprender motivaciones humanas, base del clima laboral y NOM-035.'
+  },
+  {
+    id: 19,
+    bloque: 'II. Empatía, escucha y trato humano',
+    pregunta: 'Si tienes que elegir entre ganar dinero o trabajar en un lugar donde te tratan bien, ¿qué eliges?',
+    opciones: [
+      'Donde me tratan bien, porque ahí rindo más',
+      'Donde gane más, aunque me traten mal',
+      'Donde trabajen mis amigos',
+      'Donde trabaje menos'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Valoración del trato digno y entorno organizacional sano.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Conciencia sobre cómo el trato digno y el bienestar impulsan la productividad del personal.'
+  },
+  {
+    id: 20,
+    bloque: 'IV. Ética, adaptabilidad y proyección en RH',
+    pregunta: '¿Te imaginas trabajando en contratar, capacitar y apoyar a los trabajadores de una empresa?',
+    opciones: [
+      'Sí, me emociona, creo que es lo mío',
+      'Tal vez, me gustaría saber más',
+      'No mucho',
+      'No, para nada'
+    ],
+    correcta: 'a',
+    aspecto_evaluado: 'Proyección vocacional e interés directo en Recursos Humanos.',
+    explicacion: 'Indicador de perfil RH (Opción A · 1 pt): Motivación directa por ejercer las funciones centrales de reclutamiento, capacitación y bienestar laboral.'
+  }
+];
+
 export const ESPECIALIDADES: SpecialtyInfo[] = [
   {
     id: 'programacion',
@@ -785,55 +1068,16 @@ export const ESPECIALIDADES: SpecialtyInfo[] = [
         descripcion: 'Fotografía de actividades y trabajos realizados por alumnos de la especialidad de Recursos Humanos.'
       }
     ],
-    preguntas_quiz: [
-      {
-        id: 1,
-        pregunta: '¿Cuál es la función medular del área de Recursos Humanos en una empresa?',
-        opciones: [
-          'Administrar, potenciar, capacitar y cuidar el bienestar del personal de la organización.',
-          'Reparar impresoras y servidores de red.',
-          'Vender boletos de avión a pasajeros.'
-        ],
-        respuesta_correcta: 0,
-        explicacion: 'Recursos Humanos gestiona el talento desde su atracción hasta su desarrollo y retiro digno.'
-      },
-      {
-        id: 2,
-        pregunta: '¿Qué ley en México regula los derechos, jornadas, salarios y prestaciones de los trabajadores?',
-        opciones: ['Ley Federal del Trabajo (LFT)', 'Código Penal Federal', 'Ley de Aguas Nacionales'],
-        respuesta_correcta: 0,
-        explicacion: 'La LFT rige los vínculos laborales bajo el Artículo 123 constitucional.'
-      },
-      {
-        id: 3,
-        pregunta: '¿Qué aspecto evalúa prioritariamente la NOM-035-STPS en los centros de trabajo?',
-        opciones: [
-          'La velocidad de la conexión a internet.',
-          'Los factores de riesgo psicosocial y la promoción de un entorno organizacional favorable.',
-          'El color de la pintura de las fachadas.'
-        ],
-        respuesta_correcta: 1,
-        explicacion: 'La NOM-035 protege la salud mental, combate la violencia laboral y previene el estrés severo.'
-      },
-      {
-        id: 4,
-        pregunta: '¿Qué es el DNC en la gestión de capital humano?',
-        opciones: [
-          'Detección de Necesidades de Capacitación.',
-          'Dirección Nacional de Cómputo.',
-          'Documento Nacional de Contabilidad.'
-        ],
-        respuesta_correcta: 0,
-        explicacion: 'El DNC permite identificar en qué áreas requiere entrenamiento y actualización el personal.'
-      },
-      {
-        id: 5,
-        pregunta: '¿Cuál de las siguientes es una prestación de ley obligatoria para los trabajadores en México?',
-        opciones: ['Aguinaldo, vacaciones y prima vacacional', 'Viajes recreativos mensuales a la playa', 'Coche último modelo de la empresa'],
-        respuesta_correcta: 0,
-        explicacion: 'El aguinaldo anual, las vacaciones pagadas y la prima vacacional son derechos irrenunciables en la LFT.'
-      }
-    ],
+    preguntas_quiz: RRHH_DIAGNOSTICO_REACTIVOS.map((r, idx) => ({
+      id: typeof r.id === 'number' ? r.id : idx + 1,
+      bloque: r.bloque,
+      pregunta: r.pregunta,
+      opciones: r.opciones,
+      respuesta_correcta: 0,
+      explicacion: r.explicacion || '',
+      es_informativa: false,
+      aspecto_evaluado: r.aspecto_evaluado
+    })),
     reto_presencial: {
       nombre: 'Match Laboral & Dinámica de Integración',
       objetivo: 'Entrevistar a 2 candidatos ficticios, cotejar competencias y seleccionar al perfil idóneo para un puesto crítico.',
@@ -1767,33 +2011,7 @@ export const FICHAS_ACADEMIA_DEFAULT: Record<string, FichaAcademiaReq> = {
         }
       ]
     },
-    banco_reactivos: [
-      {
-        pregunta: '¿Cuál es la función medular de la administración de Recursos Humanos?',
-        opciones: ['Gestionar el talento, potenciar el clima laboral y velar por el bienestar del personal', 'Armar piezas automotrices', 'Programar bases de datos'],
-        correcta: 'a'
-      },
-      {
-        pregunta: '¿Qué ley tutela los derechos laborales en México bajo el artículo 123 constitucional?',
-        opciones: ['Ley Federal del Trabajo (LFT)', 'Código Fiscal de la Federación', 'Ley de Aviación Civil'],
-        correcta: 'a'
-      },
-      {
-        pregunta: '¿Qué norma oficial mexicana previene los factores de riesgo psicosocial en el trabajo?',
-        opciones: ['NOM-001-SEDE', 'NOM-035-STPS', 'NOM-025-SCFI'],
-        correcta: 'b'
-      },
-      {
-        pregunta: '¿Qué significa la sigla DNC en capacitación laboral?',
-        opciones: ['Diagnóstico / Detección de Necesidades de Capacitación', 'Dirección Nacional de Cómputo', 'Documento de Nómina Colectiva'],
-        correcta: 'a'
-      },
-      {
-        pregunta: '¿Cuál es una prestación laboral obligatoria por ley en México?',
-        opciones: ['Aguinaldo y prima vacacional', 'Bono de telefonía satelital', 'Auto deportivo de lujo'],
-        correcta: 'a'
-      }
-    ],
+    banco_reactivos: RRHH_DIAGNOSTICO_REACTIVOS,
     reto_ludico: {
       nombre: 'Match Laboral & Dinámica de Integración',
       objetivo: 'Entrevistar a 2 candidatos ficticios, cotejar competencias y seleccionar al perfil idóneo para un puesto crítico.',
@@ -2180,51 +2398,15 @@ export const CUESTIONARIOS_DEFAULT: CuestionarioEspecialidad[] = [
   {
     id: 'quiz-rrhh-oficial',
     especialidad_id: 'rrhh',
-    titulo: 'Evaluación Formativa de Administración de Recursos Humanos',
-    descripcion: 'Comprensión de normas laborales LFT, NOM-035, nómina, reclutamiento y bienestar organizacional.',
-    instrucciones: 'Responde de acuerdo a las directrices de la gestión del talento humano. Se requiere 60% para acreditar.',
-    porcentaje_aprobatorio: 60,
+    titulo: 'Test de Habilidades: ¿Tengo Perfil para Administración de Recursos Humanos?',
+    descripcion: '20 reactivos situacionales de perfil vocacional agrupados en 4 bloques (Liderazgo, Empatía, Comunicación y Ética en RH). Cuenta cuántas respuestas A seleccionas.',
+    instrucciones: 'Lee cada situación y elige la opción que MÁS se parezca a ti. Contesta con sinceridad; no hay respuestas buenas o malas, es un diagnóstico vocacional.',
+    porcentaje_aprobatorio: 50,
     tiempo_limite_min: 15,
     activo: true,
-    fecha_actualizacion: '2026-11-03T09:00:00.000Z',
+    fecha_actualizacion: '2026-11-18T09:00:00.000Z',
     autor_docente: 'Mtra. Patricia Mendoza Garduño (Presidenta de Academia)',
-    preguntas: [
-      {
-        id: 1,
-        pregunta: '¿Qué ley en México regula las relaciones laborales y los derechos mínimos de los trabajadores?',
-        opciones: ['Ley Federal del Trabajo (LFT)', 'Código Penal Federal', 'Ley de Tránsito'],
-        correcta: 'a',
-        explicacion: 'La LFT establece la jornada legal, salario, aguinaldo, vacaciones dignas y seguridad social.'
-      },
-      {
-        id: 2,
-        pregunta: '¿Cuál es el objetivo primordial de la NOM-035-STPS en las empresas?',
-        opciones: ['Identificar, prevenir y mitigar factores de riesgo psicosocial en el trabajo', 'Prohibir el uso de uniformes', 'Aumentar las horas extras obligatorias'],
-        correcta: 'a',
-        explicacion: 'La NOM-035 promueve un entorno organizacional favorable y previene estrés crónico o acoso laboral.'
-      },
-      {
-        id: 3,
-        pregunta: '¿Qué fase inicial del proceso de reclutamiento define el perfil del puesto deseado?',
-        opciones: ['Análisis y descripción de puestos', 'Firma de renuncia previa', 'Despido injustificado'],
-        correcta: 'a',
-        explicacion: 'El análisis de puestos detalla competencias, responsabilidades y requisitos del colaborador idóneo.'
-      },
-      {
-        id: 4,
-        pregunta: '¿Qué deducciones obligatorias por ley se reflejan comúnmente en un recibo de nómina?',
-        opciones: ['IMSS e ISR', 'Préstamo entre amigos', 'Cuota de graduación'],
-        correcta: 'a',
-        explicacion: 'Las retenciones oficiales obligatorias son el Impuesto Sobre la Renta (SAT) y cuotas obreras de seguridad social (IMSS).'
-      },
-      {
-        id: 5,
-        pregunta: '¿En qué áreas se desempeñan los técnicos en Recursos Humanos?',
-        opciones: ['Departamentos de Talento Humano, Reclutamiento, Capacitación y Nómina', 'Cabinas de belleza exclusivamente', 'Muelle de carga marítima'],
-        correcta: 'a',
-        explicacion: 'Gestionan el personal en empresas corporativas, fábricas, organismos de gobierno y consultorías de RH.'
-      }
-    ]
+    preguntas: RRHH_DIAGNOSTICO_REACTIVOS
   },
   {
     id: 'quiz-cosmetologia-oficial',

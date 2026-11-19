@@ -53,7 +53,7 @@ export interface ProgresoEspecialidad {
   calificacion_quiz: number; // 0 to 100
   puntaje_obtenido?: number;
   puntaje_maximo?: number;
-  nivel_perfil?: 'ALTO' | 'EN_DESARROLLO' | 'EXPLORATORIO';
+  nivel_perfil?: 'ALTO' | 'EN_DESARROLLO' | 'EXPLORATORIO' | 'MUY_ALTO' | 'MEDIO_ALTO' | 'BAJO' | 'OTRA_ESPECIALIDAD';
   respuestas_detalle?: Record<number, number>;
 }
 

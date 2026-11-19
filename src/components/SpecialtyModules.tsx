@@ -143,12 +143,22 @@ export const SpecialtyModules: React.FC<SpecialtyModulesProps> = ({
       }
     });
 
+    const isRrhhPerfil = selectedId === 'rrhh' && divisor >= 18;
     const score = Math.round((correctCount / divisor) * 100);
     const minPassPct = divisor === 16 ? 56 : 60; // 9/16 = 56.25% -> Perfil en Desarrollo o Alto
-    const passed = score >= minPassPct;
+    const passed = isRrhhPerfil ? true : score >= minPassPct;
 
-    let nivelPerfil: 'ALTO' | 'EN_DESARROLLO' | 'EXPLORATORIO' | undefined;
-    if (divisor === 16) {
+    let nivelPerfil: 'ALTO' | 'EN_DESARROLLO' | 'EXPLORATORIO' | 'MUY_ALTO' | 'MEDIO_ALTO' | 'BAJO' | 'OTRA_ESPECIALIDAD' | undefined;
+    if (isRrhhPerfil) {
+      nivelPerfil =
+        correctCount >= 15
+          ? 'MUY_ALTO'
+          : correctCount >= 10
+            ? 'MEDIO_ALTO'
+            : correctCount >= 5
+              ? 'BAJO'
+              : 'OTRA_ESPECIALIDAD';
+    } else if (divisor === 16) {
       nivelPerfil = correctCount >= 13 ? 'ALTO' : correctCount >= 9 ? 'EN_DESARROLLO' : 'EXPLORATORIO';
     } else {
       nivelPerfil = score >= 80 ? 'ALTO' : score >= 60 ? 'EN_DESARROLLO' : 'EXPLORATORIO';
@@ -1027,203 +1037,291 @@ export const SpecialtyModules: React.FC<SpecialtyModulesProps> = ({
         {/* Tab 4: Cuestionario de Comprobación de Lectura (Banco de Reactivos Dinámico) */}
         {activeTab === 'quiz' && (
           <div className="space-y-6 max-w-3xl mx-auto">
-            <div className="bg-stone-50 p-4 rounded-xl border border-stone-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <span className="text-xs uppercase tracking-wider text-stone-500 font-semibold">
-                  {selectedId === 'cosmetologia' && preguntasQuiz.length >= 16
-                    ? 'Test Diagnóstico de Intereses, Actitudes y Perfil Vocacional'
-                    : 'Evaluación Formativa'}
-                </span>
-                <h4 className="text-sm font-bold text-stone-900">
-                  Cuestionario de {preguntasQuiz.length} {preguntasQuiz.length === 1 ? 'Reactivo' : 'Reactivos'} · {currentSpecialty.titulo_corto}
-                </h4>
-                {selectedId === 'cosmetologia' && preguntasQuiz.length >= 16 && (
-                  <p className="text-[11px] text-stone-600 mt-0.5">
-                    16 reactivos puntuables (1 pt c/u) + 1 reactivo de contexto logístico sobre disponibilidad de modelos (Pregunta 4, sin puntaje).
-                  </p>
-                )}
-              </div>
-              {quizSubmitted && (
-                <div className="text-right shrink-0">
-                  <span className="text-xs text-stone-500 block">Resultado Obtenido:</span>
-                  <span className={`text-base font-bold font-mono-code ${
-                    currentProgress.quiz_aprobado ? 'text-emerald-700' : 'text-amber-700'
-                  }`}>
-                    {currentProgress.puntaje_maximo
-                      ? `${currentProgress.puntaje_obtenido ?? 0} / ${currentProgress.puntaje_maximo} pts (${currentProgress.calificacion_quiz}%)`
-                      : `${currentProgress.calificacion_quiz} / 100 pts`}
-                  </span>
-                </div>
-              )}
-            </div>
+            {(() => {
+              const isCosmeDiag = selectedId === 'cosmetologia' && preguntasQuiz.length >= 16;
+              const isRrhhDiag = selectedId === 'rrhh' && preguntasQuiz.length >= 18;
 
-            {/* Automatic Vocational Tier Feedback Banner when Submitted */}
-            {quizSubmitted && selectedId === 'cosmetologia' && (currentProgress.puntaje_maximo ?? 0) === 16 && (
-              (() => {
-                const pts = currentProgress.puntaje_obtenido ?? 0;
-                const isAlto = pts >= 13;
-                const isDesarrollo = pts >= 9 && pts <= 12;
-                const q4Choice = quizAnswers[4];
-
-                return (
-                  <div className={`p-4 rounded-xl border-2 space-y-2 ${
-                    isAlto
-                      ? 'bg-emerald-50 border-emerald-300 text-emerald-950'
-                      : isDesarrollo
-                        ? 'bg-amber-50 border-amber-300 text-amber-950'
-                        : 'bg-stone-100 border-stone-300 text-stone-900'
-                  }`}>
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="text-xs font-black uppercase tracking-wider">
-                        {isAlto
-                          ? '★ 13 a 16 puntos — Perfil Vocacional Alto'
-                          : isDesarrollo
-                            ? '◆ 9 a 12 puntos — Perfil Vocacional en Desarrollo'
-                            : '○ 0 a 8 puntos — Perfil Exploratorio / Baja Afinidad'}
+              return (
+                <>
+                  <div className="bg-stone-50 p-4 rounded-xl border border-stone-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                      <span className="text-xs uppercase tracking-wider text-stone-500 font-semibold">
+                        {isCosmeDiag
+                          ? 'Test Diagnóstico de Intereses, Actitudes y Perfil Vocacional'
+                          : isRrhhDiag
+                            ? 'Test de Habilidades · ¿Tengo Perfil para Administración de Recursos Humanos?'
+                            : 'Evaluación Formativa'}
                       </span>
-                      <span className="text-xs font-mono-code font-bold px-2 py-0.5 rounded bg-white/80 border border-black/10">
-                        {pts} / 16 pts
-                      </span>
+                      <h4 className="text-sm font-bold text-stone-900">
+                        Cuestionario de {preguntasQuiz.length} {preguntasQuiz.length === 1 ? 'Reactivo' : 'Reactivos'} · {currentSpecialty.titulo_corto}
+                      </h4>
+                      {isCosmeDiag && (
+                        <p className="text-[11px] text-stone-600 mt-0.5">
+                          16 reactivos puntuables (1 pt c/u) + 1 reactivo de contexto logístico sobre disponibilidad de modelos (Pregunta 4, sin puntaje).
+                        </p>
+                      )}
+                      {isRrhhDiag && (
+                        <p className="text-[11px] text-stone-600 mt-0.5">
+                          20 reactivos situacionales en 4 bloques (no hay respuestas buenas o malas). El sistema contabiliza tus selecciones A para calcular tu perfil vocacional.
+                        </p>
+                      )}
                     </div>
-                    <p className="text-xs leading-relaxed">
-                      {isAlto &&
-                        '¡Tienes una excelente afinidad con la carrera técnica de Cosmetología! Muestras interés genuino por el cuidado integral de la piel, disposición para el trabajo práctico con personas, sentido de responsabilidad y ética profesional.'}
-                      {isDesarrollo &&
-                        'Tienes buen potencial para integrarte a Cosmetología. Te recomendamos acercarte al stand de la especialidad para conocer más sobre los protocolos de higiene, el trabajo práctico de pie y los materiales requeridos en taller.'}
-                      {!isAlto && !isDesarrollo &&
-                        'Tus respuestas sugieren que podrías tener mayor afinidad con otras áreas técnicas. Te invitamos a explorar el resto de las especialidades del CETis No. 7 antes de tomar tu decisión.'}
-                    </p>
-                    {(q4Choice === 2 || q4Choice === 3) && (
-                      <div className="text-[11px] bg-white/70 p-2 rounded-lg border border-black/10">
-                        <strong>Nota logística (Pregunta 4 - Sin puntaje):</strong> La disponibilidad de modelos no afecta tu calificación ni tu ingreso. El equipo docente organizará prácticas cruzadas o banco de voluntarios para acompañarte.
+                    {quizSubmitted && (
+                      <div className="text-right shrink-0">
+                        <span className="text-xs text-stone-500 block">
+                          {isRrhhDiag ? 'Afinidad Obtenida:' : 'Resultado Obtenido:'}
+                        </span>
+                        <span className={`text-base font-bold font-mono-code ${
+                          currentProgress.quiz_aprobado ? 'text-emerald-700' : 'text-amber-700'
+                        }`}>
+                          {currentProgress.puntaje_maximo
+                            ? isRrhhDiag
+                              ? `${currentProgress.puntaje_obtenido ?? 0} / ${currentProgress.puntaje_maximo} A (${currentProgress.calificacion_quiz}%)`
+                              : `${currentProgress.puntaje_obtenido ?? 0} / ${currentProgress.puntaje_maximo} pts (${currentProgress.calificacion_quiz}%)`
+                            : `${currentProgress.calificacion_quiz} / 100 pts`}
+                        </span>
                       </div>
                     )}
                   </div>
-                );
-              })()
-            )}
 
-            {preguntasQuiz.length === 0 ? (
-              <div className="text-center py-10 bg-white rounded-xl border border-dashed border-stone-300 p-6">
-                <HelpCircle className="w-10 h-10 text-stone-300 mx-auto mb-2" />
-                <p className="text-sm font-bold text-stone-700">El banco de reactivos está en configuración</p>
-                <p className="text-xs text-stone-500 mt-1 max-w-md mx-auto">
-                  Los profesores de la academia técnica están elaborando los reactivos de evaluación para esta especialidad en la Ficha de Dirección Académica.
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                {preguntasQuiz.map((q, qIdx) => {
-                  const userSelected = quizAnswers[q.id];
-                  const isInfo = Boolean(q.es_informativa || q.respuesta_correcta < 0);
-                  const isCorrect = !isInfo && userSelected === q.respuesta_correcta;
+                  {/* Automatic Vocational Tier Feedback Banner: Cosmetología */}
+                  {quizSubmitted && selectedId === 'cosmetologia' && (currentProgress.puntaje_maximo ?? 0) === 16 && (
+                    (() => {
+                      const pts = currentProgress.puntaje_obtenido ?? 0;
+                      const isAlto = pts >= 13;
+                      const isDesarrollo = pts >= 9 && pts <= 12;
+                      const q4Choice = quizAnswers[4];
 
-                  return (
-                    <div key={q.id} className="p-4 rounded-xl border border-stone-200 bg-white space-y-3">
-                      {q.bloque && (
-                        <div className="text-[10px] font-bold uppercase tracking-wider text-[#721B32] bg-[#721B32]/5 px-2.5 py-1 rounded inline-block">
-                          {q.bloque}
-                        </div>
-                      )}
-                      <div className="flex items-start justify-between gap-2">
-                        <p className="text-sm font-semibold text-stone-900">
-                          <span className="text-[#721B32] mr-1.5">{qIdx + 1}.</span>
-                          {q.pregunta}
-                        </p>
-                        {isInfo ? (
-                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-indigo-50 text-indigo-800 border border-indigo-200 shrink-0">
-                            Contexto Logístico (0 pts)
-                          </span>
-                        ) : (
-                          quizSubmitted && (
-                            <span className={`text-xs font-semibold px-2 py-0.5 rounded shrink-0 ${
-                              isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
-                            }`}>
-                              {isCorrect ? '1 pt ✓' : '0 pts'}
+                      return (
+                        <div className={`p-4 rounded-xl border-2 space-y-2 ${
+                          isAlto
+                            ? 'bg-emerald-50 border-emerald-300 text-emerald-950'
+                            : isDesarrollo
+                              ? 'bg-amber-50 border-amber-300 text-amber-950'
+                              : 'bg-stone-100 border-stone-300 text-stone-900'
+                        }`}>
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <span className="text-xs font-black uppercase tracking-wider">
+                              {isAlto
+                                ? '★ 13 a 16 puntos — Perfil Vocacional Alto'
+                                : isDesarrollo
+                                  ? '◆ 9 a 12 puntos — Perfil Vocacional en Desarrollo'
+                                  : '○ 0 a 8 puntos — Perfil Exploratorio / Baja Afinidad'}
                             </span>
-                          )
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        {q.opciones.map((opt, optIdx) => {
-                          const isChosen = userSelected === optIdx;
-                          let itemClass = 'bg-stone-50/50 border-stone-200 text-stone-700 hover:bg-stone-100';
-
-                          if (quizSubmitted) {
-                            if (isInfo) {
-                              if (isChosen) {
-                                itemClass = 'bg-indigo-50 border-indigo-400 text-indigo-950 font-medium';
-                              }
-                            } else if (optIdx === q.respuesta_correcta) {
-                              itemClass = 'bg-emerald-50 border-emerald-500 text-emerald-950 font-medium';
-                            } else if (isChosen) {
-                              itemClass = 'bg-red-50 border-red-400 text-red-950';
-                            }
-                          } else if (isChosen) {
-                            itemClass = 'bg-[#721B32]/10 border-[#721B32] text-stone-900 font-medium';
-                          }
-
-                          return (
-                            <button
-                              key={optIdx}
-                              type="button"
-                              disabled={quizSubmitted && currentProgress.quiz_aprobado}
-                              onClick={() => handleSelectQuizOption(q.id, optIdx)}
-                              className={`w-full text-left p-3 rounded-lg text-xs md:text-sm border transition-all ${itemClass}`}
-                            >
-                              <div className="flex items-start gap-2.5">
-                                <span className="w-5 h-5 rounded-full border border-stone-400 flex items-center justify-center shrink-0 text-xs font-semibold uppercase">
-                                  {String.fromCharCode(65 + optIdx)}
-                                </span>
-                                <span>{opt}</span>
-                              </div>
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      {quizSubmitted && (
-                        <div className="text-xs text-stone-600 bg-stone-50 p-2.5 rounded border border-stone-200 mt-2">
-                          <strong className="text-stone-800">
-                            {isInfo ? 'Criterio Pedagógico:' : 'Aspecto Vocacional:'}
-                          </strong>{' '}
-                          {q.explicacion}
+                            <span className="text-xs font-mono-code font-bold px-2 py-0.5 rounded bg-white/80 border border-black/10">
+                              {pts} / 16 pts
+                            </span>
+                          </div>
+                          <p className="text-xs leading-relaxed">
+                            {isAlto &&
+                              '¡Tienes una excelente afinidad con la carrera técnica de Cosmetología! Muestras interés genuino por el cuidado integral de la piel, disposición para el trabajo práctico con personas, sentido de responsabilidad y ética profesional.'}
+                            {isDesarrollo &&
+                              'Tienes buen potencial para integrarte a Cosmetología. Te recomendamos acercarte al stand de la especialidad para conocer más sobre los protocolos de higiene, el trabajo práctico de pie y los materiales requeridos en taller.'}
+                            {!isAlto && !isDesarrollo &&
+                              'Tus respuestas sugieren que podrías tener mayor afinidad con otras áreas técnicas. Te invitamos a explorar el resto de las especialidades del CETis No. 7 antes de tomar tu decisión.'}
+                          </p>
+                          {(q4Choice === 2 || q4Choice === 3) && (
+                            <div className="text-[11px] bg-white/70 p-2 rounded-lg border border-black/10">
+                              <strong>Nota logística (Pregunta 4 - Sin puntaje):</strong> La disponibilidad de modelos no afecta tu calificación ni tu ingreso. El equipo docente organizará prácticas cruzadas o banco de voluntarios para acompañarte.
+                            </div>
+                          )}
                         </div>
-                      )}
+                      );
+                    })()
+                  )}
+
+                  {/* Automatic Vocational Tier Feedback Banner: Recursos Humanos */}
+                  {quizSubmitted && selectedId === 'rrhh' && (currentProgress.puntaje_maximo ?? 0) >= 18 && (
+                    (() => {
+                      const pts = currentProgress.puntaje_obtenido ?? 0;
+                      const maxPts = currentProgress.puntaje_maximo ?? 20;
+                      const isMuyAlto = pts >= 15;
+                      const isMedioAlto = pts >= 10 && pts <= 14;
+                      const isBajo = pts >= 5 && pts <= 9;
+
+                      return (
+                        <div className={`p-4 rounded-xl border-2 space-y-2 ${
+                          isMuyAlto
+                            ? 'bg-emerald-50 border-emerald-300 text-emerald-950'
+                            : isMedioAlto
+                              ? 'bg-blue-50 border-blue-300 text-blue-950'
+                              : isBajo
+                                ? 'bg-amber-50 border-amber-300 text-amber-950'
+                                : 'bg-stone-100 border-stone-300 text-stone-900'
+                        }`}>
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <span className="text-xs font-black uppercase tracking-wider">
+                              {isMuyAlto
+                                ? '★ 15 a 20 respuestas A — Perfil Muy Alto para Recursos Humanos'
+                                : isMedioAlto
+                                  ? '◆ 10 a 14 respuestas A — Perfil Medio-Alto para Recursos Humanos'
+                                  : isBajo
+                                    ? '▲ 5 a 9 respuestas A — Perfil Bajo en Trato Directo'
+                                    : '○ 0 a 4 respuestas A — Otra Especialidad te Conviene Más'}
+                            </span>
+                            <span className="text-xs font-mono-code font-bold px-2 py-0.5 rounded bg-white/80 border border-black/10">
+                              {pts} / {maxPts} respuestas A
+                            </span>
+                          </div>
+                          <p className="text-xs leading-relaxed">
+                            {isMuyAlto &&
+                              'Tienes empatía, liderazgo, organización y gusto por la gente. ¡Eres candidato(a) ideal para la carrera técnica de Administración de Recursos Humanos!'}
+                            {isMedioAlto &&
+                              'Tienes habilidades valiosas para el área; solo necesitas desarrollar un poco más la comunicación asertiva y el manejo de conflictos. Te recomendamos considerar esta especialidad.'}
+                            {isBajo &&
+                              'Puede que te guste la parte administrativa y de organización, pero no tanto el trato constante con personas. Te sugerimos acercarte al stand de Recursos Humanos para conocer a detalle qué hace un técnico en RH.'}
+                            {!isMuyAlto && !isMedioAlto && !isBajo &&
+                              'Tus habilidades e intereses actuales muestran mayor afinidad con otras áreas técnicas. Tu participación quedó acreditada para tu Pase QR; te invitamos a explorar el resto de las especialidades del CETis No. 7.'}
+                          </p>
+                        </div>
+                      );
+                    })()
+                  )}
+
+                  {preguntasQuiz.length === 0 ? (
+                    <div className="text-center py-10 bg-white rounded-xl border border-dashed border-stone-300 p-6">
+                      <HelpCircle className="w-10 h-10 text-stone-300 mx-auto mb-2" />
+                      <p className="text-sm font-bold text-stone-700">El banco de reactivos está en configuración</p>
+                      <p className="text-xs text-stone-500 mt-1 max-w-md mx-auto">
+                        Los profesores de la academia técnica están elaborando los reactivos de evaluación para esta especialidad en la Ficha de Dirección Académica.
+                      </p>
                     </div>
-                  );
-                })}
-              </div>
-            )}
+                  ) : (
+                    <div className="space-y-6">
+                      {preguntasQuiz.map((q, qIdx) => {
+                        const userSelected = quizAnswers[q.id];
+                        const isInfo = Boolean(q.es_informativa || q.respuesta_correcta < 0);
+                        const isCorrect = !isInfo && userSelected === q.respuesta_correcta;
 
-            {preguntasQuiz.length > 0 && (
-              (() => {
-                const scoredCount = preguntasQuiz.filter(q => !q.es_informativa && q.respuesta_correcta >= 0).length || preguntasQuiz.length;
-                const requiredCorrect = scoredCount === 16 ? 9 : Math.ceil(scoredCount * 0.6);
+                        return (
+                          <div key={q.id} className="p-4 rounded-xl border border-stone-200 bg-white space-y-3">
+                            {q.bloque && (
+                              <div className="text-[10px] font-bold uppercase tracking-wider text-[#721B32] bg-[#721B32]/5 px-2.5 py-1 rounded inline-block">
+                                {q.bloque}
+                              </div>
+                            )}
+                            <div className="flex items-start justify-between gap-2">
+                              <p className="text-sm font-semibold text-stone-900">
+                                <span className="text-[#721B32] mr-1.5">{qIdx + 1}.</span>
+                                {q.pregunta}
+                              </p>
+                              {isInfo ? (
+                                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-indigo-50 text-indigo-800 border border-indigo-200 shrink-0">
+                                  Contexto Logístico (0 pts)
+                                </span>
+                              ) : (
+                                quizSubmitted && (
+                                  isRrhhDiag ? (
+                                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded shrink-0 ${
+                                      isCorrect
+                                        ? 'bg-emerald-100 text-emerald-800'
+                                        : 'bg-stone-100 text-stone-700 border border-stone-200'
+                                    }`}>
+                                      {isCorrect ? 'Perfil RH (A · 1 pt) ✓' : 'Otro rasgo vocacional'}
+                                    </span>
+                                  ) : (
+                                    <span className={`text-xs font-semibold px-2 py-0.5 rounded shrink-0 ${
+                                      isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
+                                    }`}>
+                                      {isCorrect ? '1 pt ✓' : '0 pts'}
+                                    </span>
+                                  )
+                                )
+                              )}
+                            </div>
 
-                return (
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-stone-200">
-                    <span className="text-xs text-stone-500">
-                      {scoredCount === 16
-                        ? `Instrumento diagnóstico de ${scoredCount} reactivos puntuables (mínimo ${requiredCorrect} de ${scoredCount} para perfil en desarrollo/alto). La pregunta 4 no penaliza puntaje.`
-                        : `Se requiere un mínimo de 60 pts (${requiredCorrect} de ${scoredCount} correctas) para aprobar el módulo.`}
-                    </span>
-                    <button
-                      disabled={Object.keys(quizAnswers).length < preguntasQuiz.length}
-                      onClick={handleGradeQuiz}
-                      className={`w-full sm:w-auto px-5 py-2.5 text-sm font-semibold rounded-lg transition-colors shrink-0 ${
-                        Object.keys(quizAnswers).length === preguntasQuiz.length
-                          ? 'bg-[#721B32] text-white hover:bg-[#5b1528] cursor-pointer'
-                          : 'bg-stone-200 text-stone-400 cursor-not-allowed'
-                      }`}
-                    >
-                      {quizSubmitted ? 'Volver a Evaluar Cuestionario' : 'Enviar Respuestas y Calificar'}
-                    </button>
-                  </div>
-                );
-              })()
-            )}
+                            <div className="space-y-2">
+                              {q.opciones.map((opt, optIdx) => {
+                                const isChosen = userSelected === optIdx;
+                                let itemClass = 'bg-stone-50/50 border-stone-200 text-stone-700 hover:bg-stone-100';
+
+                                if (quizSubmitted) {
+                                  if (isInfo) {
+                                    if (isChosen) {
+                                      itemClass = 'bg-indigo-50 border-indigo-400 text-indigo-950 font-medium';
+                                    }
+                                  } else if (isRrhhDiag) {
+                                    if (isChosen && optIdx === q.respuesta_correcta) {
+                                      itemClass = 'bg-emerald-50 border-emerald-500 text-emerald-950 font-medium';
+                                    } else if (isChosen) {
+                                      itemClass = 'bg-violet-50 border-violet-400 text-violet-950 font-medium';
+                                    } else if (optIdx === q.respuesta_correcta) {
+                                      itemClass = 'bg-emerald-50/40 border-emerald-200 text-stone-800';
+                                    }
+                                  } else if (optIdx === q.respuesta_correcta) {
+                                    itemClass = 'bg-emerald-50 border-emerald-500 text-emerald-950 font-medium';
+                                  } else if (isChosen) {
+                                    itemClass = 'bg-red-50 border-red-400 text-red-950';
+                                  }
+                                } else if (isChosen) {
+                                  itemClass = 'bg-[#721B32]/10 border-[#721B32] text-stone-900 font-medium';
+                                }
+
+                                return (
+                                  <button
+                                    key={optIdx}
+                                    type="button"
+                                    disabled={quizSubmitted && currentProgress.quiz_aprobado}
+                                    onClick={() => handleSelectQuizOption(q.id, optIdx)}
+                                    className={`w-full text-left p-3 rounded-lg text-xs md:text-sm border transition-all ${itemClass}`}
+                                  >
+                                    <div className="flex items-start gap-2.5">
+                                      <span className="w-5 h-5 rounded-full border border-stone-400 flex items-center justify-center shrink-0 text-xs font-semibold uppercase">
+                                        {String.fromCharCode(65 + optIdx)}
+                                      </span>
+                                      <span>{opt}</span>
+                                    </div>
+                                  </button>
+                                );
+                              })}
+                            </div>
+
+                            {quizSubmitted && (
+                              <div className="text-xs text-stone-600 bg-stone-50 p-2.5 rounded border border-stone-200 mt-2">
+                                <strong className="text-stone-800">
+                                  {isInfo ? 'Criterio Pedagógico:' : 'Aspecto Vocacional:'}
+                                </strong>{' '}
+                                {q.explicacion}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {preguntasQuiz.length > 0 && (
+                    (() => {
+                      const scoredCount = preguntasQuiz.filter(q => !q.es_informativa && q.respuesta_correcta >= 0).length || preguntasQuiz.length;
+                      const requiredCorrect = scoredCount === 16 ? 9 : Math.ceil(scoredCount * 0.6);
+
+                      return (
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-stone-200">
+                          <span className="text-xs text-stone-500">
+                            {isRrhhDiag
+                              ? `Test diagnóstico de ${scoredCount} reactivos (no hay respuestas buenas o malas). Al responder todo se calcula tu perfil RH y queda acreditado el módulo.`
+                              : scoredCount === 16
+                                ? `Instrumento diagnóstico de ${scoredCount} reactivos puntuables (mínimo ${requiredCorrect} de ${scoredCount} para perfil en desarrollo/alto). La pregunta 4 no penaliza puntaje.`
+                                : `Se requiere un mínimo de 60 pts (${requiredCorrect} de ${scoredCount} correctas) para aprobar el módulo.`}
+                          </span>
+                          <button
+                            disabled={Object.keys(quizAnswers).length < preguntasQuiz.length}
+                            onClick={handleGradeQuiz}
+                            className={`w-full sm:w-auto px-5 py-2.5 text-sm font-semibold rounded-lg transition-colors shrink-0 ${
+                              Object.keys(quizAnswers).length === preguntasQuiz.length
+                                ? 'bg-[#721B32] text-white hover:bg-[#5b1528] cursor-pointer'
+                                : 'bg-stone-200 text-stone-400 cursor-not-allowed'
+                            }`}
+                          >
+                            {quizSubmitted ? 'Volver a Evaluar Cuestionario' : 'Enviar Respuestas y Calificar'}
+                          </button>
+                        </div>
+                      );
+                    })()
+                  )}
+                </>
+              );
+            })()}
           </div>
         )}
 

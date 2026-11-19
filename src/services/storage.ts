@@ -1,5 +1,5 @@
 import { Estudiante, EvaluacionVocacional, ProgresoVirtual, ProgresoEspecialidad, AsistenciaPresencial, FichaAcademiaReq, OficioCircular, SpecialtyId, DocenteAutorizado, CuestionarioEspecialidad, ReactivoExamen } from '../types';
-import { ESTUDIANTES_INICIALES, FICHAS_ACADEMIA_DEFAULT, OFICIO_CIRCULAR_DEFAULT, CUESTIONARIOS_DEFAULT, COSMETOLOGIA_DIAGNOSTICO_REACTIVOS } from '../data/mockData';
+import { ESTUDIANTES_INICIALES, FICHAS_ACADEMIA_DEFAULT, OFICIO_CIRCULAR_DEFAULT, CUESTIONARIOS_DEFAULT, COSMETOLOGIA_DIAGNOSTICO_REACTIVOS, RRHH_DIAGNOSTICO_REACTIVOS } from '../data/mockData';
 import { cloudSaveEstudiante, cloudSaveDocente, cloudSaveCuestionario, cloudDeleteCuestionario } from './firebase';
 
 const STORAGE_KEYS = {
@@ -133,6 +133,45 @@ function buildCosmetologiaSeedProgress(q4OptionIdx: number, wrongQuestionIds: nu
     quiz_aprobado: correctCount >= 9,
     calificacion_quiz,
     puntaje_obtenido: correctCount,
+    puntaje_maximo,
+    nivel_perfil,
+    respuestas_detalle
+  };
+}
+
+function buildRrhhSeedProgress(nonAQuestionIds: number[]): ProgresoEspecialidad {
+  const nonASet = new Set(nonAQuestionIds);
+  const respuestas_detalle: Record<number, number> = {};
+  let countA = 0;
+
+  RRHH_DIAGNOSTICO_REACTIVOS.forEach((item, index) => {
+    const qId = typeof item.id === 'number' ? item.id : index + 1;
+    if (nonASet.has(qId)) {
+      respuestas_detalle[qId] = (index % 3) + 1; // B, C o D
+    } else {
+      respuestas_detalle[qId] = 0; // Opción A
+      countA++;
+    }
+  });
+
+  const puntaje_maximo = 20;
+  const calificacion_quiz = Math.round((countA / puntaje_maximo) * 100);
+  const nivel_perfil: 'MUY_ALTO' | 'MEDIO_ALTO' | 'BAJO' | 'OTRA_ESPECIALIDAD' =
+    countA >= 15
+      ? 'MUY_ALTO'
+      : countA >= 10
+        ? 'MEDIO_ALTO'
+        : countA >= 5
+          ? 'BAJO'
+          : 'OTRA_ESPECIALIDAD';
+
+  return {
+    video_visto: true,
+    infografia_explorada: true,
+    proyectos_revisados: true,
+    quiz_aprobado: true,
+    calificacion_quiz,
+    puntaje_obtenido: countA,
     puntaje_maximo,
     nivel_perfil,
     respuestas_detalle
@@ -290,8 +329,7 @@ export function initializeStorage() {
 
     const baseFinishedSpecs = {
       programacion: { video_visto: true, infografia_explorada: true, proyectos_revisados: true, quiz_aprobado: true, calificacion_quiz: 100 },
-      comercio: { video_visto: true, infografia_explorada: true, proyectos_revisados: true, quiz_aprobado: true, calificacion_quiz: 100 },
-      rrhh: { video_visto: true, infografia_explorada: true, proyectos_revisados: true, quiz_aprobado: true, calificacion_quiz: 80 }
+      comercio: { video_visto: true, infografia_explorada: true, proyectos_revisados: true, quiz_aprobado: true, calificacion_quiz: 100 }
     };
 
     const defaultProgresos: Record<string, ProgresoVirtual> = {
@@ -300,10 +338,11 @@ export function initializeStorage() {
         test_vocacional_completado: true,
         progreso_especialidades: {
           ...baseFinishedSpecs,
+          rrhh: buildRrhhSeedProgress([1, 2, 3, 4, 6, 7, 8, 9, 10, 14, 15, 18, 20]),
           cosmetologia: buildCosmetologiaSeedProgress(2, [3, 6, 10, 11, 16])
         },
         porcentaje_virtual: 100,
-        promedio_cuestionarios: 87.3,
+        promedio_cuestionarios: 76.0,
         clave_unica_token: gaelToken,
         estatus_fase_virtual: 'COMPLETADO',
         fecha_termino: new Date(Date.now() - 3600000).toISOString()
@@ -313,10 +352,11 @@ export function initializeStorage() {
         test_vocacional_completado: true,
         progreso_especialidades: {
           ...baseFinishedSpecs,
+          rrhh: buildRrhhSeedProgress([4, 7, 14, 18, 20]),
           cosmetologia: buildCosmetologiaSeedProgress(2, [5, 11, 17])
         },
         porcentaje_virtual: 100,
-        promedio_cuestionarios: 90.3,
+        promedio_cuestionarios: 89.0,
         clave_unica_token: valeriaToken,
         estatus_fase_virtual: 'COMPLETADO',
         fecha_termino: new Date(Date.now() - 7200000).toISOString()
@@ -326,10 +366,11 @@ export function initializeStorage() {
         test_vocacional_completado: true,
         progreso_especialidades: {
           ...baseFinishedSpecs,
+          rrhh: buildRrhhSeedProgress([11, 13]),
           cosmetologia: buildCosmetologiaSeedProgress(1, [3, 10, 13, 17])
         },
         porcentaje_virtual: 100,
-        promedio_cuestionarios: 88.8,
+        promedio_cuestionarios: 91.3,
         clave_unica_token: diegoToken,
         estatus_fase_virtual: 'COMPLETADO',
         fecha_termino: new Date(Date.now() - 10800000).toISOString()
@@ -339,10 +380,11 @@ export function initializeStorage() {
         test_vocacional_completado: true,
         progreso_especialidades: {
           ...baseFinishedSpecs,
+          rrhh: buildRrhhSeedProgress([1, 4, 5, 10, 11, 16, 20]),
           cosmetologia: buildCosmetologiaSeedProgress(0, [])
         },
         porcentaje_virtual: 100,
-        promedio_cuestionarios: 95.0,
+        promedio_cuestionarios: 91.3,
         clave_unica_token: ximenaToken,
         estatus_fase_virtual: 'COMPLETADO',
         fecha_termino: new Date(Date.now() - 14400000).toISOString()
@@ -380,10 +422,11 @@ export function initializeStorage() {
         test_vocacional_completado: true,
         progreso_especialidades: {
           ...baseFinishedSpecs,
+          rrhh: buildRrhhSeedProgress([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16, 18, 19, 20]),
           cosmetologia: buildCosmetologiaSeedProgress(3, [1, 3, 5, 10, 11, 17])
         },
         porcentaje_virtual: 100,
-        promedio_cuestionarios: 85.8,
+        promedio_cuestionarios: 70.8,
         clave_unica_token: leonardoToken,
         estatus_fase_virtual: 'COMPLETADO',
         fecha_termino: new Date(Date.now() - 18000000).toISOString()
@@ -393,10 +436,11 @@ export function initializeStorage() {
         test_vocacional_completado: true,
         progreso_especialidades: {
           ...baseFinishedSpecs,
+          rrhh: buildRrhhSeedProgress([2, 3, 4, 6, 7, 8, 9, 14, 18]),
           cosmetologia: buildCosmetologiaSeedProgress(0, [7, 13])
         },
         porcentaje_virtual: 100,
-        promedio_cuestionarios: 92.0,
+        promedio_cuestionarios: 85.8,
         clave_unica_token: renataToken,
         estatus_fase_virtual: 'COMPLETADO',
         fecha_termino: new Date(Date.now() - 21600000).toISOString()
@@ -688,6 +732,33 @@ export function getProgresoVirtual(nc: string): ProgresoVirtual {
       localStorage.setItem(cosmeStatsSyncKey, '1');
     }
 
+    const rrhhStatsSyncKey = 'cetis7_rrhh_stats_v1_synced';
+    if (!localStorage.getItem(rrhhStatsSyncKey)) {
+      const rrhhSampleSeeds: Record<string, number[]> = {
+        [ESTUDIANTES_INICIALES[0].num_control]: [1, 2, 3, 4, 6, 7, 8, 9, 10, 14, 15, 18, 20],
+        [ESTUDIANTES_INICIALES[1].num_control]: [4, 7, 14, 18, 20],
+        [ESTUDIANTES_INICIALES[2].num_control]: [11, 13],
+        [ESTUDIANTES_INICIALES[3].num_control]: [1, 4, 5, 10, 11, 16, 20],
+        [ESTUDIANTES_INICIALES[6].num_control]: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16, 18, 19, 20],
+        [ESTUDIANTES_INICIALES[7].num_control]: [2, 3, 4, 6, 7, 8, 9, 14, 18]
+      };
+      let changedRrhhStats = false;
+      Object.entries(rrhhSampleSeeds).forEach(([studentNc, nonAIds]) => {
+        const entry = dict[studentNc];
+        if (entry?.progreso_especialidades?.rrhh?.quiz_aprobado && !entry.progreso_especialidades.rrhh.respuestas_detalle) {
+          entry.progreso_especialidades.rrhh = {
+            ...entry.progreso_especialidades.rrhh,
+            ...buildRrhhSeedProgress(nonAIds)
+          };
+          changedRrhhStats = true;
+        }
+      });
+      if (changedRrhhStats) {
+        localStorage.setItem(STORAGE_KEYS.PROGRESOS, JSON.stringify(dict));
+      }
+      localStorage.setItem(rrhhStatsSyncKey, '1');
+    }
+
     if (dict[nc]) {
       return dict[nc];
     }
@@ -925,6 +996,19 @@ export function getFichasAcademia(): Record<string, FichaAcademiaReq> {
       }
     }
     localStorage.setItem(cosmeReactivosSyncKey, '1');
+  }
+
+  const rrhhReactivosSyncKey = 'cetis7_rrhh_20reactivos_v1_synced';
+  if (!localStorage.getItem(rrhhReactivosSyncKey)) {
+    const defaultRrhh = FICHAS_ACADEMIA_DEFAULT.rrhh;
+    if (fichas.rrhh && defaultRrhh?.banco_reactivos?.length === 20) {
+      const currentCount = fichas.rrhh.banco_reactivos?.length || 0;
+      if (currentCount <= 5) {
+        fichas.rrhh.banco_reactivos = defaultRrhh.banco_reactivos;
+        localStorage.setItem(STORAGE_KEYS.FICHAS, JSON.stringify(fichas));
+      }
+    }
+    localStorage.setItem(rrhhReactivosSyncKey, '1');
   }
 
   return fichas;
